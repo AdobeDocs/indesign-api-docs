@@ -1,0 +1,1818 @@
+openapi: 3.0.0
+info:
+  description: Documentation for InDesign Cloud Services. This document gives out the
+    detailed specification of the various APIs exposed, that developers can leverage.
+  version: 0.1.0
+  title: InDesign Services
+  contact:
+    email: idservices@adobe.com
+tags:
+  - name: rendition
+    description: Rendition APIs
+  - name: dataMerge
+    description: Data Merge API
+  - name: documentData
+    description: API to fetch data about the document.
+security:
+  - ApiKeyAuth:
+      []
+paths:
+
+  /api/v1/capability/indesign/rendition/jpeg:
+    post:
+      tags:
+        - rendition
+      summary: Creates JPEG renditions
+      description: Creates and returns JPEG renditions of a specific InDesign document.
+        Output rendition has mimetype 'image/jpeg'. For the structure of StatusCompletedResponse/output/data please refer to RenditionOutputData.
+      operationId: jpegJob
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/JPEGRenditionRequest"
+        description: Job request object that specifies parameters for generation of JPEG
+          output.
+        required: true
+      responses:
+        202:
+          $ref: '#/components/responses/Accepted'
+        400:
+          $ref: "#/components/responses/BadParams"
+        401:
+          $ref: "#/components/responses/Unauthorized"
+        403:
+          $ref: "#/components/responses/Forbidden"
+        404:
+          $ref: "#/components/responses/NotFound"
+        500:
+          $ref: "#/components/responses/InternalServerError"
+
+  /api/v1/capability/indesign/rendition/png:
+    post:
+      tags:
+        - rendition
+      summary: Creates PNG renditions
+      description: Creates and returns new PNG renditions of a specific InDesign document.
+        Output rendition has mimetype 'image/png'. For the structure of StatusCompletedResponse/output/data please refer to RenditionOutputData.
+      operationId: pngJob
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/PNGRenditionRequest"
+        description: Job request object that specifies parameters for generation of PNG
+          output.
+        required: true
+      responses:
+        202:
+          $ref: '#/components/responses/Accepted'
+        400:
+          $ref: "#/components/responses/BadParams"
+        401:
+          $ref: "#/components/responses/Unauthorized"
+        403:
+          $ref: "#/components/responses/Forbidden"
+        404:
+          $ref: "#/components/responses/NotFound"
+        500:
+          $ref: "#/components/responses/InternalServerError"
+
+  /api/v1/capability/indesign/rendition/pdf:
+    post:
+      tags:
+        - rendition
+      summary: Creates PDF renditions
+      description: Creates and returns new PDF from a specific InDesign document. Output
+        rendition has mimetype 'application/pdf'. For the structure of StatusCompletedResponse/output/data please refer to RenditionOutputData.
+      operationId: pdfPrintJob
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/PDFRenditionRequest"
+        description: Job request object that specifies parameters for generation of PDF
+          output.
+        required: true
+      responses:
+        202:
+          $ref: '#/components/responses/Accepted'
+        400:
+          $ref: "#/components/responses/BadParams"
+        401:
+          $ref: "#/components/responses/Unauthorized"
+        403:
+          $ref: "#/components/responses/Forbidden"
+        404:
+          $ref: "#/components/responses/NotFound"
+        500:
+          $ref: "#/components/responses/InternalServerError"
+
+  /api/v1/capability/indesign/dataMerge/merge:
+    post:
+      tags:
+        - dataMerge
+      summary: Performs data merge
+      description: Creates and returns merged InDesign documents or PDFs created after merging the data and provided template.
+        Output rendition has mimetype 'application/pdf' or 'application/x-indesign'. For the structure of StatusCompletedResponse/output/data please refer to DataMergeOutputData
+      operationId: dataMerge
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/DataMergeRequest"
+        description: Job request object that specifies parameters for merging the data as per provided template.
+        required: true
+      responses:
+        202:
+          $ref: '#/components/responses/Accepted'
+        400:
+          $ref: "#/components/responses/BadParams"
+        401:
+          $ref: "#/components/responses/Unauthorized"
+        403:
+          $ref: "#/components/responses/Forbidden"
+        404:
+          $ref: "#/components/responses/NotFound"
+        500:
+          $ref: "#/components/responses/InternalServerError"
+
+  /api/v1/capability/indesign/dataMerge/tags:
+    post:
+      tags:
+        - dataMerge
+      summary: Gets data merge tags
+      description: Retrieves the data merge tags from the document. For the structure of StatusCompletedResponse/output/data please refer to DataMergeTagsOutputData
+      operationId: dataMergeTags
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/DataMergeTagsRequest"
+        description: Job request object that specifies parameters for retrieving the data merge tags.
+        required: true
+      responses:
+        202:
+          $ref: '#/components/responses/Accepted'
+        400:
+          $ref: "#/components/responses/BadParams"
+        401:
+          $ref: "#/components/responses/Unauthorized"
+        403:
+          $ref: "#/components/responses/Forbidden"
+        404:
+          $ref: "#/components/responses/NotFound"
+        500:
+          $ref: "#/components/responses/InternalServerError"
+
+  /api/v1/capability/indesign/documentData:
+    post:
+      tags:
+        - documentData
+      summary: Fetches data about the document.
+      description: Retrieves the requested data from the document. The data may include information around the relationship between spreads and pages, information about the page items,
+        information about the text stories and data merge tags. At the very least number of pages and number of spread is provided. For the structure of StatusCompletedResponse/output/data please refer to DocumentDataOutputData.
+      operationId: documentData
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/DocumentDataRequest"
+        description: Job request object that specifies parameters for merging the data as per provided template.
+        required: true
+      responses:
+        202:
+          $ref: '#/components/responses/Accepted'
+        400:
+          $ref: "#/components/responses/BadParams"
+        401:
+          $ref: "#/components/responses/Unauthorized"
+        403:
+          $ref: "#/components/responses/Forbidden"
+        404:
+          $ref: "#/components/responses/NotFound"
+        500:
+          $ref: "#/components/responses/InternalServerError"
+
+  /api/v1/capability/status/{id}:
+    get:
+      description: Returns the latest status event of a capability execution
+      parameters:
+        - name: id
+          in: path
+          description: ID for which status is to be retrieved
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Status of a capability execution.
+          content:
+            application/json:
+              schema:
+                type: object
+                oneOf:
+                  - $ref: '#/components/schemas/QueuedEvent'
+                  - $ref: '#/components/schemas/RunningEvent'
+                  - $ref: '#/components/schemas/AssetsDownloadStartedEvent'
+                  - $ref: '#/components/schemas/AssetDownloadStartedEvent'
+                  - $ref: '#/components/schemas/AssetDownloadCompletedEvent'
+                  - $ref: '#/components/schemas/AssetDownloadFailedEvent'
+                  - $ref: '#/components/schemas/AssetsDownloadCompletedEvent'
+                  - $ref: '#/components/schemas/AssetsUploadStartedEvent'
+                  - $ref: '#/components/schemas/AssetUploadStartedEvent'
+                  - $ref: '#/components/schemas/AssetUploadCompletedEvent'
+                  - $ref: '#/components/schemas/AssetUploadFailedEvent'
+                  - $ref: '#/components/schemas/AssetsUploadCompletedEvent'
+                  - $ref: '#/components/schemas/CompletedEvent'
+                  - $ref: '#/components/schemas/FailedEvent'
+
+  /api/v1/capability/status/all/{id}:
+    get:
+      description: Returns the status of a capability execution. The API returns the latest 10 events in paginated form. The 'nextURL' can be invoked to fetch the next set of events.
+      parameters:
+        - name: id
+          in: path
+          description: ID for which status is to be retrieved
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Status of a capability execution.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StatusResponse'
+
+servers:
+  - url: https://cxp-dev.adobe.io/
+components:
+  securitySchemes:
+    ApiKeyAuth:
+      type: apiKey
+      in: header
+      name: X-API-KEY
+  responses:
+    Accepted:
+      description: The job has been accepted for processing
+      content:
+        application/json:
+          schema:
+            properties:
+              id:
+                type: string
+                description: ID
+              status_url:
+                type: string
+                description: Status URL
+    BadParams:
+      description: Bad Parameter
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    Unauthorized:
+      description: Unauthorized
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    Forbidden:
+      description: Forbidden
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    NotFound:
+      description: Not found
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    InternalServerError:
+      description: Internal server error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+  schemas:
+    Error:
+      type: object
+      properties:
+        message:
+          type: string
+      required:
+        - message
+
+    BaseJobRequestWithOutput:
+      description: Base job request for any job with the option to specify output urls.
+      required:
+        - assets
+      properties:
+        assets:
+          type: array
+          items:
+            $ref: "#/components/schemas/InputAsset"
+          description: Information about the assets which will be used to process the job.
+        outputs:
+          type: array
+          items:
+            $ref: '#/components/schemas/OutputAsset'
+
+    BaseJobRequest:
+      description: Base job request for any job.
+      required:
+        - assets
+      properties:
+        assets:
+          type: array
+          items:
+            $ref: "#/components/schemas/InputAsset"
+          description: Information about the assets which will be used to process the job.
+
+    WarningResponse:
+      description: Response containing the warnings from a process.
+      type: object
+      properties:
+        missingFonts:
+          description: List of missing fonts.
+          type: array
+          items:
+            type: string
+            description: The name of a missing font.
+        missingLinks:
+          description: List of missing links.
+          type: array
+          items:
+            type: string
+            description: The url of the missing link.
+        otherWarnings:
+          description: List of remaining warnings.
+          type: array
+          items:
+            type: string
+            description: The description of the warning.
+
+    MergeWarningResponse:
+      description: Response containing the warnings after a merge process.
+      allOf:
+        - $ref: '#/components/schemas/WarningResponse'
+        - type: object
+          properties:
+            csvMissingLinks:
+              description: List of missing links from CSV.
+              type: array
+              items:
+                type: string
+                description: The url of the missing link.
+            oversetText:
+              description: The information about the overset texts.
+              type: array
+              items:
+                type: object
+                properties:
+                  page:
+                    type: integer
+                    description: The page number of overset instance.
+                  charactersInOverset:
+                    description: The number of characters in overset.
+                    type: integer
+                  wordsInOverset:
+                    description: The number of words in overset.
+                    type: integer
+                  oversetText:
+                    description: The part of text which is in overset.
+                    type: string
+
+    RenditionOutputData:
+      type: object
+      properties:
+        outputs:
+          type: array
+          items:
+            type: object
+            properties:
+              input:
+                type: string
+                description: The input file path in the working directory.
+              renditions:
+                description: Information about the created renditions.
+                type: array
+                items:
+                  $ref: "#/components/schemas/RenditionDef"
+              errorDetails:
+                type: object
+                properties:
+                  reason:
+                    type: string
+                    description: A brief about what went wrong.
+                  errorCode:
+                    type: integer
+              warnings:
+                $ref: '#/components/schemas/WarningResponse'
+                description: Warnings generated during the rendition request.
+
+    RenditionDef:
+      type: object
+      properties:
+        pageIndex:
+          type: string
+          description: Refers to the indices of page/spread in the input document for which the rendition information is provided.
+        path:
+          description: The paths corresponding to the pages mentioned in pageIndex.
+          type: array
+          items:
+            type: string
+
+    JPEGRenditionRequest:
+      allOf:
+        - $ref: '#/components/schemas/BaseJobRequestWithOutput'
+        - description: Inputs and properties with which the job should be processed.
+          type: object
+          required:
+          - params
+          properties:
+            params:
+              type: object
+              required:
+              - targetDocuments
+              - jobType
+              properties:
+                jobType:
+                  description: The type of job.
+                  type: string
+                  default: RENDITION_JPEG
+                  enum:
+                    - RENDITION_JPEG
+                targetDocuments:
+                  description: List of documents to render as per the given parameters. Currently only one document is supported.
+                  type: array
+                  items:
+                    type: string
+                  minItems: 1
+                  maxItems: 1
+                exportingSpread:
+                  type: boolean
+                  default: false
+                  description: Specify true for treating range as spread numbers and otherwise
+                    as pages.
+                pageRange:
+                  type: string
+                  default: All
+                  description: Page ranges. The ranges are based on index of the page with in
+                    the document. Value can be 'All' along with numeral ranges. Also
+                    if exportingSpread is true this range would represent spread
+                    indices in the document.
+                quality:
+                  type: string
+                  description: Defines the quality of the output.
+                  default: MEDIUM
+                  enum:
+                    - LOW
+                    - MEDIUM
+                    - HIGH
+                    - MAXIMUM
+                renderingStyle:
+                  type: string
+                  description: Specifies formatting options for converted JPEG images.
+                  default: BASELINE_ENCODING
+                  enum:
+                    - BASELINE_ENCODING
+                    - PROGRESSIVE_ENCODING
+                resolution:
+                  type: integer
+                  default: 72
+                  description: Specifies the resolution of the final image
+                  minimum: 1
+                  maximum: 2400
+                colorSpace:
+                  type: string
+                  description: Specifies formatting options for converted JPEG images.
+                  default: RGB
+                  enum:
+                    - RGB
+                    - CMYK
+                    - GRAY
+                embedColorProfile:
+                  type: boolean
+                  default: true
+                  description: Specify true to embed the color profile, false otherwise.
+                antiAlias:
+                  type: boolean
+                  default: true
+                  description: If true, use anti-aliasing for text and vectors during export.
+                simulateOverprint:
+                  type: boolean
+                  default: false
+                  description: If true, simulates the effects of overprinting spot and process
+                    colors in the same way they would occur when printing.
+                useDocumentBleeds:
+                  type: boolean
+                  default: false
+                  description: If true, uses the document's bleed settings in the exported JPEG.
+                colorSettingsFile:
+                  type: string
+                  description: The color settings file to be used for generating a rendition.
+                outputFileBaseString:
+                  type: string
+                  description: The name of the output file.
+                outputFolderPath:
+                  type: string
+                  description: The path of the output folder.
+
+    PNGRenditionRequest:
+      allOf:
+        - $ref: '#/components/schemas/BaseJobRequestWithOutput'
+        - description: Inputs and properties with which the job should be processed.
+          type: object
+          required:
+            - params
+          properties:
+            params:
+              type: object
+              required:
+              - targetDocuments
+              - jobType
+              properties:
+                jobType:
+                  description: The type of job.
+                  type: string
+                  default: RENDITION_PNG
+                  enum:
+                    - RENDITION_PNG
+                targetDocuments:
+                  description: List of documents to render as per the given parameters. Currently only one document is supported.
+                  type: array
+                  items:
+                    type: string
+                  minItems: 1
+                  maxItems: 1
+                exportingSpread:
+                  type: boolean
+                  default: false
+                  description: Specify true for treating range as spread numbers and otherwise
+                    as pages.
+                pageRange:
+                  type: string
+                  default: All
+                  description: Page ranges. The ranges are based on index of the page with in
+                    the document. Value can be 'All' along with numeral ranges. Also
+                    if exportingSpread is true this range would represent spread
+                    indices in the document.
+                quality:
+                  type: string
+                  description: Defines the quality of the output.
+                  default: MEDIUM
+                  enum:
+                    - LOW
+                    - MEDIUM
+                    - HIGH
+                    - MAXIMUM
+                resolution:
+                  type: integer
+                  default: 72
+                  description: Specifies the resolution of the final image.
+                  minimum: 1
+                  maximum: 2400
+                colorSpace:
+                  type: string
+                  description: Specifies formatting options for converted PNG images.
+                  default: RGB
+                  enum:
+                    - RGB
+                    - GRAY
+                antiAlias:
+                  type: boolean
+                  default: true
+                  description: If true, use anti-aliasing for text and vectors during export.
+                simulateOverprint:
+                  type: boolean
+                  default: false
+                  description: If true, simulates the effects of overprinting spot and process
+                    colors in the same way they would occur when printing.
+                useDocumentBleeds:
+                  type: boolean
+                  default: false
+                  description: If true, uses the document's bleed settings in the exported PNG.
+                transparentBackground:
+                  type: boolean
+                  default: false
+                  description: If true, use a transparent background for the exported PNG.
+                colorSettingsFile:
+                  type: string
+                  description: The color settings file to be used for generating a rendition.
+                outputFileBaseString:
+                  type: string
+                  description: The name of the output file.
+                outputFolderPath:
+                  type: string
+                  description: The path of the output folder.
+
+    PDFRenditionRequest:
+      description: Inputs and properties with which the job should be processed. In absence of
+        params job will be processed with "High Quality Print" as the
+        preset/setting.
+      allOf:
+        - $ref: '#/components/schemas/BaseJobRequestWithOutput'
+        - description: Properties with which the job should be processed.
+          type: object
+          required:
+            - params
+          properties:
+            params:
+              type: object
+              required:
+              - targetDocuments
+              - jobType
+              properties:
+                jobType:
+                  description: The type of job.
+                  type: string
+                  default: RENDITION_PDFPRINT
+                  enum:
+                    - RENDITION_PDFPRINT
+                targetDocuments:
+                  description: List of documents to render as per the given parameters. Currently only one document is supported.
+                  type: array
+                  items:
+                    type: string
+                  minItems: 1
+                  maxItems: 1
+                exportingSpread:
+                  type: boolean
+                  default: false
+                  description: Specify true for treating range as spread numbers and otherwise
+                    as pages.
+                pageRange:
+                  type: string
+                  default: All
+                  description: Page ranges. The ranges are based on index of the page with in
+                    the document. Value can be 'All' along with numeral ranges. Also
+                    if exportingSpread is true this range would represent spread
+                    indices in the document.
+                createSeparateFiles:
+                  type: boolean
+                  default: false
+                  description: Specify true for creating separate PDF files for all specified
+                    pages/spreads.
+                optimizeForFastWebView:
+                  type: boolean
+                  default: true
+                  description: Specify true for optimizing the PDF for faster web viewing.
+                embedPageThumbnails:
+                  type: boolean
+                  default: false
+                  description: Specify true for embedding page thumbnails.
+                includeBookmarks:
+                  type: boolean
+                  default: false
+                  description: If true, displays bookmarks and table of contents entries as
+                    links in the bookmarks pane in the PDF document. If false, no
+                    bookmarks are exported.
+                includeHyperlinks:
+                  type: boolean
+                  default: false
+                  description: If true, includes hyperlinks when exporting the document.
+                exportNonprintingObjects:
+                  type: boolean
+                  default: false
+                  description: If true, makes non-printing objects visible in the PDF document.
+                exportGuidesAndGrids:
+                  type: boolean
+                  default: false
+                  description: If true, includes visible guides and baseline grids in the PDF
+                    document.
+                createTaggedPDF:
+                  type: boolean
+                  default: true
+                  description: If true, creates a tagged PDF file.
+                includeInteractiveElements:
+                  type: string
+                  description: Specifies the option to draw interactive elements.
+                  default: DO_NOT_INCLUDE
+                  enum:
+                    - DO_NOT_INCLUDE
+                    - APPEARANCE_ONLY
+                exportWhichLayers:
+                  type: string
+                  description: Which layers to export.
+                  default: EXPORT_ALL_LAYERS
+                  enum:
+                    - EXPORT_ALL_LAYERS
+                    - EXPORT_VISIBLE_LAYERS
+                    - EXPORT_VISIBLE_PRINTABLE_LAYERS
+                jobOptionsFile:
+                  type: string
+                  description: The file which will be used as PDF creation settings file during the export. This will take precedence over pdfPreset attribute.
+                pdfPreset:
+                  type: string
+                  description: The export style to use.
+                  default: High Quality Print
+                  enum:
+                    - High Quality Print
+                    - PDF/X-1a:2001
+                    - PDF/X-3:2002
+                    - PDF/X-4:2008
+                    - Press Quality
+                    - Smallest File Size
+                outputFileBaseString:
+                  type: string
+                  description: The name of the output file.
+                outputFolderPath:
+                  type: string
+                  description: The path of the output folder.
+
+    DataMergeRequest:
+      allOf:
+        - $ref: '#/components/schemas/BaseJobRequestWithOutput'
+        - description: Inputs for the data merge request.
+          type: object
+          required:
+            - params
+          properties:
+            params:
+              type: object
+              required:
+              - targetDocument
+              - dataSource
+              - jobType
+              properties:
+                jobType:
+                  description: The type of job.
+                  type: string
+                  default: DATAMERGE_MERGE
+                  enum:
+                    - DATAMERGE_MERGE
+                targetDocument:
+                  description: The tagged document to be used as template for merging.
+                  type: string
+                dataSource:
+                  description: The data source files to use.
+                  type: string
+                outputType:
+                  description: The type of required output.
+                  type: string
+                  enum:
+                    - JPEG
+                    - PNG
+                    - INDD
+                    - PDF
+                  default: INDD
+                exportSettings:
+                  type: object
+                  description: The settings corresponding to the output format.
+                  properties:
+                    jobOptionsFile:
+                      type: string
+                      description: Only relevant if outputType is "PDF". The file which will be used as PDF creation settings file during the export. This will take precedence over pdfPreset attribute.
+                    pdfPreset:
+                      type: string
+                      description: Only relevant if outputType is "PDF". The PDF export style to use.
+                      default: High Quality Print
+                      enum:
+                        - High Quality Print
+                        - PDF/X-1a:2001
+                        - PDF/X-3:2002
+                        - PDF/X-4:2008
+                        - Press Quality
+                        - Smallest File Size
+                    quality:
+                      type: string
+                      description: Defines the quality of the output for JPEG and PNG formats.
+                      default: MEDIUM
+                      enum:
+                        - LOW
+                        - MEDIUM
+                        - HIGH
+                        - MAXIMUM
+                    linkImages:
+                      description: Only relevant if outputType is "INDD". If true, links images to the target document. If false, embeds linked images, already referred in the target document.
+                      type: boolean
+                      default: false
+                recordRange:
+                  description: The ranges of records to process for this job. Value can be 'All' along with numeral ranges e.g. '1-2, 5'.
+                  type: string
+                allowMultipleRecordsPerPage:
+                  description: The number of records to place on the each page of the document.
+                  type: boolean
+                multipleRecordLayoutOptions:
+                  description: The options to use in case allowMultipleRecordsPerPage is set to true.
+                  type: object
+                  properties:
+                    arrangeBy:
+                      description: |
+                        The order in which to arrange records in the target document.
+                        * `ROWS_FIRST` - Arranges records by row.
+                        * `COLUMNS_FIRST` - Arranges records by column.
+                      type: string
+                      enum:
+                        - ROWS_FIRST
+                        - COLUMNS_FIRST
+                    bottomMargin:
+                      description: The offset value of the bottom margin in the target document. The values can be specified like '1 pt', '1 pica'. '1' etc. If just a number is mentioned in the string, it will be used as a value in pica.
+                      type: string
+                    topMargin:
+                      description: The offset value of the top margin in the target document. The values can be specified like '1 pt', '1 pica'. '1' etc. If just a number is mentioned in the string, it will be used as a value in pica.
+                      type: string
+                    leftMargin:
+                      description: The offset value of the left margin in the target document. The values can be specified like '1 pt', '1 pica'. '1' etc. If just a number is mentioned in the string, it will be used as a value in pica.
+                      type: string
+                    rightMargin:
+                      description: The offset value of the right margin in the target document. The values can be specified like '1 pt', '1 pica'. '1' etc. If just a number is mentioned in the string, it will be used as a value in pica.
+                      type: string
+                    columnSpacing:
+                      description: The amount of spacing between columns of records in the target document. The values can be specified like '1 pt', '1 pica'. '1' etc. If just a number is mentioned in the string, it will be used as a value in pica.
+                      type: string
+                    rowSpacing:
+                      description: The amount of spacing between rows of records in the target document. The values can be specified like '1 pt', '1 pica'. '1' etc. If just a number is mentioned in the string, it will be used as a value in pica.
+                      type: string
+                imagePlacementOptions:
+                  description: These are the options for image placement which will be used while merging images in the document.
+                  type: object
+                  properties:
+                    centreImage:
+                      description: If true, centers the image in the frame while preserving the frame size as well as content size and proportions. If the content is larger than the frame, content around the edges is obscured by the bounding box of the frame. This doesn't work with 'Content_Aware_Fit' fittingOption.
+                      type: boolean
+                    fittingOption:
+                      description: |
+                        Method of fitting content in a frame.
+                        * `CONTENT_AWARE_FIT` - Selects best crop region of the content for the frame based on Adobe Sensei. Note: Preserves frame size but might scale the content size. If this fitting is set, centerImage property is turned-off.
+                        * `FILL_PROPORTIONAL` - Resizes content to fill the frame while preserving the proportions of the content. If the content and frame have different proportions, some of the content is obscured by the bounding box of the frame.
+                        * `FIT_CONTENT_TO_FRAME` - Resizes content to fit the frame. Note: Content that is a different size than the frame appears stretched or squeezed.
+                        * `FIT_FRAME_TO_CONTENT` - Resizes the frame so it fits the content.
+                        * `HONOUR_EXISTING_STYLE` - Apply the frame fitting based on existing setting applied on the orginal frame.
+                        * `PRESERVE_SIZES` - Preserves the original sizes of the frame and the content. Note: Content that is larger than the frame is obscured around the edges.
+                        * `PROPORTIONAL` - Resizes content to fit the frame while preserving content proportions. If the content and frame have different proportions, some empty space occurs in the frame.
+                      type: string
+                      enum:
+                        - CONTENT_AWARE_FIT
+                        - FILL_PROPORTIONAL
+                        - FIT_CONTENT_TO_FRAME
+                        - FIT_FRAME_TO_CONTENT
+                        - HONOUR_EXISTING_STYLE
+                        - PRESERVE_SIZES
+                        - PROPORTIONAL
+                    linkImages:
+                      description: If true, links images to the target document. If false, embeds images in the target document. This is in reference to the images being brought in the document while merging.
+                      type: boolean
+                pagesPerDocument:
+                  description: The maximum number of pages per document.
+                  type: integer
+                removeBlankLines:
+                  description: If true, removes blank lines caused by empty fields.
+                  type: boolean
+                  default: false
+                outputFileBaseString:
+                  type: string
+                  description: The name of the output file.
+                outputFolderPath:
+                  type: string
+                  description: The path of the output folder.
+
+    DataMergeOutputData:
+      type: object
+      properties:
+        records:
+          description: The information about the records which were processed.
+          type: array
+          items:
+            type: object
+            properties:
+              recordIndex:
+                type: string
+                description: It will be indicate the record numbers for which the data is provided here.
+              outputs:
+                description: The list of outputs corresponding to this record.
+                type: array
+                items:
+                  type: object
+                  properties:
+                    pageIndex:
+                      type: string
+                      description: It will be indicate the page numbers in the merged output for which the paths are mentioned below.
+                    path:
+                      description: The paths corresponding to the pages mentioned in pageIndex.
+                      type: array
+                      items:
+                        type: string
+              warnings:
+                $ref: '#/components/schemas/MergeWarningResponse'
+                description: Warnings generated during the merge.
+        errorDetails:
+          type: object
+          properties:
+            reason:
+              type: string
+              description: A brief about what went wrong.
+            errorCode:
+              type: integer
+        warnings:
+          $ref: '#/components/schemas/WarningResponse'
+          description: Warnings generated for the template.
+
+    DataMergeTagsRequest:
+      allOf:
+        - $ref: '#/components/schemas/BaseJobRequest'
+        - description: Filters according to which the information related to data merge tags would be retrieved.
+          type: object
+          required:
+            - params
+          properties:
+            params:
+              type: object
+              required:
+                - jobType
+                - targetDocument
+              properties:
+                jobType:
+                  description: The type of job.
+                  type: string
+                  default: DATAMERGE_TAGS
+                  enum:
+                    - DATAMERGE_TAGS
+                targetDocument:
+                  description: The tagged document to be used for extraction of tags.
+                  type: string
+                dataSource:
+                  description: The data source file to use for extracting and matching the tags.
+                  type: string
+                filter:
+                  type: string
+                  default: All
+                  description: Accepted values are "All", "Text", "Image" and "QR". Multiple values can be provided. e.g. "Text, Image"
+                includePageItemIdentifiers:
+                  type: boolean
+                  description: If true, the information for associated page items is added as well to the tags extracted from the document.
+                  default: false
+
+    DataMergeTagsOutputData:
+      type: object
+      description: The data corresponding to the tags from the documents and the data source file, if provided.
+      properties:
+        documentTags:
+          description: The information about the tags retrieved from the target document.
+          type: array
+          items:
+            type: object
+            properties:
+              name:
+                type: string
+                description: Name of the tag.
+              type:
+                type: string
+                description: Type of the tag.
+                enum:
+                  - Image
+                  - Text
+                  - QR
+              parentPageItems:
+                description: Information about the page items where the tag is present, if asked for.
+                type: array
+                items:
+                  type: object
+                  properties:
+                    pageItemId:
+                      type: integer
+                      description: ID of the page item which has the data merge tag within it.
+                    pageIndexInSpread:
+                      type: integer
+                      description: Zero based index of the page (in the spread) on which the page item exists.
+                    pageIndexInDocument:
+                      type: integer
+                      description: Zero based index of the page (in the document) on which the page item exists.
+                    pageId:
+                      type: integer
+                      description: ID of the page on which the page item exists.
+                    pageName:
+                      type: string
+                      description: Name of the page on which the page item exists.
+                    spreadIndex:
+                      type: integer
+                      description: Zero based index of the spread (in the document) on which the page item exists.
+                    spreadId:
+                      type: integer
+                      description: ID of the spread on which the page item exists.
+                    parentStoryId:
+                      type: integer
+                      description: Only valid for text tags. ID of the parent story in which the tag exists.
+        dataSourceTags:
+          description: The information about the tags from the data source file and their relevance for the target document.
+          type: array
+          items:
+            type: object
+            properties:
+              name:
+                type: string
+                description: Name of the tag.
+              type:
+                type: string
+                description: Type of the tag.
+                enum:
+                  - Image
+                  - Text
+                  - QR
+              status:
+                type: string
+                description: Status or thr relavnce of the tag in context to the target document.
+                enum:
+                  - Match
+                  - Extra
+        dataSourceValidation:
+          description: Provided when both target document and data source are provided. This will include data from validation of the data source against the target document.
+          type: object
+          properties:
+            isValid:
+              type: boolean
+              description: Indicates whether the provided data source is valid for the document or not.
+            missingTags:
+              description: Provides the information about the tags which are missing from the data source but are required by the document.
+              type: array
+              items:
+                type: string
+        warnings:
+          $ref: '#/components/schemas/WarningResponse'
+          description: Warnings generated during the execution of the request.
+
+    DocumentDataRequest:
+      allOf:
+        - $ref: '#/components/schemas/BaseJobRequest'
+        - description: Filters according to which the data is to be fetched from the InDesign document.
+          type: object
+          required:
+            - params
+          properties:
+            params:
+              type: object
+              required:
+                - targetDocument
+                - jobType
+              properties:
+                jobType:
+                  description: The type of job.
+                  type: string
+                  default: DOCUMENTDATA_DATA
+                  enum:
+                    - DOCUMENTDATA_DATA
+                targetDocument:
+                  description: The document to be used to fetch the data.
+                  type: string
+                spreadsAndPages:
+                  type: object
+                  description: If specified, the details about the spreads is being sought.
+                  properties:
+                    includeTemplateSpreadsInfo:
+                      type: boolean
+                      description: Relevant when filterType is 'spreadIndex' or filter is 'All'. If true, the information for template spreads (previously known as master spreads) will be added.
+                      default: false
+                    includeNormalSpreadsInfo:
+                      type: boolean
+                      default: true
+                      description: Relevant when filterType is 'spreadIndex' or filter is 'All'. If true, the information for normal spreads will be added.
+                    filterType:
+                      type: string
+                      description: This would tell about the type of values specified in the filter.
+                      default: spreadIndex
+                      enum:
+                        - spreadID
+                        - spreadIndex
+                        - pageID
+                        - pageIndex
+                    filter:
+                      type: string
+                      default: All
+                      description: Spread ranges. Value can be 'All' or numeral ranges e.g. "0-5, 8"
+                textStories:
+                  type: object
+                  description: If specified, the details about the text stories is being sought.
+                  properties:
+                    includeContent:
+                      type: boolean
+                      description: If true, include the content of the text stories.
+                      default: true
+                    includeTemplateSpreadsInfo:
+                      type: boolean
+                      description: Relevant when filterType is 'spreadIndex' or filter is 'All'. If true, the information for template spreads (previously known as master spreads) will be added.
+                      default: false
+                    includeNormalSpreadsInfo:
+                      type: boolean
+                      default: true
+                    filterType:
+                      type: string
+                      description: This would tell about the type of values specified in the filter. The pageItemID will be valid for TextFrame, EndNoteTextFrame and TextPath.
+                      default: spreadIndex
+                      enum:
+                        - spreadID
+                        - spreadIndex
+                        - pageID
+                        - pageIndex
+                        - storyID
+                        - pageItemID
+                    filter:
+                      type: string
+                      default: All
+                      description: Ranges. Value can be 'All' or numeral ranges e.g. "231, 245"
+                pageItems:
+                  type: object
+                  description: If specified, the details about the pages and associated page items is being sought.
+                  properties:
+                    includeTemplateSpreadsInfo:
+                      type: boolean
+                      description: Relevant when filterType is 'spreadIndex' or filter is 'All'. If true, the information for template spreads (previously known as master spreads) will be added.
+                      default: false
+                    includeNormalSpreadsInfo:
+                      type: boolean
+                      default: true
+                      description: Relevant when filterType is 'spreadIndex' or filter is 'All'. If true, the information for normal spreads will be added.
+                    filterType:
+                      type: string
+                      description: This would tell about the type of values specified in the filter. Note that, pageIndex does not work for template pages (previously known as master pages).
+                      default: spreadIndex
+                      enum:
+                        - spreadID
+                        - spreadIndex
+                        - pageID
+                        - pageIndex
+                        - pageItemID
+                    filter:
+                      type: string
+                      default: All
+                      description: Ranges. Value can be 'All' or numeral ranges e.g. "0-5, 8"
+                links:
+                  type: object
+                  description: If specified, the details about the links is being sought.
+                  properties:
+                    includeTemplateSpreadsInfo:
+                      type: boolean
+                      description: Relevant when filterType is 'spreadIndex' or filter is 'All'. If true, the information for template spreads (previously known as master spreads) will be added.
+                      default: false
+                    includeNormalSpreadsInfo:
+                      type: boolean
+                      default: true
+                      description: Relevant when filterType is 'spreadIndex' or filter is 'All'. If true, the information for normal spreads will be added.
+                    filterType:
+                      type: string
+                      description: This would tell about the type of values specified in the filter. This will work in conjunction with linkType attribute.
+                      default: spreadIndex
+                      enum:
+                        - spreadID
+                        - spreadIndex
+                        - pageID
+                        - pageIndex
+                        - linkID
+                    filter:
+                      type: string
+                      default: All
+                      description: Ranges. Value can be 'All' or numeral ranges e.g. "231, 245"
+                    status:
+                      type: string
+                      description: If specified this will filter links on the basis of their status. This will work in conjunction with filter attribute. Multiple values can be given e.g. "NORMAL, LINK_EMBEDDED"
+                      default: All
+                      enum:
+                        - All
+                        - NORMAL
+                        - LINK_EMBEDDED
+                        - LINK_INACCESSIBLE
+                        - LINK_MISSING
+                        - LINK_OUT_OF_DATE
+
+    DocumentDataOutputData:
+      type: object
+      properties:
+        numPages:
+          type: integer
+          description: Number of pages in the document. This does not include template pages (previously known as master pages).
+        numSpreads:
+          type: integer
+          description: Number of spreads in the document. This doesn not include template spreads (previously known as master spreads).
+        spreadsAndPages:
+          type: object
+          properties:
+            inValidIDs:
+              type: array
+              items:
+                type: integer
+              description: The list of invalid IDs given in the input.
+            info:
+              type: array
+              description: Information about the relevant spreads and pages.
+              items:
+                type: object
+                properties:
+                  isTemplateSpread:
+                    type: boolean
+                    description: If true, the current spread is a template spread (previously known as master spread).
+                  id:
+                    type: integer
+                    description: Spread ID.
+                  index:
+                    type: integer
+                    description: Spread index (0 based).
+                  name:
+                    type: string
+                    description: Name of the spread. Can be empty as well.
+                  pages:
+                    type: array
+                    description: Information about the pages present under the spread.
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: integer
+                          description: Page ID.
+                        indexInDocument:
+                          type: integer
+                          description: Page index in the document (0 based). The value is -1 for template pages (previously known as master pages).
+                        indexInSpread:
+                          type: integer
+                          description: Page index in the spread (0 based).
+                        appliedTemplateSpread:
+                          type: integer
+                          description: The ID of the template spread (previously known as master spread) applied to the page. Value will be 0 in case of no template spread.
+                        pageSide:
+                          type: string
+                          description: If true, the current spread is a template spread (previously known as master spread).
+                          enum:
+                            - LEFT_HAND
+                            - RIGHT_HAND
+                            - SINGLE_SIDED
+                        name:
+                          type: string
+                          description: Name of the page.
+                        bounds:
+                          type: object
+                          description: The bounds of the page keeping in mind the complete bounding box of spread. Top Left is 0,0.
+                          properties:
+                            left:
+                              type: number
+                              description: The left of the bounds.
+                            right:
+                              type: number
+                              description: The right of the bounds.
+                            top:
+                              type: number
+                              description: The top of the bounds.
+                            bottom:
+                              type: number
+                              description: The bottom of the bounds.
+        textStories:
+          type: object
+          properties:
+            inValidIDs:
+                type: array
+                items:
+                  type: integer
+                description: The list of invalid IDs given in the input.
+            info:
+              type: array
+              description: Information about the relevant stories.
+              items:
+                type: object
+                properties:
+                  contents:
+                    type: string
+                    description: The content of the story.
+                  id:
+                    type: integer
+                    description: Story ID.
+                  parentType:
+                    type: string
+                    description: Specifies the type of parent e.g. "Document".
+                  parentId:
+                    type: integer
+                    description: ID of the parent, if present.
+                  textOnPath:
+                    type: boolean
+                    description: True, if the story correspondes to thext on path.
+                  textContainers:
+                    type: array
+                    description: Information about the containers of the story.
+                    items:
+                      type: object
+                      properties:
+                        pageId:
+                          type: integer
+                          description: ID of the page on which the text frame exists.
+                        pageIndex:
+                          type: integer
+                          description: Zero based index of the page (in the document) on which the text frame exists. In case of items on a template page (previously known as master page), the value would be -1.
+                        spreadId:
+                          type: integer
+                          description: ID of the spread on which the text frame exists.
+                        spreadIndex:
+                          type: integer
+                          description: Zero based index of the spread (in the document) on which the text frame exists. In case of items on a template page (previously known as master page), the index would correpsond to the index of template spread (previously known as master spread).
+                        id:
+                          type: integer
+                          description: ID of the text containers.
+                        liesOnTemplatePage:
+                          type: boolean
+                          description: If true, then it means that the page item exists on a template page (previously known as master page).
+                        startndex:
+                          type: integer
+                          description: The start index of the range of text which lies in this text frame. The index is with repect to the complete story.
+                        endIndex:
+                          type: integer
+                          description: The end index of the range of text which lies in this text frame. The index is with repect to the complete story.
+        pageItems:
+          type: object
+          properties:
+            inValidIDs:
+                type: array
+                items:
+                  type: integer
+                description: The list of invalid IDs given in the input.
+            info:
+              type: array
+              description: Information about the relevant page items.
+              items:
+                type: object
+                properties:
+                  type:
+                    type: string
+                    description: Specifies the type of page item e.g. "TextFrame", "Polygon" etc.
+                  id:
+                    type: string
+                    description: ID of the page items.
+                  bounds:
+                    type: object
+                    description: The bounds of the page item.
+                    properties:
+                      left:
+                        type: number
+                        description: The left of the bounds.
+                      right:
+                        type: number
+                        description: The right of the bounds.
+                      top:
+                        type: number
+                        description: The top of the bounds.
+                      bottom:
+                        type: number
+                        description: The bottom of the bounds.
+                  parentId:
+                    type: integer
+                    description: ID of the parent wherever appicable, -1 otherwise.
+                  parentType:
+                    type: string
+                    description: Specifies the type of parent e.g. "Page", "Spread" etc.
+                  pageId:
+                    type: integer
+                    description: ID of the page on which the text frame exists.
+                  pageIndex:
+                    type: integer
+                    description: Zero based index of the page (in the document) on which the page item exists. In case of item being present on a template page (previously known as master page), the value would be -1.
+                  spreadId:
+                    type: integer
+                    description: ID of the spread on which the page item exists.
+                  spreadIndex:
+                    type: integer
+                    description: Zero based index of the spread (in the document) on which the page item exists. In case of item beng present on a template page (previously known as master page), the index would correpsond to the index of template spread (previously known as master spread).
+                  liesOnTemplatePage:
+                    type: boolean
+                    description: If true, then it means that the page item exists on a template page (previously known as master page).
+        links:
+          type: object
+          properties:
+            inValidIDs:
+                type: array
+                items:
+                  type: integer
+                description: The list of invalid IDs given in the input.
+            info:
+              type: array
+              description: Information about the relevant links.
+              items:
+                type: object
+                properties:
+                  id:
+                    type: string
+                    description: ID of the link.
+                  status:
+                    type: string
+                    description: Status of the link.
+                      enum
+                        - NORMAL
+                        - LINK_EMBEDDED
+                        - LINK_INACCESSIBLE
+                        - LINK_MISSING
+                        - LINK_OUT_OF_DATE
+                  uri:
+                    type: string
+                    description: URI of the resource.
+                  linkType:
+                    type: string
+                    description: The file type of the link.
+                  name:
+                    type: string
+                    description: Name of the link.
+                  pages:
+                    type: array
+                    description: Information about the pages containing the link. For text links, the entries can be multiple corresponding to threaded text frames, otherwise there would be a single entry.
+                    items:
+                      type: object
+                      properties:
+                        pageId:
+                          type: integer
+                          description: ID of the page on which the text frame exists.
+                        pageIndex:
+                          type: integer
+                          description: Zero based index of the page (in the document) on which the page item exists. In case of item being present on a template page (previously known as master page), the value would be -1.
+                        spreadId:
+                          type: integer
+                          description: ID of the spread on which the page item exists.
+                        spreadIndex:
+                          type: integer
+                          description: Zero based index of the spread (in the document) on which the page item exists. In case of item beng present on a template page (previously known as master page), the index would correpsond to the index of template spread (previously known as master spread).
+                        liesOnTemplatePage:
+                          type: boolean
+                          description: If true, then it means that the page item exists on a template page (previously known as master page).
+
+    BaseEvent:
+      type: object
+      description: Base event response for any job.
+      properties:
+        event_id:
+          description: Event ID for the latest event.
+          type: string
+        id:
+          description: Capability Execution ID.
+          type: string
+        timestamp:
+          type: number
+          description: Epoch time
+
+    QueuedEvent:
+      allOf:
+        - $ref: '#/components/schemas/BaseEvent'
+        - description: Queued Event
+          type: object
+          properties:
+            state:
+              type: string
+              description: The current state of the job.
+              enum:
+                - QUEUED
+
+    RunningEvent:
+      allOf:
+        - $ref: '#/components/schemas/BaseEvent'
+        - description: Running Event
+          type: object
+          properties:
+            state:
+              type: string
+              description: The current state of the job.
+              enum:
+                - RUNNING
+            data:
+              type: object
+              properties:
+                percent:
+                  type: string
+
+    AssetsDownloadStartedEvent:
+      allOf:
+        - $ref: '#/components/schemas/BaseEvent'
+        - description: Assets download started Event
+          type: object
+          properties:
+            state:
+              type: string
+              description: The current state of the job.
+              enum:
+                - ASSETS_DOWNLOAD_STARTED
+            data:
+              type: object
+              properties:
+                total:
+                  type: string
+                  description: number of assets to download
+
+    AssetDownloadStartedEvent:
+      allOf:
+        - $ref: '#/components/schemas/BaseEvent'
+        - description: Asset download start event
+          type: object
+          properties:
+            state:
+              type: string
+              description: The current state of the job.
+              enum:
+                - ASSETS_DOWNLOAD_STARTED
+            data:
+              type: object
+
+    AssetDownloadCompletedEvent:
+      allOf:
+        - $ref: '#/components/schemas/BaseEvent'
+        - description: Asset download complete event
+          type: object
+          properties:
+            state:
+              type: string
+              description: The current state of the job.
+              enum:
+                - ASSET_DOWNLOAD_COMPLETED
+            data:
+              type: object              
+  
+    AssetDownloadFailedEvent:
+      allOf:
+        - $ref: '#/components/schemas/BaseEvent'
+        - description: Asset download failed event
+          type: object
+          properties:
+            state:
+              type: string
+              description: The current state of the job.
+              enum:
+                - ASSET_DOWNLOAD_FAILED
+            data:
+              type: object
+    
+    AssetsDownloadCompletedEvent:
+      allOf:
+        - $ref: '#/components/schemas/BaseEvent'
+        - description: Assets download complete event
+          type: object
+          properties:
+            state:
+              type: string
+              description: The current state of the job.
+              enum:
+                - ASSETS_DOWNLOAD_COMPLETED
+            data:
+              type: object
+              
+    AssetsUploadStartedEvent:
+      allOf:
+        - $ref: '#/components/schemas/BaseEvent'
+        - description: Assets upload start event
+          type: object
+          properties:
+            state:
+              type: string
+              description: The current state of the job.
+              enum:
+                - ASSETS_UPLOAD_STARTED
+            data:
+              type: object
+              properties:
+                total:
+                  type: string
+                  description: number of assets to upload
+
+    AssetUploadStartedEvent:
+      allOf:
+        - $ref: '#/components/schemas/BaseEvent'
+        - description: Asset upload start event
+          type: object
+          properties:
+            state:
+              type: string
+              description: The current state of the job.
+              enum:
+                - ASSET_UPLOAD_STARTED
+            data:
+              type: object
+              
+    AssetUploadCompletedEvent:
+      allOf:
+        - $ref: '#/components/schemas/BaseEvent'
+        - description: Asset upload completed event
+          type: object
+          properties:
+            state:
+              type: string
+              description: The current state of the job.
+              enum:
+                - ASSET_UPLOAD_COMPLETED
+            data:
+              type: object
+              
+    AssetUploadFailedEvent:
+      allOf:
+        - $ref: '#/components/schemas/BaseEvent'
+        - description: Asset upload failed event
+          type: object
+          properties:
+            state:
+              type: string
+              description: The current state of the job.
+              enum:
+                - ASSET_UPLOAD_FAILED
+            data:
+              type: object
+              
+    AssetsUploadCompletedEvent:
+      allOf:
+        - $ref: '#/components/schemas/BaseEvent'
+        - description: Assets upload completed event
+          type: object
+          properties:
+            state:
+              type: string
+              description: The current state of the job.
+              enum:
+                - ASSETS_UPLOAD_COMPLETED
+            data:
+              type: object
+              
+    CompletedEvent:
+      allOf:
+        - $ref: '#/components/schemas/BaseEvent'
+        - description: Completed Event
+          type: object
+          properties:
+            state:
+              type: string
+              description: The current state of the job.
+              enum:
+                - COMPLETED
+            data:
+              type: object
+
+    FailedEvent:
+      allOf:
+        - $ref: '#/components/schemas/BaseEvent'
+        - description: Failed Event
+          type: object
+          properties:
+            state:
+              type: string
+              description: The current state of the job.
+              enum:
+                - FAILED
+            data:
+              type: object
+              properties:
+                errorMessage:
+                  type: string
+
+    StatusResponse:
+      type: object
+      description:  Response body which is sent back on querying the status API
+      properties:
+        events:
+          type: array
+          items:
+            oneOf:
+              - $ref: '#/components/schemas/QueuedEvent'
+              - $ref: '#/components/schemas/RunningEvent'
+              - $ref: '#/components/schemas/AssetsDownloadStartedEvent'
+              - $ref: '#/components/schemas/AssetDownloadStartedEvent'
+              - $ref: '#/components/schemas/AssetDownloadCompletedEvent'
+              - $ref: '#/components/schemas/AssetDownloadFailedEvent'
+              - $ref: '#/components/schemas/AssetsDownloadCompletedEvent'
+              - $ref: '#/components/schemas/AssetsUploadStartedEvent'
+              - $ref: '#/components/schemas/AssetUploadStartedEvent'
+              - $ref: '#/components/schemas/AssetUploadCompletedEvent'
+              - $ref: '#/components/schemas/AssetUploadFailedEvent'
+              - $ref: '#/components/schemas/AssetsUploadCompletedEvent'
+              - $ref: '#/components/schemas/CompletedEvent'
+              - $ref: '#/components/schemas/FailedEvent'
+        paging:
+          type: object
+          properties:
+            prevUrl:
+              type: string
+              description: url to previous 'n' events
+            nextUrl:
+              type: string
+              description: url to next 'n' events
+
+    InputAsset:
+      type: object
+      required:
+        - source
+      properties:
+        source:
+          type: object
+          description: Path from where the asset is to be fetched.
+          oneOf:
+            - $ref: '#/components/schemas/PathBasedAsset'
+            - $ref: '#/components/schemas/IdBasedAsset'
+            - $ref: '#/components/schemas/UrlBasedInputAsset'
+            - $ref: '#/components/schemas/AdobeFontsBasedInputAsset'
+        destination:
+          type: string
+          description: This provides a path relative to a temporary base directory (working directory) where resource would be downloaded. This would be used to identify the assets within the parmeters.
+            Cannot go up using '..' or '/'. Cannot have '/./'. Should be a valid file name.
+
+    UrlBasedOutputAsset:
+      type: object
+      required:
+        - url
+        - type
+      properties:
+        url:
+          type: string
+          description: URL of the asset
+        type:
+          type: string
+          default: HTTP_PUT
+          enum:
+            - HTTP_POST
+            - HTTP_PUT
+
+    UrlBasedInputAsset:
+      type: object
+      required:
+        - url
+        - type
+      properties:
+        url:
+          type: string
+          description: URL of the asset
+        type:
+          type: string
+          default: HTTP_GET
+          enum:
+            - HTTP_GET
+
+    IdBasedAsset:
+      type: object
+      required:
+        - assetId
+        - type
+      properties:
+        assetId:
+          type: string
+          description: Asset ID
+        type:
+          type: string
+          default: ACP
+          enum:
+            - ACP
+        token:
+          type: object
+          description: Contains required authentication info to upload asset
+          properties:
+            token:
+              type: string
+              description: Token to download/upload the asset
+
+    PathBasedAsset:
+      type: object
+      required:
+        - path
+        - repositoryId
+        - type
+      properties:
+        path:
+          type: string
+          description: Path of the asset
+        repositoryId:
+          type: string
+          description: Repository ID
+        type:
+          type: string
+          default: ACP
+          enum:
+            - ACP
+        token:
+          type: object
+          description: Contains required authentication info to upload asset
+          properties:
+            token:
+              type: string
+              description: Token to download/upload the asset
+
+    AdobeFontsBasedInputAsset:
+      type: object
+      description: One of 'postscriptName' or 'fontId' must be provided
+      required:
+        - type
+      properties:
+        postscriptName:
+          type: string
+          description: Adobe font postscript name
+        fontId:
+          type: string
+          description: Adobe font Id. This is same as typekit Id. 
+        type:
+          type: string
+          default: ADOBE_FONT
+          enum:
+            - ADOBE_FONT
+
+    OutputAsset:
+      description: The url, where the output assets are to be posted after the job processing.
+      type: object
+      required:
+        - destination
+        - source
+      properties:
+        destination:
+          type: object
+          description: Destination from where the asset is to be uploaded.
+          oneOf:
+            - $ref: '#/components/schemas/PathBasedAsset'
+            - $ref: '#/components/schemas/IdBasedAsset'
+            - $ref: '#/components/schemas/UrlBasedOutputAsset'
+        source:
+          type: string
+          description: This provides a path relative of the output where resource would be generated.
+            Cannot go up using '..' or '/'. Cannot
+            have '/./'. Should be a valid file name.
