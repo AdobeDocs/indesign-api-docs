@@ -50,10 +50,20 @@ Clients can use assets stored on one of the following storage types:
 1. Adobe: by referencing the path to the files on Creative Cloud
 2. External: (like AWS S3) by using a presigned GET/PUT URL
 
+## Fonts / links 
+detailed explanation is required about hierarchy 
+## Custom fonts 
+
+## typekit fonts supported
+we might need to tell the user about the typekit access or not ? need to discuss.
+
+## how to get Status of the current job
+detailed info :
+
 ## Supported Features
 
 ### Rendition
-Details : basic info about rendition
+Details : basic info about rendition 
 
 Input Format : .INDD .INDT .IDML
 OutPut Format : .pdf .png .JPEG
@@ -132,7 +142,11 @@ curl --location --request POST 'https://cxp.adobe.io/api/v1/capability/indesign/
 ```
 
 ### DATAMERGE - 
+// brief descrition of Data-Merge
 Tags - Brief Info 
+
+### input and output formats
+
 Sample : 
 ```
 curl --location --request POST 'https://cxp.adobe.io/api/v1/capability/indesign/dataMerge/tags' \
@@ -166,7 +180,9 @@ curl --location --request POST 'https://cxp.adobe.io/api/v1/capability/indesign/
 }
 ```
 
-Merge - Brief Info
+### Merge - Brief Info
+### input and Output format
+
 sample : 
 ```
 curl --location --request POST 'https://cxp.adobe.io/api/v1/capability/indesign/dataMerge/merge' \
@@ -210,10 +226,6 @@ curl --location --request POST 'https://cxp.adobe.io/api/v1/capability/indesign/
 }
 ```
 
-
-### Fonts / links 
-detailed explanation is required about hierarchy 
-### Custom and typekit fonts supported 
 
 ### Status for the jobs 
 Add the response here, with an explanation
