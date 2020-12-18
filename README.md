@@ -57,7 +57,7 @@ detailed explanation is required about hierarchy
 ## typekit fonts supported
 we might need to tell the user about the typekit access or not ? need to discuss.
 
-## how to get Status of the current job
+## how to get Status of the current job and how to undertand the status ?
 detailed info :
 
 ## Supported Features
@@ -225,11 +225,4 @@ curl --location --request POST 'https://cxp.adobe.io/api/v1/capability/indesign/
     }
 }
 ```
-
-
-### Status for the jobs 
-Add the response here, with an explanation
-
-
-
 
