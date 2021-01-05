@@ -50,12 +50,17 @@ Clients can use assets stored on one of the following storage types:
 1. Adobe: by referencing the path to the files on Creative Cloud
 2. External: (like AWS S3) by using a presigned GET/PUT URL
 
-## Fonts / links 
-detailed explanation is required about hierarchy 
-## Custom fonts 
+# Links 
+Links is one of the most important feature of InDesign. You can place and link content within the same document or even across different documents. This also helps in keeping the assets and the document decoupled. Links can be correponding to texts, graphics etc. 
 
-## typekit fonts supported
-we might need to tell the user about the typekit access or not ? need to discuss.
+InDesign APIs support the processing of documents with links. To process a request a temporary folder/diretory is created. This directory is called the working directory for the req. In the request all the assets mentioned in the request are downloaded and kept in the working directory. Within the working directory the location of individual asset is governed by the relative path mentioned in the assets[i]/destination. To refer to the same asset in the rest of the params, the value mentioned in the destination property is to be used.
+
+## Fonts 
+Like Links fonts are very important. The support of fonts is as follows:
+### Adobe fonts
+Adobe fonts are also supported. These are fetched automatically on the behalf of the requestor and thus nothing needs to be done while making a request. Please not that the list of supported fonts is dependent on the requestor's account.
+### Custom fonts
+Custom fonts or user fonts can be provided as a a regular link. For the fonts to be picked properly, please place it in the "Document Fonts" folder parallel to the document which uses it.
 
 ## how to get Status of the current job and how to undertand the status ?
 detailed info :
