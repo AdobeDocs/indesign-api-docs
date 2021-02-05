@@ -24,14 +24,14 @@ paths:
         - rendition
       summary: Creates JPEG renditions
       description: Creates and returns JPEG renditions of a specific InDesign document.
-        Output rendition has mimetype 'image/jpeg'. For the structure of StatusCompletedResponse/output/data please refer to RenditionOutputData.
+        Output rendition has mimetype 'image/jpeg'. For the structure of StatusCompletedResponse/output/data refer to RenditionOutputData.
       operationId: jpegJob
       requestBody:
         content:
           application/json:
             schema:
               $ref: "#/components/schemas/JPEGRenditionRequest"
-        description: Job request object that specifies parameters for generation of JPEG
+        description: Job request object that specifies parameters for the generation of JPEG
           output.
         required: true
       responses:
@@ -52,9 +52,9 @@ paths:
     post:
       tags:
         - rendition
-      summary: Creates PNG renditions
+      summary: Creates PNG renditions.
       description: Creates and returns new PNG renditions of a specific InDesign document.
-        Output rendition has mimetype 'image/png'. For the structure of StatusCompletedResponse/output/data please refer to RenditionOutputData.
+        Output rendition has mimetype 'image/png'. For the structure of StatusCompletedResponse/output/data refer to RenditionOutputData.
       operationId: pngJob
       requestBody:
         content:
@@ -82,9 +82,9 @@ paths:
     post:
       tags:
         - rendition
-      summary: Creates PDF renditions
+      summary: Creates PDF renditions.
       description: Creates and returns new PDF from a specific InDesign document. Output
-        rendition has mimetype 'application/pdf'. For the structure of StatusCompletedResponse/output/data please refer to RenditionOutputData.
+        rendition has mimetype 'application/pdf'. For the structure of StatusCompletedResponse/output/data refer to RenditionOutputData.
       operationId: pdfPrintJob
       requestBody:
         content:
@@ -112,16 +112,16 @@ paths:
     post:
       tags:
         - dataMerge
-      summary: Performs data merge
-      description: Creates and returns merged InDesign documents or PDFs created after merging the data and provided template.
-        Output rendition has mimetype 'application/pdf' or 'application/x-indesign'. For the structure of StatusCompletedResponse/output/data please refer to DataMergeOutputData
+      summary: Performs data merge.
+      description: Creates and returns merged InDesign documents or PDFs that are created after merging the data and the given template.
+        Output rendition has mimetype 'application/pdf' or 'application/x-indesign'. For the structure of StatusCompletedResponse/output/data refer to DataMergeOutputData.
       operationId: dataMerge
       requestBody:
         content:
           application/json:
             schema:
               $ref: "#/components/schemas/DataMergeRequest"
-        description: Job request object that specifies parameters for merging the data as per provided template.
+        description: Job request object that specifies parameters for merging the data as per the given template.
         required: true
       responses:
         202:
@@ -142,7 +142,7 @@ paths:
       tags:
         - dataMerge
       summary: Gets data merge tags
-      description: Retrieves the data merge tags from the document. For the structure of StatusCompletedResponse/output/data please refer to DataMergeTagsOutputData
+      description: Retrieves the data merge tags from the document. For the structure of StatusCompletedResponse/output/data refer to DataMergeTagsOutputData.
       operationId: dataMergeTags
       requestBody:
         content:
@@ -171,14 +171,14 @@ paths:
         - documentData
       summary: Fetches data about the document.
       description: Retrieves the requested data from the document. The data may include information around the relationship between spreads and pages, information about the page items,
-        information about the text stories and data merge tags. At the very least number of pages and number of spread is provided. For the structure of StatusCompletedResponse/output/data please refer to DocumentDataOutputData.
+        information about the text stories, and data merge tags. At the very least, number of pages and number of spreads is provided. For the structure of StatusCompletedResponse/output/data refer to DocumentDataOutputData.
       operationId: documentData
       requestBody:
         content:
           application/json:
             schema:
               $ref: "#/components/schemas/DocumentDataRequest"
-        description: Job request object that specifies parameters for merging the data as per provided template.
+        description: Job request object that specifies parameters for merging the data as per the given template.
         required: true
       responses:
         202:
@@ -196,11 +196,11 @@ paths:
 
   /api/v1/capability/status/{id}:
     get:
-      description: Returns the latest status event of a capability execution
+      description: Returns the latest status event of a capability execution.
       parameters:
         - name: id
           in: path
-          description: ID for which status is to be retrieved
+          description: ID, for which the status has to be retrieved.
           required: true
           schema:
             type: string
@@ -233,7 +233,7 @@ paths:
       parameters:
         - name: id
           in: path
-          description: ID for which status is to be retrieved
+          description: ID, for which the status has to be retrieved.
           required: true
           schema:
             type: string
@@ -255,7 +255,7 @@ components:
       name: X-API-KEY
   responses:
     Accepted:
-      description: The job has been accepted for processing
+      description: The job has been accepted for processing.
       content:
         application/json:
           schema:
@@ -314,7 +314,7 @@ components:
           type: array
           items:
             $ref: "#/components/schemas/InputAsset"
-          description: Information about the assets which will be used to process the job.
+          description: Information about the assets, which will be used to process the job.
         outputs:
           type: array
           items:
@@ -329,7 +329,7 @@ components:
           type: array
           items:
             $ref: "#/components/schemas/InputAsset"
-          description: Information about the assets which will be used to process the job.
+          description: Information about the assets, which will be used to process the job.
 
     WarningResponse:
       description: Response containing the warnings from a process.
@@ -406,7 +406,7 @@ components:
                 properties:
                   reason:
                     type: string
-                    description: A brief about what went wrong.
+                    description: A brief information about the issue. 
                   errorCode:
                     type: integer
               warnings:
@@ -418,7 +418,7 @@ components:
       properties:
         pageIndex:
           type: string
-          description: Refers to the indices of page/spread in the input document for which the rendition information is provided.
+          description: Refers to the indices of a page/spread in the input document for which the rendition information is provided.
         path:
           description: The paths corresponding to the pages mentioned in pageIndex.
           type: array
@@ -440,13 +440,13 @@ components:
               - jobType
               properties:
                 jobType:
-                  description: The type of job.
+                  description: The type of a job.
                   type: string
                   default: RENDITION_JPEG
                   enum:
                     - RENDITION_JPEG
                 targetDocuments:
-                  description: List of documents to render as per the given parameters. Currently only one document is supported.
+                  description: List of documents to render as per the given parameters. Currently, only one document is supported.
                   type: array
                   items:
                     type: string
@@ -455,14 +455,13 @@ components:
                 exportingSpread:
                   type: boolean
                   default: false
-                  description: Specify true for treating range as spread numbers and otherwise
-                    as pages.
+                  description: Specify true if you consider range as spread numbers, false if you treat range as pages. 
                 pageRange:
                   type: string
                   default: All
-                  description: Page ranges. The ranges are based on index of the page with in
-                    the document. Value can be 'All' along with numeral ranges. Also
-                    if exportingSpread is true this range would represent spread
+                  description: Page ranges. The ranges are based on index of the page within
+                    the document. Value can be 'All' along with numeral ranges. Also,
+                    if exportingSpread is true, this range would represent spread
                     indices in the document.
                 quality:
                   type: string
@@ -475,7 +474,7 @@ components:
                     - MAXIMUM
                 renderingStyle:
                   type: string
-                  description: Specifies formatting options for converted JPEG images.
+                  description: Specifies formatting options for the converted JPEG images.
                   default: BASELINE_ENCODING
                   enum:
                     - BASELINE_ENCODING
@@ -483,7 +482,7 @@ components:
                 resolution:
                   type: integer
                   default: 72
-                  description: Specifies the resolution of the final image
+                  description: Specifies the resolution of the final image.
                   minimum: 1
                   maximum: 2400
                 colorSpace:
@@ -501,12 +500,12 @@ components:
                 antiAlias:
                   type: boolean
                   default: true
-                  description: If true, use anti-aliasing for text and vectors during export.
+                  description: If true, uses the anti-aliasing for text and vectors during export.
                 simulateOverprint:
                   type: boolean
                   default: false
-                  description: If true, simulates the effects of overprinting spot and process
-                    colors in the same way they would occur when printing.
+                  description: If true, simulates the effects of overprinting spot and processes
+                    colors in the same way they would occur when you print.
                 useDocumentBleeds:
                   type: boolean
                   default: false
@@ -551,14 +550,13 @@ components:
                 exportingSpread:
                   type: boolean
                   default: false
-                  description: Specify true for treating range as spread numbers and otherwise
-                    as pages.
+                  description: Specify true for considering range as spread numbers, false for considering range as pages.  
                 pageRange:
                   type: string
                   default: All
-                  description: Page ranges. The ranges are based on index of the page with in
-                    the document. Value can be 'All' along with numeral ranges. Also
-                    if exportingSpread is true this range would represent spread
+                  description: Page ranges. The ranges are based on index of the page within
+                    the document. Value can be 'All' along with numeral ranges. Also,
+                    if exportingSpread is true, this range would represent spread
                     indices in the document.
                 quality:
                   type: string
@@ -589,7 +587,7 @@ components:
                 simulateOverprint:
                   type: boolean
                   default: false
-                  description: If true, simulates the effects of overprinting spot and process
+                  description: If true, simulates the effects of overprinting spot and processes
                     colors in the same way they would occur when printing.
                 useDocumentBleeds:
                   type: boolean
@@ -598,7 +596,7 @@ components:
                 transparentBackground:
                   type: boolean
                   default: false
-                  description: If true, use a transparent background for the exported PNG.
+                  description: If true, uses a transparent background for the exported PNG.
                 colorSettingsFile:
                   type: string
                   description: The color settings file to be used for generating a rendition.
@@ -611,7 +609,7 @@ components:
 
     PDFRenditionRequest:
       description: Inputs and properties with which the job should be processed. In absence of
-        params job will be processed with "High Quality Print" as the
+        params, job will be processed with "High Quality Print" as the
         preset/setting.
       allOf:
         - $ref: '#/components/schemas/BaseJobRequestWithOutput'
@@ -633,7 +631,7 @@ components:
                   enum:
                     - RENDITION_PDFPRINT
                 targetDocuments:
-                  description: List of documents to render as per the given parameters. Currently only one document is supported.
+                  description: List of documents to render as per the given parameters. Currently, only one document is supported.
                   type: array
                   items:
                     type: string
@@ -642,19 +640,18 @@ components:
                 exportingSpread:
                   type: boolean
                   default: false
-                  description: Specify true for treating range as spread numbers and otherwise
-                    as pages.
+                  description: Specify true if you consider range as spread numbers, false if you consider range as pages. 
                 pageRange:
                   type: string
                   default: All
-                  description: Page ranges. The ranges are based on index of the page with in
-                    the document. Value can be 'All' along with numeral ranges. Also
-                    if exportingSpread is true this range would represent spread
+                  description: Page ranges. The ranges are based on index of the page within
+                    the document. Value can be 'All' along with numeral ranges. Also,
+                    if exportingSpread is true, this range would represent spread
                     indices in the document.
                 createSeparateFiles:
                   type: boolean
                   default: false
-                  description: Specify true for creating separate PDF files for all specified
+                  description: Specify true for creating separate PDF files for all the specified
                     pages/spreads.
                 optimizeForFastWebView:
                   type: boolean
@@ -668,8 +665,7 @@ components:
                   type: boolean
                   default: false
                   description: If true, displays bookmarks and table of contents entries as
-                    links in the bookmarks pane in the PDF document. If false, no
-                    bookmarks are exported.
+                    links in the bookmarks pane of the PDF document. If false, bookmarks are not exported. 
                 includeHyperlinks:
                   type: boolean
                   default: false
@@ -696,7 +692,7 @@ components:
                     - APPEARANCE_ONLY
                 exportWhichLayers:
                   type: string
-                  description: Which layers to export.
+                  description: The layers to be exported.
                   default: EXPORT_ALL_LAYERS
                   enum:
                     - EXPORT_ALL_LAYERS
@@ -765,10 +761,10 @@ components:
                   properties:
                     jobOptionsFile:
                       type: string
-                      description: Only relevant if outputType is "PDF". The file which will be used as PDF creation settings file during the export. This will take precedence over pdfPreset attribute.
+                      description: Only relevant if outputType is "PDF". The file, which will be used as PDF creation settings file during the export. This will take precedence over pdfPreset attribute.
                     pdfPreset:
                       type: string
-                      description: Only relevant if outputType is "PDF". The PDF export style to use.
+                      description: The PDF export style to use. This is relevant if outputType is "PDF".
                       default: High Quality Print
                       enum:
                         - High Quality Print
@@ -791,10 +787,10 @@ components:
                       type: boolean
                       default: false
                 recordRange:
-                  description: The ranges of records to process for this job. Value can be 'All' along with numeral ranges e.g. '1-2, 5'.
+                  description: The ranges of records to process for this job. Value can be 'All' along with numeral ranges. Foe example, '1-2, 5'.
                   type: string
                 allowMultipleRecordsPerPage:
-                  description: The number of records to place on the each page of the document.
+                  description: The number of records to place on each page of the document.
                   type: boolean
                 multipleRecordLayoutOptions:
                   description: The options to use in case allowMultipleRecordsPerPage is set to true.
@@ -810,22 +806,22 @@ components:
                         - ROWS_FIRST
                         - COLUMNS_FIRST
                     bottomMargin:
-                      description: The offset value of the bottom margin in the target document. The values can be specified like '1 pt', '1 pica'. '1' etc. If just a number is mentioned in the string, it will be used as a value in pica.
+                      description: The offset value of the bottom margin in the target document. The values can be specified like '1 pt', '1 pica'. '1' etc. If a number is mentioned in the string, it will be used as a value in pica.
                       type: string
                     topMargin:
-                      description: The offset value of the top margin in the target document. The values can be specified like '1 pt', '1 pica'. '1' etc. If just a number is mentioned in the string, it will be used as a value in pica.
+                      description: The offset value of the top margin in the target document. The values can be specified like '1 pt', '1 pica'. '1' etc. If a number is mentioned in the string, it will be used as a value in pica.
                       type: string
                     leftMargin:
-                      description: The offset value of the left margin in the target document. The values can be specified like '1 pt', '1 pica'. '1' etc. If just a number is mentioned in the string, it will be used as a value in pica.
+                      description: The offset value of the left margin in the target document. The values can be specified like '1 pt', '1 pica'. '1' etc. If a number is mentioned in the string, it will be used as a value in pica.
                       type: string
                     rightMargin:
-                      description: The offset value of the right margin in the target document. The values can be specified like '1 pt', '1 pica'. '1' etc. If just a number is mentioned in the string, it will be used as a value in pica.
+                      description: The offset value of the right margin in the target document. The values can be specified like '1 pt', '1 pica'. '1' etc. If a number is mentioned in the string, it will be used as a value in pica.
                       type: string
                     columnSpacing:
-                      description: The amount of spacing between columns of records in the target document. The values can be specified like '1 pt', '1 pica'. '1' etc. If just a number is mentioned in the string, it will be used as a value in pica.
+                      description: The amount of spacing between columns of records in the target document. The values can be specified like '1 pt', '1 pica'. '1' etc. If a number is mentioned in the string, it will be used as a value in pica.
                       type: string
                     rowSpacing:
-                      description: The amount of spacing between rows of records in the target document. The values can be specified like '1 pt', '1 pica'. '1' etc. If just a number is mentioned in the string, it will be used as a value in pica.
+                      description: The amount of spacing between rows of records in the target document. The values can be specified like '1 pt', '1 pica'. '1' etc. If a number is mentioned in the string, it will be used as a value in pica.
                       type: string
                 imagePlacementOptions:
                   description: These are the options for image placement which will be used while merging images in the document.
@@ -837,13 +833,13 @@ components:
                     fittingOption:
                       description: |
                         Method of fitting content in a frame.
-                        * `CONTENT_AWARE_FIT` - Selects best crop region of the content for the frame based on Adobe Sensei. Note: Preserves frame size but might scale the content size. If this fitting is set, centerImage property is turned-off.
+                        * `CONTENT_AWARE_FIT` - Selects best crop region of the content for the frame based on Adobe Sensei. Note: Preserves frame size but it might scale the content size. If this fitting is set, centerImage property is turned-off.
                         * `FILL_PROPORTIONAL` - Resizes content to fill the frame while preserving the proportions of the content. If the content and frame have different proportions, some of the content is obscured by the bounding box of the frame.
                         * `FIT_CONTENT_TO_FRAME` - Resizes content to fit the frame. Note: Content that is a different size than the frame appears stretched or squeezed.
                         * `FIT_FRAME_TO_CONTENT` - Resizes the frame so it fits the content.
                         * `HONOUR_EXISTING_STYLE` - Apply the frame fitting based on existing setting applied on the orginal frame.
                         * `PRESERVE_SIZES` - Preserves the original sizes of the frame and the content. Note: Content that is larger than the frame is obscured around the edges.
-                        * `PROPORTIONAL` - Resizes content to fit the frame while preserving content proportions. If the content and frame have different proportions, some empty space occurs in the frame.
+                        * `PROPORTIONAL` - Resizes content to fit the frame while preserving content proportions. If the content and frame have different proportions, an empty space occurs in the frame.
                       type: string
                       enum:
                         - CONTENT_AWARE_FIT
@@ -881,7 +877,7 @@ components:
             properties:
               recordIndex:
                 type: string
-                description: It will be indicate the record numbers for which the data is provided here.
+                description: Indicates the record numbers for which the data is provided here.
               outputs:
                 description: The list of outputs corresponding to this record.
                 type: array
@@ -890,7 +886,7 @@ components:
                   properties:
                     pageIndex:
                       type: string
-                      description: It will be indicate the page numbers in the merged output for which the paths are mentioned below.
+                      description: Indicates the page numbers in the merged output for which the paths are mentioned below.
                     path:
                       description: The paths corresponding to the pages mentioned in pageIndex.
                       type: array
@@ -904,7 +900,7 @@ components:
           properties:
             reason:
               type: string
-              description: A brief about what went wrong.
+              description: A brief information about the issue. 
             errorCode:
               type: integer
         warnings:
@@ -935,15 +931,15 @@ components:
                   description: The tagged document to be used for extraction of tags.
                   type: string
                 dataSource:
-                  description: The data source file to use for extracting and matching the tags.
+                  description: The data source file to be used for extracting and matching the tags.
                   type: string
                 filter:
                   type: string
                   default: All
-                  description: Accepted values are "All", "Text", "Image" and "QR". Multiple values can be provided. e.g. "Text, Image"
+                  description: Accepted values are "All", "Text", "Image" and "QR". Multiple values can be provided. For example, "Text, Image"
                 includePageItemIdentifiers:
                   type: boolean
-                  description: If true, the information for associated page items is added as well to the tags extracted from the document.
+                  description: If true, the information for associated page items is added to the tags extracted from the document.
                   default: false
 
     DataMergeTagsOutputData:
@@ -967,7 +963,7 @@ components:
                   - Text
                   - QR
               parentPageItems:
-                description: Information about the page items where the tag is present, if asked for.
+                description: Information about the page items where the tag is present, if it is requested.
                 type: array
                 items:
                   type: object
@@ -1014,17 +1010,17 @@ components:
                   - QR
               status:
                 type: string
-                description: Status or thr relavnce of the tag in context to the target document.
+                description: Status or relavnce of the tag in context to the target document.
                 enum:
                   - Match
                   - Extra
         dataSourceValidation:
-          description: Provided when both target document and data source are provided. This will include data from validation of the data source against the target document.
+          description: Provided when both target document and data source are given. This will include data from validation of the data source against the target document.
           type: object
           properties:
             isValid:
               type: boolean
-              description: Indicates whether the provided data source is valid for the document or not.
+              description: Indicates whether the provided data source is valid for the document.
             missingTags:
               description: Provides the information about the tags which are missing from the data source but are required by the document.
               type: array
