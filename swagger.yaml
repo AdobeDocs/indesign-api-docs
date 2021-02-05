@@ -1,16 +1,16 @@
 openapi: 3.0.0
 info:
-  description: Documentation for InDesign Cloud Services. This document gives out the
-    detailed specification of the various APIs exposed, that developers can leverage.
+  description: Documentation for InDesign Cloud Services. This document provides a
+    detailed specification of the various exposed APIs, that can be leveraged by developers. 
   version: 0.1.0
-  title: InDesign Services
+  title: InDesign Services.
   contact:
     email: idservices@adobe.com
 tags:
   - name: rendition
-    description: Rendition APIs
+    description: Rendition APIs.
   - name: dataMerge
-    description: Data Merge API
+    description: Data Merge API.
   - name: documentData
     description: API to fetch data about the document.
 security:
@@ -22,7 +22,7 @@ paths:
     post:
       tags:
         - rendition
-      summary: Creates JPEG renditions
+      summary: Creates JPEG renditions.
       description: Creates and returns JPEG renditions of a specific InDesign document.
         Output rendition has mimetype 'image/jpeg'. For the structure of StatusCompletedResponse/output/data refer to RenditionOutputData.
       operationId: jpegJob
@@ -31,7 +31,7 @@ paths:
           application/json:
             schema:
               $ref: "#/components/schemas/JPEGRenditionRequest"
-        description: Job request object that specifies parameters for the generation of JPEG
+        description: Job request object that specifies parameters for the generation of JPEG.
           output.
         required: true
       responses:
@@ -61,7 +61,7 @@ paths:
           application/json:
             schema:
               $ref: "#/components/schemas/PNGRenditionRequest"
-        description: Job request object that specifies parameters for generation of PNG
+        description: Job request object that specifies parameters for generation of PNG.
           output.
         required: true
       responses:
@@ -91,7 +91,7 @@ paths:
           application/json:
             schema:
               $ref: "#/components/schemas/PDFRenditionRequest"
-        description: Job request object that specifies parameters for generation of PDF
+        description: Job request object that specifies parameters for generation of PDF.
           output.
         required: true
       responses:
@@ -1067,7 +1067,7 @@ components:
                       description: Relevant when filterType is 'spreadIndex' or filter is 'All'. If true, the information for normal spreads will be added.
                     filterType:
                       type: string
-                      description: This would tell about the type of values specified in the filter.
+                      description: Describes the type of values specified in the filter.
                       default: spreadIndex
                       enum:
                         - spreadID
@@ -1077,14 +1077,14 @@ components:
                     filter:
                       type: string
                       default: All
-                      description: Spread ranges. Value can be 'All' or numeral ranges e.g. "0-5, 8"
+                      description: Spread ranges. Value can be 'All' or numeral ranges For example, "0-5, 8"
                 textStories:
                   type: object
                   description: If specified, the details about the text stories is being sought.
                   properties:
                     includeContent:
                       type: boolean
-                      description: If true, include the content of the text stories.
+                      description: If true, includes the content of the text stories.
                       default: true
                     includeTemplateSpreadsInfo:
                       type: boolean
@@ -1095,7 +1095,7 @@ components:
                       default: true
                     filterType:
                       type: string
-                      description: This would tell about the type of values specified in the filter. The pageItemID will be valid for TextFrame, EndNoteTextFrame and TextPath.
+                      description: Describes the type of values specified in the filter. The pageItemID will be valid for TextFrame, EndNoteTextFrame and TextPath.
                       default: spreadIndex
                       enum:
                         - spreadID
@@ -1107,7 +1107,7 @@ components:
                     filter:
                       type: string
                       default: All
-                      description: Ranges. Value can be 'All' or numeral ranges e.g. "231, 245"
+                      description: Ranges. Value can be 'All' or numeral ranges For example, "231, 245"
                 pageItems:
                   type: object
                   description: If specified, the details about the pages and associated page items is being sought.
@@ -1122,7 +1122,7 @@ components:
                       description: Relevant when filterType is 'spreadIndex' or filter is 'All'. If true, the information for normal spreads will be added.
                     filterType:
                       type: string
-                      description: This would tell about the type of values specified in the filter. Note that, pageIndex does not work for template pages (previously known as master pages).
+                      description: Describes the type of values specified in the filter. Note that, pageIndex does not work for template pages (previously known as master pages).
                       default: spreadIndex
                       enum:
                         - spreadID
@@ -1133,7 +1133,7 @@ components:
                     filter:
                       type: string
                       default: All
-                      description: Ranges. Value can be 'All' or numeral ranges e.g. "0-5, 8"
+                      description: Ranges. Value can be 'All' or numeral ranges For example, "0-5, 8"
                 links:
                   type: object
                   description: If specified, the details about the links is being sought.
@@ -1159,10 +1159,10 @@ components:
                     filter:
                       type: string
                       default: All
-                      description: Ranges. Value can be 'All' or numeral ranges e.g. "231, 245"
+                      description: Ranges. Value can be 'All' or numeral ranges. For example, "231, 245"
                     status:
                       type: string
-                      description: If specified this will filter links on the basis of their status. This will work in conjunction with filter attribute. Multiple values can be given e.g. "NORMAL, LINK_EMBEDDED"
+                      description: If specified, this will filter links on the basis of their status. This will work in conjunction with filter attribute. Multiple values can be given. For example, "NORMAL, LINK_EMBEDDED"
                       default: All
                       enum:
                         - All
@@ -1180,7 +1180,7 @@ components:
           description: Number of pages in the document. This does not include template pages (previously known as master pages).
         numSpreads:
           type: integer
-          description: Number of spreads in the document. This doesn not include template spreads (previously known as master spreads).
+          description: Number of spreads in the document. This does not include template spreads (previously known as master spreads).
         spreadsAndPages:
           type: object
           properties:
@@ -1206,7 +1206,7 @@ components:
                     description: Spread index (0 based).
                   name:
                     type: string
-                    description: Name of the spread. Can be empty as well.
+                    description: Name of the spread. It can also be empty.
                   pages:
                     type: array
                     description: Information about the pages present under the spread.
@@ -1237,7 +1237,7 @@ components:
                           description: Name of the page.
                         bounds:
                           type: object
-                          description: The bounds of the page keeping in mind the complete bounding box of spread. Top Left is 0,0.
+                          description: The bounds of the page with reference to the complete bounding box of spread. Top Left is 0,0.
                           properties:
                             left:
                               type: number
@@ -1273,13 +1273,13 @@ components:
                     description: Story ID.
                   parentType:
                     type: string
-                    description: Specifies the type of parent e.g. "Document".
+                    description: Specifies the type of parent. For example, "Document".
                   parentId:
                     type: integer
                     description: ID of the parent, if present.
                   textOnPath:
                     type: boolean
-                    description: True, if the story correspondes to thext on path.
+                    description: True, if the story correspondes to text on path.
                   textContainers:
                     type: array
                     description: Information about the containers of the story.
@@ -1306,10 +1306,10 @@ components:
                           description: If true, then it means that the page item exists on a template page (previously known as master page).
                         startndex:
                           type: integer
-                          description: The start index of the range of text which lies in this text frame. The index is with repect to the complete story.
+                          description: The start index of the range of text which lies in this text frame. The index is with reference to the complete story.
                         endIndex:
                           type: integer
-                          description: The end index of the range of text which lies in this text frame. The index is with repect to the complete story.
+                          description: The end index of the range of text which lies in this text frame. The index is with reference to the complete story.
         pageItems:
           type: object
           properties:
@@ -1326,7 +1326,7 @@ components:
                 properties:
                   type:
                     type: string
-                    description: Specifies the type of page item e.g. "TextFrame", "Polygon" etc.
+                    description: Specifies the type of page item. For example, "TextFrame", "Polygon" and so on. 
                   id:
                     type: string
                     description: ID of the page items.
@@ -1351,7 +1351,7 @@ components:
                     description: ID of the parent wherever appicable, -1 otherwise.
                   parentType:
                     type: string
-                    description: Specifies the type of parent e.g. "Page", "Spread" etc.
+                    description: Specifies the type of parent. For example, "Page", "Spread" etc.
                   pageId:
                     type: integer
                     description: ID of the page on which the text frame exists.
@@ -1470,7 +1470,7 @@ components:
     AssetsDownloadStartedEvent:
       allOf:
         - $ref: '#/components/schemas/BaseEvent'
-        - description: Assets download started Event
+        - description: Assets download started Event.
           type: object
           properties:
             state:
@@ -1483,12 +1483,12 @@ components:
               properties:
                 total:
                   type: string
-                  description: number of assets to download
+                  description: Number of assets to download
 
     AssetDownloadStartedEvent:
       allOf:
         - $ref: '#/components/schemas/BaseEvent'
-        - description: Asset download start event
+        - description: Asset download start event.
           type: object
           properties:
             state:
@@ -1502,7 +1502,7 @@ components:
     AssetDownloadCompletedEvent:
       allOf:
         - $ref: '#/components/schemas/BaseEvent'
-        - description: Asset download complete event
+        - description: Asset download complete event.
           type: object
           properties:
             state:
@@ -1516,7 +1516,7 @@ components:
     AssetDownloadFailedEvent:
       allOf:
         - $ref: '#/components/schemas/BaseEvent'
-        - description: Asset download failed event
+        - description: Asset download failed event.
           type: object
           properties:
             state:
@@ -1530,7 +1530,7 @@ components:
     AssetsDownloadCompletedEvent:
       allOf:
         - $ref: '#/components/schemas/BaseEvent'
-        - description: Assets download complete event
+        - description: Assets download complete event.
           type: object
           properties:
             state:
@@ -1557,12 +1557,12 @@ components:
               properties:
                 total:
                   type: string
-                  description: number of assets to upload
+                  description: Number of assets to upload.
 
     AssetUploadStartedEvent:
       allOf:
         - $ref: '#/components/schemas/BaseEvent'
-        - description: Asset upload start event
+        - description: Asset upload start event.
           type: object
           properties:
             state:
@@ -1576,7 +1576,7 @@ components:
     AssetUploadCompletedEvent:
       allOf:
         - $ref: '#/components/schemas/BaseEvent'
-        - description: Asset upload completed event
+        - description: Asset upload completed event.
           type: object
           properties:
             state:
@@ -1590,7 +1590,7 @@ components:
     AssetUploadFailedEvent:
       allOf:
         - $ref: '#/components/schemas/BaseEvent'
-        - description: Asset upload failed event
+        - description: Asset upload failed event.
           type: object
           properties:
             state:
@@ -1604,7 +1604,7 @@ components:
     AssetsUploadCompletedEvent:
       allOf:
         - $ref: '#/components/schemas/BaseEvent'
-        - description: Assets upload completed event
+        - description: Assets upload completed event.
           type: object
           properties:
             state:
@@ -1618,7 +1618,7 @@ components:
     CompletedEvent:
       allOf:
         - $ref: '#/components/schemas/BaseEvent'
-        - description: Completed Event
+        - description: Completed Event.
           type: object
           properties:
             state:
@@ -1648,7 +1648,7 @@ components:
 
     StatusResponse:
       type: object
-      description:  Response body which is sent back on querying the status API
+      description:  Response body which is sent back on querying the status API.
       properties:
         events:
           type: array
@@ -1694,7 +1694,7 @@ components:
         destination:
           type: string
           description: This provides a path relative to a temporary base directory (working directory) where resource would be downloaded. This would be used to identify the assets within the parmeters.
-            Cannot go up using '..' or '/'. Cannot have '/./'. Should be a valid file name.
+            It cannot go up using '..' or '/' and it cannot have '/./'. Should be a valid file name.
 
     UrlBasedOutputAsset:
       type: object
@@ -1704,7 +1704,7 @@ components:
       properties:
         url:
           type: string
-          description: URL of the asset
+          description: URL of the asset.
         type:
           type: string
           default: HTTP_PUT
@@ -1720,7 +1720,7 @@ components:
       properties:
         url:
           type: string
-          description: URL of the asset
+          description: URL of the asset.
         type:
           type: string
           default: HTTP_GET
@@ -1735,7 +1735,7 @@ components:
       properties:
         assetId:
           type: string
-          description: Asset ID
+          description: Asset ID.
         type:
           type: string
           default: ACP
@@ -1743,11 +1743,11 @@ components:
             - ACP
         token:
           type: object
-          description: Contains required authentication info to upload asset
+          description: Contains required authentication info to upload asset.
           properties:
             token:
               type: string
-              description: Token to download/upload the asset
+              description: Token to download/upload the asset.
 
     PathBasedAsset:
       type: object
@@ -1758,10 +1758,10 @@ components:
       properties:
         path:
           type: string
-          description: Path of the asset
+          description: Path of the asset.
         repositoryId:
           type: string
-          description: Repository ID
+          description: Repository ID.
         type:
           type: string
           default: ACP
@@ -1769,21 +1769,21 @@ components:
             - ACP
         token:
           type: object
-          description: Contains required authentication info to upload asset
+          description: Contains required authentication info to upload asset.
           properties:
             token:
               type: string
-              description: Token to download/upload the asset
+              description: Token to download/upload the asset.
 
     AdobeFontsBasedInputAsset:
       type: object
-      description: One of 'postscriptName' or 'fontId' must be provided
+      description: One of 'postscriptName' or 'fontId' must be provided.
       required:
         - type
       properties:
         postscriptName:
           type: string
-          description: Adobe font postscript name
+          description: Adobe font postscript name.
         fontId:
           type: string
           description: Adobe font Id. This is same as typekit Id. 
