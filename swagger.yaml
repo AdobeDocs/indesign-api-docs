@@ -11,8 +11,6 @@ tags:
     description: Rendition APIs.
   - name: dataMerge
     description: Data Merge API.
-  - name: documentData
-    description: API to fetch data about the document.
 security:
   - ApiKeyAuth:
       []
@@ -164,36 +162,7 @@ paths:
           $ref: "#/components/responses/NotFound"
         500:
           $ref: "#/components/responses/InternalServerError"
-
-  /api/v1/capability/indesign/documentData:
-    post:
-      tags:
-        - documentData
-      summary: Fetches data about the document.
-      description: Retrieves the requested data from the document. The data may include information around the relationship between spreads and pages, information about the page items,
-        information about the text stories, and data merge tags. At the very least, number of pages and number of spreads is provided. For the structure of StatusCompletedResponse/output/data refer to DocumentDataOutputData.
-      operationId: documentData
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: "#/components/schemas/DocumentDataRequest"
-        description: Job request object that specifies parameters for merging the data as per the given template.
-        required: true
-      responses:
-        202:
-          $ref: '#/components/responses/Accepted'
-        400:
-          $ref: "#/components/responses/BadParams"
-        401:
-          $ref: "#/components/responses/Unauthorized"
-        403:
-          $ref: "#/components/responses/Forbidden"
-        404:
-          $ref: "#/components/responses/NotFound"
-        500:
-          $ref: "#/components/responses/InternalServerError"
-
+          
   /api/v1/capability/status/{id}:
     get:
       description: Returns the latest status event of a capability execution.
