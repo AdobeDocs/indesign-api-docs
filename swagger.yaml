@@ -215,7 +215,7 @@ paths:
                 $ref: '#/components/schemas/StatusResponse'
 
 servers:
-  - url: https://cxp-dev.adobe.io/
+  - url: https://cxp.adobe.io/
 components:
   securitySchemes:
     ApiKeyAuth:
