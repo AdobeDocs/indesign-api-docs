@@ -1,0 +1,22 @@
+{
+    "manifestVersion": "1.0.0",
+    "id": "Unique id for the capability",
+    "name": "Name of the capability",
+    "version": "0.0.1",
+    "host": {
+        "app": "IDSN",
+        "minVersion": "21.0",
+        "maxVersion": "25.0"
+    },
+    "apiEntryPoints": [
+        {
+            "type": "capability",
+            "path": "sample.jsx",
+            "language": "extendscript"
+        },
+        {
+            "type" : "openapi",
+            "path" : "swagger.yml"
+        }
+    ]
+}
