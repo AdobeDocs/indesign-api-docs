@@ -12,8 +12,8 @@ tags:
   - name: dataMerge
     description: Data Merge API.
 security:
-  - ApiKeyAuth:
-      []
+  - ApiKeyAuth: []
+  - BearerAuth: [] 
 paths:
 
   /api/v1/capability/indesign/rendition/jpeg:
@@ -22,7 +22,7 @@ paths:
         - rendition
       summary: Creates JPEG renditions.
       description: Creates and returns JPEG renditions of a specific InDesign document.
-        Output rendition has mimetype 'image/jpeg'. For the structure of StatusCompletedResponse/output/data refer to RenditionOutputData.
+        Output rendition has mimetype 'image/jpeg'. For the structure of StatusCompletedResponse/output/data refer to RenditionOutputData. Also for the list of possible error codes in FailedEvent refer to RenditionFailedData.
       operationId: jpegJob
       requestBody:
         content:
@@ -52,7 +52,7 @@ paths:
         - rendition
       summary: Creates PNG renditions.
       description: Creates and returns new PNG renditions of a specific InDesign document.
-        Output rendition has mimetype 'image/png'. For the structure of StatusCompletedResponse/output/data refer to RenditionOutputData.
+        Output rendition has mimetype 'image/png'. For the structure of StatusCompletedResponse/output/data refer to RenditionOutputData. Also for the list of possible error codes in FailedEvent refer to RenditionFailedData.
       operationId: pngJob
       requestBody:
         content:
@@ -82,7 +82,7 @@ paths:
         - rendition
       summary: Creates PDF renditions.
       description: Creates and returns new PDF from a specific InDesign document. Output
-        rendition has mimetype 'application/pdf'. For the structure of StatusCompletedResponse/output/data refer to RenditionOutputData.
+        rendition has mimetype 'application/pdf'. For the structure of StatusCompletedResponse/output/data refer to RenditionOutputData. Also for the list of possible error codes in FailedEvent refer to RenditionPDFFailedData.
       operationId: pdfPrintJob
       requestBody:
         content:
@@ -112,7 +112,7 @@ paths:
         - dataMerge
       summary: Performs data merge.
       description: Creates and returns merged InDesign documents or PDFs that are created after merging the data and the given template.
-        Output rendition has mimetype 'application/pdf' or 'application/x-indesign'. For the structure of StatusCompletedResponse/output/data refer to DataMergeOutputData.
+        Output rendition has mimetype 'application/pdf' or 'application/x-indesign'. For the structure of StatusCompletedResponse/output/data refer to DataMergeOutputData. Also for the list of possible error codes in FailedEvent refer to DataMergeFailedData.
       operationId: dataMerge
       requestBody:
         content:
@@ -140,7 +140,7 @@ paths:
       tags:
         - dataMerge
       summary: Gets data merge tags
-      description: Retrieves the data merge tags from the document. For the structure of StatusCompletedResponse/output/data refer to DataMergeTagsOutputData.
+      description: Retrieves the data merge tags from the document. For the structure of StatusCompletedResponse/output/data refer to DataMergeTagsOutputData. Also for the list of possible error codes in FailedEvent refer to DataMergeFailedData.
       operationId: dataMergeTags
       requestBody:
         content:
@@ -162,9 +162,10 @@ paths:
           $ref: "#/components/responses/NotFound"
         500:
           $ref: "#/components/responses/InternalServerError"
-          
+
   /api/v1/capability/status/{id}:
     get:
+      summary: Gets latest status for a job.
       description: Returns the latest status event of a capability execution.
       parameters:
         - name: id
@@ -198,6 +199,7 @@ paths:
 
   /api/v1/capability/status/all/{id}:
     get:
+      summary: Gets status events for a job.
       description: Returns the status of a capability execution. The API returns the latest 10 events in paginated form. The 'nextURL' can be invoked to fetch the next set of events.
       parameters:
         - name: id
@@ -214,17 +216,110 @@ paths:
               schema:
                 $ref: '#/components/schemas/StatusResponse'
 
+  /api/v2/capability:
+    post:
+      summary: Submit custom capability.
+      description: Submit the capability bundle. Returns the URL for posting execution request against the capability
+      parameters:
+        - name: x-gw-ims-org-id
+          in: header
+          description: Identifier for IMS organization as defined in Adobe's developer console
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/zip:
+            schema:
+              type: object
+        description: Capability bundle in ZIP format. This describes the capability to App Engine
+        required: true
+      responses:
+        '202':
+          description: Status of a capability execution.
+          content:
+            application/json:
+              schema:
+                properties:
+                  capability:
+                    type: string
+                    description: Name of capability as specified in capability manifest
+                  version:
+                    type: string
+                    description: Version of capability as specified in capability manifest
+                  url:
+                    type: string
+                    description: URL to submit execution request against the capability
+        400:
+          $ref: "#/components/responses/BadParams"
+        401:
+          $ref: "#/components/responses/Unauthorized"
+        403:
+          $ref: "#/components/responses/Forbidden"
+        404:
+          $ref: "#/components/responses/NotFound"
+        500:
+          $ref: "#/components/responses/InternalServerError"
+
+  /api/v2/capability/{product}/{organization}/{capability}:
+    post:
+      summary: Submit capability execution request.
+      description: Define the input assets and parameters with which the capability should be executed against the app engine.
+      parameters:
+        - name: product
+          in: path
+          description: Name of the target app engine as specified in capability manifest
+          required: true
+          schema:
+            type: string
+        - name: organization
+          in: path
+          description: organization identifier as reported by response to capability submit request
+          required: true
+          schema:
+            type: string
+        - name: capability
+          in: path
+          description: Name of the capability specified in capability manifest
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/BaseJobRequestWithOutput"
+        description: Job request object that specifies parameters for the execution of capability.
+        required: true
+      responses:
+        202:
+          $ref: '#/components/responses/Accepted'
+        400:
+          $ref: "#/components/responses/BadParams"
+        401:
+          $ref: "#/components/responses/Unauthorized"
+        403:
+          $ref: "#/components/responses/Forbidden"
+        404:
+          $ref: "#/components/responses/NotFound"
+        500:
+          $ref: "#/components/responses/InternalServerError"
+
 servers:
-  - url: https://cxp.adobe.io/
+  - url: https://indesign.adobe.io/
 components:
   securitySchemes:
     ApiKeyAuth:
       type: apiKey
       in: header
-      name: X-API-KEY
+      name: x-api-key
+    BearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
   responses:
     Accepted:
-      description: The job has been accepted for processing.
+      description: The job/capability has been accepted for processing.
       content:
         application/json:
           schema:
@@ -274,21 +369,6 @@ components:
       required:
         - message
 
-    BaseJobRequestWithOutput:
-      description: Base job request for any job with the option to specify output urls.
-      required:
-        - assets
-      properties:
-        assets:
-          type: array
-          items:
-            $ref: "#/components/schemas/InputAsset"
-          description: Information about the assets, which will be used to process the job.
-        outputs:
-          type: array
-          items:
-            $ref: '#/components/schemas/OutputAsset'
-
     BaseJobRequest:
       description: Base job request for any job.
       required:
@@ -299,6 +379,108 @@ components:
           items:
             $ref: "#/components/schemas/InputAsset"
           description: Information about the assets, which will be used to process the job.
+        params:
+          type: object
+          properties:
+            generalSettings:
+              description: General settings.
+              type: object
+              properties:
+                fonts:
+                  description: Settings related to fonts.
+                  type: object
+                  properties:
+                    adobeFonts:
+                      description: The list of documents to include or exclude from the search for Adobe Fonts. If missing, it means all the documents are to be checked for Adobe Fonts.
+                      type: object
+                      properties:
+                        includeDocuments:
+                          description: The list will specify the documents to check for adobe fonts. No other document will be checked for Adobe Fonts. Empty means no document to be checked for. If absent, then all the input documents are to be checked.
+                          type: array
+                          items:
+                            type: string
+                            description: This provides a path relative to a temporary base directory (working directory) where the document can be found. It cannot go up using '..' or '/'. Should be a valid file name.
+                        excludeDocuments:
+                          description: The list will specify the documents to exclude from search. The documents mentioned here will be removed from document list mentioned in includeDocuments parameter or in absence of that parameter from the complete list of documents which can be gathered from the assets params.
+                          type: array
+                          items:
+                            type: string
+                            description: This provides a path relative to a temporary base directory (working directory) where the document can be found. It cannot go up using '..' or '/'. Should be a valid file name.
+                    fontsDirectories:
+                      description: This lists the directories to be used as font directories for the input InDesign documents. "Document Fonts" in parallel to the document will continue to work even without specifying. In absence of this, temporary base directory (working directory) will be considered as a font directory.
+                      type: array
+                      items:
+                        type: string
+                        description: This provides a path of a directory relative to a temporary base directory (working directory) where the fonts can be found. It cannot go up using '..' or '/'. Should be a valid path. For specifying working directory, mention '.'.
+                links:
+                  description: Settings related to links.
+                  type: object
+                  properties:
+                    replaceLinks:
+                      type: array
+                      items:
+                          type: object
+                          required:
+                          - targetDocument
+                          - mapping
+                          properties:
+                            targetDocument:
+                              description: The document in which the relinking is to be done.
+                              type: string
+                            mapping:
+                              type: array
+                              items:
+                                type: object
+                                properties:
+                                  currentURI:
+                                    type: string
+                                    description: The existing URI of the link that needs relinking. If multiple links with this URI are found, all will be relinked. If linkID is provided, this attribute will be ignored. Either one of currentURI or linkID should be present.
+                                  linkID:
+                                    type: integer
+                                    description: The ID of the link which is to be relinked. If currentURI, is also provided it would be ignored. Either one of currentURI or linkID should be present.
+                                  newAssetRelativePath:
+                                    type: string
+                                    description: This provides a path relative to a temporary base directory (working directory) where the asset to be linked to can be found. It cannot go up using '..' or '/'. Should be a valid file name.
+                appLogs:
+                  description: Describes parameters regarding application logs.
+                  type: object
+                  properties:
+                    logsRelativePath:
+                      type: string
+                      description: This provides a path to a file, relative to the temporary base directory (working directory). This file is where application's logs are to be dumped.
+
+    BaseJobRequestWithOutput:
+      allOf:
+        - $ref: '#/components/schemas/BaseJobRequest'
+        - description: Base job request for any job with the option to specify output urls.
+          type: object
+          properties:
+            outputs:
+              type: array
+              items:
+                $ref: '#/components/schemas/OutputAsset'
+
+    BaseOutputData:
+      description: Base output data for any job. 
+      type: object
+      properties:
+        generalData:
+          type: object
+          description: Provides any general data corresponding to the job.
+          properties:
+            appLogs:
+              type: object
+              description: Provides information regarding the app logs file. This is only present if params/generalSettings/appLogs is provided in input.
+              properties:
+                created:
+                  type: boolean
+                  description: True, if the file creation was successful and false otherwise.
+                errorReason:
+                  type: string
+                  description: In case of failure, the reason for the failure.
+                logsPath:
+                  type: string
+                  description: Provided path for the log file.
 
     WarningResponse:
       description: Response containing the warnings from a process.
@@ -355,32 +537,27 @@ components:
                     type: string
 
     RenditionOutputData:
-      type: object
-      properties:
-        outputs:
-          type: array
-          items:
-            type: object
-            properties:
-              input:
-                type: string
-                description: The input file path in the working directory.
-              renditions:
-                description: Information about the created renditions.
-                type: array
-                items:
-                  $ref: "#/components/schemas/RenditionDef"
-              errorDetails:
+      allOf:
+        - $ref: '#/components/schemas/BaseOutputData'
+        - description: Output data for a rendition request.
+          type: object
+          properties:
+            outputs:
+              type: array
+              items:
                 type: object
                 properties:
-                  reason:
+                  input:
                     type: string
-                    description: A brief information about the issue. 
-                  errorCode:
-                    type: integer
-              warnings:
-                $ref: '#/components/schemas/WarningResponse'
-                description: Warnings generated during the rendition request.
+                    description: The input file path in the working directory.
+                  renditions:
+                    description: Information about the created renditions.
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/RenditionDef"
+                  warnings:
+                    $ref: '#/components/schemas/WarningResponse'
+                    description: Warnings generated during the rendition request.
 
     RenditionDef:
       type: object
@@ -393,6 +570,57 @@ components:
           type: array
           items:
             type: string
+
+    RenditionFailedData:
+      allOf:
+        - $ref: '#/components/schemas/FailedEvent'
+        - description: Failed Event for JPEG and PNG Rendition APIs. For details of error codes refer to ErrorCodesAndDefinitions.
+          type: object
+          properties:
+            data:
+              type: object
+              properties:
+                code:
+                  type: integer
+                  description: The error code.
+                  enum:
+                    - 1002
+                    - 1004
+                    - 2002
+                    - 2003
+                    - 2005
+                    - 2006
+                    - 2007
+                    - 2008
+                    - 2011
+                    - 2012
+                    - 2013
+
+    RenditionPDFFailedData:
+      allOf:
+        - $ref: '#/components/schemas/FailedEvent'
+        - description: Failed Event for PDF Rendition API. For details of error codes refer to ErrorCodesAndDefinitions.
+          type: object
+          properties:
+            data:
+              type: object
+              properties:
+                code:
+                  type: integer
+                  description: The error code.
+                  enum:
+                    - 1002
+                    - 1003
+                    - 1004
+                    - 2002
+                    - 2003
+                    - 2005
+                    - 2006
+                    - 2007
+                    - 2008
+                    - 2011
+                    - 2012
+                    - 2013
 
     JPEGRenditionRequest:
       allOf:
@@ -409,7 +637,7 @@ components:
               - jobType
               properties:
                 jobType:
-                  description: The type of a job.
+                  description: The type of job.
                   type: string
                   default: RENDITION_JPEG
                   enum:
@@ -510,7 +738,7 @@ components:
                   enum:
                     - RENDITION_PNG
                 targetDocuments:
-                  description: List of documents to render as per the given parameters. Currently only one document is supported.
+                  description: List of documents to render as per the given parameters. Currently, only one document is supported.
                   type: array
                   items:
                     type: string
@@ -557,7 +785,7 @@ components:
                   type: boolean
                   default: false
                   description: If true, simulates the effects of overprinting spot and processes
-                    colors in the same way they would occur when printing.
+                    colors in the same way they would occur when you print.
                 useDocumentBleeds:
                   type: boolean
                   default: false
@@ -672,7 +900,7 @@ components:
                   description: The file which will be used as PDF creation settings file during the export. This will take precedence over pdfPreset attribute.
                 pdfPreset:
                   type: string
-                  description: The export style to use.
+                  description: The export style to be used.
                   default: High Quality Print
                   enum:
                     - High Quality Print
@@ -713,7 +941,7 @@ components:
                   description: The tagged document to be used as template for merging.
                   type: string
                 dataSource:
-                  description: The data source files to use.
+                  description: The data source files to be used.
                   type: string
                 outputType:
                   description: The type of required output.
@@ -733,7 +961,7 @@ components:
                       description: Only relevant if outputType is "PDF". The file, which will be used as PDF creation settings file during the export. This will take precedence over pdfPreset attribute.
                     pdfPreset:
                       type: string
-                      description: The PDF export style to use. This is relevant if outputType is "PDF".
+                      description: The PDF export style to be used. This is relevant if outputType is "PDF".
                       default: High Quality Print
                       enum:
                         - High Quality Print
@@ -756,13 +984,13 @@ components:
                       type: boolean
                       default: false
                 recordRange:
-                  description: The ranges of records to process for this job. Value can be 'All' along with numeral ranges. Foe example, '1-2, 5'.
+                  description: The ranges of records to process for this job. Value can be 'All' along with numeral ranges. For example, '1-2, 5'.
                   type: string
                 allowMultipleRecordsPerPage:
                   description: The number of records to place on each page of the document.
                   type: boolean
                 multipleRecordLayoutOptions:
-                  description: The options to use in case allowMultipleRecordsPerPage is set to true.
+                  description: The options to be used in case allowMultipleRecordsPerPage is set to true.
                   type: object
                   properties:
                     arrangeBy:
@@ -797,7 +1025,7 @@ components:
                   type: object
                   properties:
                     centreImage:
-                      description: If true, centers the image in the frame while preserving the frame size as well as content size and proportions. If the content is larger than the frame, content around the edges is obscured by the bounding box of the frame. This doesn't work with 'Content_Aware_Fit' fittingOption.
+                      description: If true, centers the image in the frame while preserving the frame size as content size and proportions. If the content is larger than the frame, content around the edges is obscured by the bounding box of the frame. This doesn't work with 'Content_Aware_Fit' fittingOption.
                       type: boolean
                     fittingOption:
                       description: |
@@ -806,7 +1034,7 @@ components:
                         * `FILL_PROPORTIONAL` - Resizes content to fill the frame while preserving the proportions of the content. If the content and frame have different proportions, some of the content is obscured by the bounding box of the frame.
                         * `FIT_CONTENT_TO_FRAME` - Resizes content to fit the frame. Note: Content that is a different size than the frame appears stretched or squeezed.
                         * `FIT_FRAME_TO_CONTENT` - Resizes the frame so it fits the content.
-                        * `HONOUR_EXISTING_STYLE` - Apply the frame fitting based on existing setting applied on the orginal frame.
+                        * `HONOUR_EXISTING_STYLE` - Apply the frame fitting based on existing setting applied on the original frame.
                         * `PRESERVE_SIZES` - Preserves the original sizes of the frame and the content. Note: Content that is larger than the frame is obscured around the edges.
                         * `PROPORTIONAL` - Resizes content to fit the frame while preserving content proportions. If the content and frame have different proportions, an empty space occurs in the frame.
                       type: string
@@ -836,45 +1064,65 @@ components:
                   description: The path of the output folder.
 
     DataMergeOutputData:
-      type: object
-      properties:
-        records:
-          description: The information about the records which were processed.
-          type: array
-          items:
-            type: object
-            properties:
-              recordIndex:
-                type: string
-                description: Indicates the record numbers for which the data is provided here.
-              outputs:
-                description: The list of outputs corresponding to this record.
-                type: array
-                items:
-                  type: object
-                  properties:
-                    pageIndex:
-                      type: string
-                      description: Indicates the page numbers in the merged output for which the paths are mentioned below.
-                    path:
-                      description: The paths corresponding to the pages mentioned in pageIndex.
-                      type: array
-                      items:
-                        type: string
-              warnings:
-                $ref: '#/components/schemas/MergeWarningResponse'
-                description: Warnings generated during the merge.
-        errorDetails:
+      allOf:
+        - $ref: '#/components/schemas/BaseOutputData'
+        - description: The data pertaining to the merged records.
           type: object
           properties:
-            reason:
-              type: string
-              description: A brief information about the issue. 
-            errorCode:
-              type: integer
-        warnings:
-          $ref: '#/components/schemas/WarningResponse'
-          description: Warnings generated for the template.
+            records:
+              description: The information about the records which were processed.
+              type: array
+              items:
+                type: object
+                properties:
+                  recordIndex:
+                    type: string
+                    description: Indicates the record numbers for which the data is provided here.
+                  outputs:
+                    description: The list of outputs corresponding to this record.
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        pageIndex:
+                          type: string
+                          description: Indicates the page numbers in the merged output for which the paths are mentioned below.
+                        path:
+                          description: The paths corresponding to the pages mentioned in pageIndex.
+                          type: array
+                          items:
+                            type: string
+                  warnings:
+                    $ref: '#/components/schemas/MergeWarningResponse'
+                    description: Warnings generated during the merge.
+            warnings:
+              $ref: '#/components/schemas/WarningResponse'
+              description: Warnings generated for the template.
+  
+    DataMergeFailedData:
+      allOf:
+        - $ref: '#/components/schemas/FailedEvent'
+        - description: Failed Event for Data Merge API. For details of error codes refer to ErrorCodesAndDefinitions.
+          type: object
+          properties:
+            data:
+              type: object
+              properties:
+                code:
+                  type: integer
+                  description: The error code.
+                  enum:
+                    - 1002
+                    - 1003
+                    - 1004
+                    - 2002
+                    - 2003
+                    - 2005
+                    - 2007
+                    - 2008
+                    - 2011
+                    - 2012
+                    - 2013
 
     DataMergeTagsRequest:
       allOf:
@@ -912,92 +1160,118 @@ components:
                   default: false
 
     DataMergeTagsOutputData:
-      type: object
-      description: The data corresponding to the tags from the documents and the data source file, if provided.
-      properties:
-        documentTags:
-          description: The information about the tags retrieved from the target document.
-          type: array
-          items:
-            type: object
-            properties:
-              name:
-                type: string
-                description: Name of the tag.
-              type:
-                type: string
-                description: Type of the tag.
-                enum:
-                  - Image
-                  - Text
-                  - QR
-              parentPageItems:
-                description: Information about the page items where the tag is present, if it is requested.
-                type: array
-                items:
-                  type: object
-                  properties:
-                    pageItemId:
-                      type: integer
-                      description: ID of the page item which has the data merge tag within it.
-                    pageIndexInSpread:
-                      type: integer
-                      description: Zero based index of the page (in the spread) on which the page item exists.
-                    pageIndexInDocument:
-                      type: integer
-                      description: Zero based index of the page (in the document) on which the page item exists.
-                    pageId:
-                      type: integer
-                      description: ID of the page on which the page item exists.
-                    pageName:
-                      type: string
-                      description: Name of the page on which the page item exists.
-                    spreadIndex:
-                      type: integer
-                      description: Zero based index of the spread (in the document) on which the page item exists.
-                    spreadId:
-                      type: integer
-                      description: ID of the spread on which the page item exists.
-                    parentStoryId:
-                      type: integer
-                      description: Only valid for text tags. ID of the parent story in which the tag exists.
-        dataSourceTags:
-          description: The information about the tags from the data source file and their relevance for the target document.
-          type: array
-          items:
-            type: object
-            properties:
-              name:
-                type: string
-                description: Name of the tag.
-              type:
-                type: string
-                description: Type of the tag.
-                enum:
-                  - Image
-                  - Text
-                  - QR
-              status:
-                type: string
-                description: Status or relavnce of the tag in context to the target document.
-                enum:
-                  - Match
-                  - Extra
-        dataSourceValidation:
-          description: Provided when both target document and data source are given. This will include data from validation of the data source against the target document.
+      allOf:
+        - $ref: '#/components/schemas/BaseOutputData'
+        - description: The data corresponding to the tags from the documents and the data source file, if provided.
           type: object
           properties:
-            isValid:
-              type: boolean
-              description: Indicates whether the provided data source is valid for the document.
-            missingTags:
-              description: Provides the information about the tags which are missing from the data source but are required by the document.
+            documentTags:
+              description: The information about the tags retrieved from the target document.
               type: array
               items:
-                type: string
-        warnings:
-          $ref: '#/components/schemas/WarningResponse'
-          description: Warnings generated during the execution of the request.
+                type: object
+                properties:
+                  name:
+                    type: string
+                    description: Name of the tag.
+                  type:
+                    type: string
+                    description: Type of the tag.
+                    enum:
+                      - Image
+                      - Text
+                      - QR
+                  parentPageItems:
+                    description: Information about the page items where the tag is present, if it is requested.
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        pageItemId:
+                          type: integer
+                          description: ID of the page item which has the data merge tag within it.
+                        pageIndexInSpread:
+                          type: integer
+                          description: Zero based index of the page (in the spread) on which the page item exists.
+                        pageIndexInDocument:
+                          type: integer
+                          description: Zero based index of the page (in the document) on which the page item exists.
+                        pageId:
+                          type: integer
+                          description: ID of the page on which the page item exists.
+                        pageName:
+                          type: string
+                          description: Name of the page on which the page item exists.
+                        spreadIndex:
+                          type: integer
+                          description: Zero based index of the spread (in the document) on which the page item exists.
+                        spreadId:
+                          type: integer
+                          description: ID of the spread on which the page item exists.
+                        parentStoryId:
+                          type: integer
+                          description: Only valid for text tags. ID of the parent story in which the tag exists.
+            dataSourceTags:
+              description: The information about the tags from the data source file and their relevance for the target document.
+              type: array
+              items:
+                type: object
+                properties:
+                  name:
+                    type: string
+                    description: Name of the tag.
+                  type:
+                    type: string
+                    description: Type of the tag.
+                    enum:
+                      - Image
+                      - Text
+                      - QR
+                  status:
+                    type: string
+                    description: Status or relevance of the tag in context to the target document.
+                    enum:
+                      - Match
+                      - Extra
+            dataSourceValidation:
+              description: Provided when both target document and data source are given. This will include data from validation of the data source against the target document.
+              type: object
+              properties:
+                isValid:
+                  type: boolean
+                  description: Indicates whether the provided data source is valid for the document.
+                missingTags:
+                  description: Provides the information about the tags which are missing from the data source but are required by the document.
+                  type: array
+                  items:
+                    type: string
+            warnings:
+              $ref: '#/components/schemas/WarningResponse'
+              description: Warnings generated during the execution of the request.
+
+    DataMergeTagsFailedData:
+      allOf:
+        - $ref: '#/components/schemas/FailedEvent'
+        - description: Failed Event for Data Merge Tags API. For details of error codes refer to ErrorCodesAndDefinitions.
+          type: object
+          properties:
+            data:
+              type: object
+              properties:
+                code:
+                  type: integer
+                  description: The error code.
+                  enum:
+                    - 1002
+                    - 2002
+                    - 2005
+                    - 2007
+                    - 2008
+                    - 2009
+                    - 2010
+                    - 2011
+                    - 2012
+                    - 2013
 
     BaseEvent:
       type: object
@@ -1058,7 +1332,7 @@ components:
               properties:
                 total:
                   type: string
-                  description: Number of assets to download
+                  description: Number of assets to download.
 
     AssetDownloadStartedEvent:
       allOf:
@@ -1202,7 +1476,11 @@ components:
               enum:
                 - COMPLETED
             data:
+              description: The data returned from execution of capability. If the data is less than 250 kB, then the data would be provided here.
               type: object
+            dataURL:
+              description: The data returned from execution of capability. If the data is more than 250 kB and less the 20 MB, it will be provided as a presigned URL. If it is more than 20 MB, the job will fail with error code 413.
+              type: string
 
     FailedEvent:
       allOf:
@@ -1218,8 +1496,94 @@ components:
             data:
               type: object
               properties:
-                errorMessage:
+                reason:
                   type: string
+                  description: The description of the error message.
+                code:
+                  type: integer
+                  description: The error code.
+
+    ErrorCodesAndDefinitions:
+      allOf:
+        - $ref: '#/components/schemas/CommonErrorCodesAndDefinitions'
+        - type: object
+          description: Error codes from capabilities and their definitions. The codes also include 5xx error codes which are common across APIs.
+          properties:
+            1001:
+              description: 'Internal script error. Ideally this should not come.'
+            1002:
+              description: 'Error during processing.'
+            1003:
+              description: 'No PDF Preset could be set.'
+            1004:
+              description: 'Unable to create specified output directory.'
+            2001:
+              description: 'Expected array'
+            2002:
+              description: 'Expected boolean.'
+            2003:
+              description: 'Expected integer.'
+            2004:
+              description: 'Expected number.'
+            2005:
+              description: 'Expected string.'
+            2006:
+              description: 'Incorrect range provided.'
+            2007:
+              description: 'Key not found in object.'
+            2008:
+              description: 'No matching enum value found.'
+            2009:
+              description: 'Empty filter provided for extraction of tags.'
+            2010:
+              description: 'Empty data source found.'
+            2011:
+              description: 'Relative path not acceptable.'
+            2012:
+              description: 'Mismatch in jobType.'
+            2013:
+              description: 'Either the params attribute is not found in the request or it is not in the correct format'
+
+    CommonErrorCodesAndDefinitions:
+      type: object
+      description: Error codes which are valid for all the capabilities and their definitions
+      properties:
+        501: 
+          description: 'Internal error: Unable to connect to server for communication'
+        502:
+          description: 'Params error: Unable to send the script to the server. Please check the path of the script'
+        503:
+          description: 'Internal error: Error parsing the response from application'
+        504:
+          description: 'Application error: Script execution failed'
+        601:
+          description: 'Params error: Relative path not acceptable'
+        602:
+          description: 'Params error: Expected string'
+        603:
+          description: 'Params error: Expected integer'
+        604:
+          description: 'Params error: Expected boolean'
+        605:
+          description: 'Params error: Expected array'
+        606:
+          description: 'Params error: Expected object'
+        701:
+          description: 'Capability error: Malformed file'
+        702:
+          description: 'Capability error: Script did not return anything'
+        703:
+          description: 'Capability error: Script did not return the response data'
+        704:
+          description: 'Capability error: Script threw an uncaught exception'
+        705:
+          description: 'Capability error: Expected array'
+        706:
+          description: 'Capability error: Expected object after parsing data at dataURL'
+        707:
+          description: 'Capability error: Relative path not acceptable'
+        708:
+          description: 'Capability error: Invalid data received'
 
     StatusResponse:
       type: object
@@ -1268,8 +1632,8 @@ components:
             - $ref: '#/components/schemas/AdobeFontsBasedInputAsset'
         destination:
           type: string
-          description: This provides a path relative to a temporary base directory (working directory) where resource would be downloaded. This would be used to identify the assets within the parmeters.
-            It cannot go up using '..' or '/' and it cannot have '/./'. Should be a valid file name.
+          description: This provides a path relative to a temporary base directory (working directory) where resource would be downloaded. This would be used to identify the assets within the parameters.
+            It cannot go up using '..' or '/'. Should be a valid file name.
 
     UrlBasedOutputAsset:
       type: object
@@ -1385,5 +1749,4 @@ components:
         source:
           type: string
           description: This provides a path relative of the output where resource would be generated.
-            Cannot go up using '..' or '/'. Cannot
-            have '/./'. Should be a valid file name.
+            It cannot go up using '..' or '/'. Should be a valid file name.
