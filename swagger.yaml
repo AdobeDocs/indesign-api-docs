@@ -1730,11 +1730,11 @@ components:
               description: Parameter that control enabling or disabling of caching
 
     IdBasedOutputAsset:
-          type: object
+      type: object
       required:
         - assetId
         - type
-          properties:
+      properties:
         assetId:
           type: string
           description: Asset ID.
@@ -1746,9 +1746,9 @@ components:
         version:
           type: string
           description: version of asset
-            token:
-              type: string
-              description: Token that is required for authentication to download/upload asset.
+        token:
+          type: string
+          description: Token that is required for authentication to download/upload asset.
 
     PathBasedInputAsset:
       type: object
@@ -1790,12 +1790,12 @@ components:
               description: Parameter that control enabling or disabling of caching
 
     PathBasedOutputAsset:
-          type: object
+      type: object
       required:
         - path
         - repositoryId
         - type
-          properties:
+      properties:
         path:
           type: string
           description: Path of the asset.
@@ -1810,9 +1810,9 @@ components:
         version:
           type: string
           description: version of asset
-            token:
-              type: string
-              description: Token that is required for authentication to download/upload asset.
+        token:
+          type: string
+          description: Token that is required for authentication to download/upload asset.
 
     AdobeFontsBasedInputAsset:
       type: object
