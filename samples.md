@@ -13,8 +13,8 @@ A manifest.json must be bundled inside the capability zip. A typical manifest wo
     "version": "1.0.13",
     "host": {
         "app": "indesign",
-        "minVersion": "13.2.0",
-        "maxVersion": "13.2.4"
+        "minVersion": "17.0.0",
+        "maxVersion": "99.9.9"
     },
     "apiEntryPoints": [
         {

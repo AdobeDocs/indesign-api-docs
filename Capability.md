@@ -28,8 +28,8 @@ The manifest file is a plain JSON file with the following structure:
     "version": "0.0.1",
     "host": {
         "app": "indesign",
-        "minVersion": "21.0",
-        "maxVersion": "25.0"
+        "minVersion": "17.0.0",
+        "maxVersion": "99.9.9"
     },
     "apiEntryPoints": [
         {
@@ -48,7 +48,7 @@ The description of all the fields of the manifest.json file is available below:
 | name            | string                      | Name of the capability. The capability can be invoked using this. It should be between 4-255 characters. Must not have any white space.                                                     | No       |
 | version         | string                      | The version number of the capability in x.y.z format. The version must be three segments and each version component must be between 0 and 99.                                               | No       |
 | host.app        | string                      | The host application would be used to execute this capability. Currently, the only valid value is indesign.                                                                                     | No       |
-| host.minVersion | string                      | Minimum required version of the host app (in x.y format) that can run this plugin. The version number must be two segments. Typically, the minor segment will be always set to 0, e.g. 16.0 | No       |
+| host.minVersion | string                      | Minimum required version of the host app (in x.y format) that can run this plugin. The version number must be two segments. Typically, the minor segment will be always set to 0, e.g. 17.0 | No       |
 | host.maxVersion | string                      | The maximum version of the host app that can run this plugin. Same formatting as host.minVersion.                                                                                           | Yes      |
 | apiEntryPoints  | array<EntryPointDefinition> | Describes the API entry points for the capability. See the next section for details.                                                                                                        | Yes      |
 

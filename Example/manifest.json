@@ -4,9 +4,9 @@
     "name": "Name of the capability",
     "version": "0.0.1",
     "host": {
-        "app": "IDSN",
-        "minVersion": "21.0",
-        "maxVersion": "25.0"
+        "app": "indesign",
+        "minVersion": "17.0.0",
+        "maxVersion": "99.9.9"
     },
     "apiEntryPoints": [
         {
