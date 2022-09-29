@@ -1654,14 +1654,9 @@ components:
             - HTTP_PUT
         headers:
           type: object
-          description: (headerName , headerValue) map. Multiple headers can be added inside this map. These headers will be added in the PUT or POST request of url.
-          properties:
-            headerName1:
-              type: string
-              description: headerValue
-            headerName2:
-              type: string
-              description: headerValue
+          description: These headers will be added in the PUT or POST request of url. There can be multiple header key value pairs specified here.
+          additionalProperties:
+            type: string
 
     UrlBasedInputAsset:
       type: object
@@ -1679,14 +1674,9 @@ components:
             - HTTP_GET
         headers:
           type: object
-          description: (headerName , headerValue) map. Multiple headers can be added inside this map. These headers will be added in the GET request of url.
-          properties:
-            headerName1:
-              type: string
-              description: headerValue
-            headerName2:
-              type: string
-              description: headerValue
+          description: These headers will be added in the GET request of url. There can be multiple header key value pairs specified here.
+          additionalProperties:
+            type: string
         cache:
           type: object
           required:
