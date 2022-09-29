@@ -27,7 +27,7 @@ The manifest file is a plain JSON file with the following structure:
     "name": "Name of the capability",
     "version": "0.0.1",
     "host": {
-        "app": "IDSN",
+        "app": "indesign",
         "minVersion": "21.0",
         "maxVersion": "25.0"
     },
@@ -47,7 +47,7 @@ The description of all the fields of the manifest.json file is available below:
 | manifestVersion | string                      | The version of the manifest file format. Currently, only 1.0.0 is supported.                                                                                                                | No       |
 | name            | string                      | Name of the capability. The capability can be invoked using this. It should be between 4-255 characters. Must not have any white space.                                                     | No       |
 | version         | string                      | The version number of the capability in x.y.z format. The version must be three segments and each version component must be between 0 and 99.                                               | No       |
-| host.app        | string                      | The host application would be used to execute this capability. Currently, the only valid value is IDSN.                                                                                     | No       |
+| host.app        | string                      | The host application would be used to execute this capability. Currently, the only valid value is indesign.                                                                                     | No       |
 | host.minVersion | string                      | Minimum required version of the host app (in x.y format) that can run this plugin. The version number must be two segments. Typically, the minor segment will be always set to 0, e.g. 16.0 | No       |
 | host.maxVersion | string                      | The maximum version of the host app that can run this plugin. Same formatting as host.minVersion.                                                                                           | Yes      |
 | apiEntryPoints  | array<EntryPointDefinition> | Describes the API entry points for the capability. See the next section for details.                                                                                                        | Yes      |
