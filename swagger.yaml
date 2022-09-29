@@ -431,6 +431,8 @@ components:
                               type: array
                               items:
                                 type: object
+                                required:
+                                - newAssetRelativePath
                                 properties:
                                   currentURI:
                                     type: string
@@ -1277,7 +1279,7 @@ components:
       type: object
       description: Base event response for any job.
       properties:
-        event_id:
+        eventId:
           description: Event ID for the latest event.
           type: string
         id:
@@ -1344,7 +1346,7 @@ components:
               type: string
               description: The current state of the job.
               enum:
-                - ASSETS_DOWNLOAD_STARTED
+                - ASSET_DOWNLOAD_STARTED
             data:
               type: object
 
@@ -1626,8 +1628,8 @@ components:
           type: object
           description: Path from where the asset is to be fetched.
           oneOf:
-            - $ref: '#/components/schemas/PathBasedAsset'
-            - $ref: '#/components/schemas/IdBasedAsset'
+            - $ref: '#/components/schemas/PathBasedInputAsset'
+            - $ref: '#/components/schemas/IdBasedInputAsset'
             - $ref: '#/components/schemas/UrlBasedInputAsset'
             - $ref: '#/components/schemas/AdobeFontsBasedInputAsset'
         destination:
@@ -1650,6 +1652,11 @@ components:
           enum:
             - HTTP_POST
             - HTTP_PUT
+        headers:
+          type: object
+          description: These headers will be added in the PUT or POST request of url. There can be multiple header key value pairs specified here.
+          additionalProperties:
+            type: string
 
     UrlBasedInputAsset:
       type: object
@@ -1665,8 +1672,29 @@ components:
           default: HTTP_GET
           enum:
             - HTTP_GET
+        headers:
+          type: object
+          description: These headers will be added in the GET request of url. There can be multiple header key value pairs specified here.
+          additionalProperties:
+            type: string
+        cache:
+          type: object
+          required:
+            - key
+          properties:
+            key:
+              type: string
+              description: Asset identifier
+            ttl:
+              type: integer
+              default: 48
+              description: TTL in hours it can be maximum 96hrs and minimum 1hr
+            useCache:
+              type: boolean
+              default: false
+              description: Parameter that control enabling or disabling of caching
 
-    IdBasedAsset:
+    IdBasedInputAsset:
       type: object
       required:
         - assetId
@@ -1680,15 +1708,49 @@ components:
           default: ACP
           enum:
             - ACP
+        version:
+          type: string
+          description: version of asset
         token:
+          type: string
+          description: Token that is required for authentication to download/upload asset.
+        cache:
           type: object
-          description: Contains required authentication info to upload asset.
           properties:
+            key:
+              type: string
+              description: Asset identifier
+            ttl:
+              type: integer
+              default: 48
+              description: TTL in hours it can be maximum 96hrs and minimum 1hr
+            useCache:
+              type: boolean
+              default: false
+              description: Parameter that control enabling or disabling of caching
+
+    IdBasedOutputAsset:
+          type: object
+      required:
+        - assetId
+        - type
+          properties:
+        assetId:
+          type: string
+          description: Asset ID.
+        type:
+          type: string
+          default: ACP
+          enum:
+            - ACP
+        version:
+          type: string
+          description: version of asset
             token:
               type: string
-              description: Token to download/upload the asset.
+              description: Token that is required for authentication to download/upload asset.
 
-    PathBasedAsset:
+    PathBasedInputAsset:
       type: object
       required:
         - path
@@ -1706,13 +1768,51 @@ components:
           default: ACP
           enum:
             - ACP
+        version:
+          type: string
+          description: version of asset
         token:
+          type: string
+          description: Token that is required for authentication to download/upload asset.
+        cache:
           type: object
-          description: Contains required authentication info to upload asset.
           properties:
+            key:
+              type: string
+              description: Asset identifier
+            ttl:
+              type: integer
+              default: 48
+              description: TTL in hours it can be maximum 96hrs and minimum 1hr
+            useCache:
+              type: boolean
+              default: false
+              description: Parameter that control enabling or disabling of caching
+
+    PathBasedOutputAsset:
+          type: object
+      required:
+        - path
+        - repositoryId
+        - type
+          properties:
+        path:
+          type: string
+          description: Path of the asset.
+        repositoryId:
+          type: string
+          description: Repository ID.
+        type:
+          type: string
+          default: ACP
+          enum:
+            - ACP
+        version:
+          type: string
+          description: version of asset
             token:
               type: string
-              description: Token to download/upload the asset.
+              description: Token that is required for authentication to download/upload asset.
 
     AdobeFontsBasedInputAsset:
       type: object
@@ -1743,8 +1843,8 @@ components:
           type: object
           description: Destination from where the asset is to be uploaded.
           oneOf:
-            - $ref: '#/components/schemas/PathBasedAsset'
-            - $ref: '#/components/schemas/IdBasedAsset'
+            - $ref: '#/components/schemas/PathBasedOutputAsset'
+            - $ref: '#/components/schemas/IdBasedOutputAsset'
             - $ref: '#/components/schemas/UrlBasedOutputAsset'
         source:
           type: string
