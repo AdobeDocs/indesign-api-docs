@@ -1748,7 +1748,7 @@ components:
           description: version of asset
             token:
               type: string
-          description: Token that is required for authentication to download/upload asset.
+              description: Token that is required for authentication to download/upload asset.
 
     PathBasedInputAsset:
       type: object
@@ -1812,7 +1812,7 @@ components:
           description: version of asset
             token:
               type: string
-          description: Token that is required for authentication to download/upload asset.
+              description: Token that is required for authentication to download/upload asset.
 
     AdobeFontsBasedInputAsset:
       type: object
