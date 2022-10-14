@@ -6,7 +6,7 @@ The InDesign Cloud Services enables you to make edits, query data and run workfl
 ## Onboarding & setup
 ### OnBoarding
 1. The user should be registered on [Developer Pre-release program](https://www.adobeprerelease.com/beta/D1A76A97-F7DC-4552-DE3C-FF5F211C7492/apply) (This would bind the developer to NDA).
-2. The user should fill up this [form](https://forms.office.com/r/DmMKF6Kfu7) for being a part of the Beta program of InDesign Cloud Services.
+2. The user should fill up this [form](https://forms.office.com/Pages/ResponsePage.aspx?id=Wht7-jR7h0OUrtLBeN7O4b96s5AZBCJOvELTJf9VO8hUQTBCMjhZTjVIS0VYQzFGN1lFVjVSM0JROC4u) for being a part of the Beta program of InDesign Cloud Services.
 
 After this, the developers will be shortlisted and they will be enrolled in the beta program. Individual developers will be shared with their client_id and client_secret and other relevant details.
 
@@ -61,7 +61,7 @@ Both scenarios will be covered a bit later, but first let us go over the common 
 As shown in the [skeleton request](#accessing-apis) above, there are three main parts of the body of the request. These parts and their significance can be understood from the information below:
 
 1. "assets": This part is where the caller can specify input assets for the request to be processed successfully. More information can be found [below](#providing-input-assets).
-2. "outputs": The caller can specify the locations where the output assets can be uploaded to. More details can be found [below](#providing-output-assets). In absence of this, the outputs assets will be stored in a temporary repository and a pre-signed url will be shared for those assets which will be valid for sometime.
+2. "outputs": The caller can specify the locations where the output assets can be uploaded to. More details can be found [below](#providing-output-assets). In absence of this, the outputs assets will be stored in a temporary repository and a pre-signed url will be shared for those assets which will be valid for 24hrs.
 3. "params": This part is where the caller can specify information regarding what to do of the input assets.
 
 Please refer to [API documentation](https://adobedocs.github.io/indesign-api-docs/) for more details.
@@ -212,6 +212,8 @@ __ACP (method 2) via repositoryId & path__ example
 Currently, the following storage types are supported to reference your assets from:
 - AWS S3: By using a presigned GET/PUT/POST URL
 - Dropbox: Generate temporary upload/download links using https://dropbox.github.io/dropbox-api-v2-explorer/
+- Azure: By using Shared Access Signature (SAS) in Azure Storage, for GET/PUT/POST operations.
+
 
 ### Links & Working directory
 Links is one of the most important features of InDesign. You can place and link content within the same document or even across different documents. This also helps in keeping the assets and the document decoupled. Links can be corresponding to texts, graphics etc. 
