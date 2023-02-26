@@ -1058,6 +1058,10 @@ components:
                   description: If true, removes blank lines caused by empty fields.
                   type: boolean
                   default: false
+                convertUrlToHyperlink:
+                  description: If true, all urls in the merged document are converted into hyperlinks.
+                  type: boolean
+                  default: true
                 outputFileBaseString:
                   type: string
                   description: The name of the output file.
