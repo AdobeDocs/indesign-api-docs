@@ -194,6 +194,11 @@ paths:
                   - $ref: '#/components/schemas/AssetUploadCompletedEvent'
                   - $ref: '#/components/schemas/AssetUploadFailedEvent'
                   - $ref: '#/components/schemas/AssetsUploadCompletedEvent'
+                  - $ref: '#/components/schemas/AssetScanningStartedEvent'
+                  - $ref: '#/components/schemas/AssetScanningCompletedEvent'
+                  - $ref: '#/components/schemas/AssetScanningFailedEvent'
+                  - $ref: '#/components/schemas/EngineProcessingStartedEvent'
+                  - $ref: '#/components/schemas/EngineProcessingCompletedEvent'
                   - $ref: '#/components/schemas/CompletedEvent'
                   - $ref: '#/components/schemas/FailedEvent'
 
@@ -1469,6 +1474,73 @@ components:
                 - ASSETS_UPLOAD_COMPLETED
             data:
               type: object
+
+    AssetScanningStartedEvent:
+      allOf:
+        - $ref: '#/components/schemas/BaseEvent'
+        - description: Asset Scanning started event.
+          type: object
+          properties:
+            state:
+              type: string
+              description: The current state of the job.
+              enum:
+                - ASSET_SCANNING_STARTED
+            data:
+              type: object
+
+    AssetScanningCompletedEvent:
+      allOf:
+        - $ref: '#/components/schemas/BaseEvent'
+        - description: Asset Scanning completed event.
+          type: object
+          properties:
+            state:
+              type: string
+              description: The current state of the job.
+              enum:
+                - ASSET_SCANNING_COMPLETED
+            data:
+              type: object
+
+    AssetScanningFailedEvent:
+      allOf:
+        - $ref: '#/components/schemas/BaseEvent'
+        - description: Asset scanning failed event.
+          type: object
+          properties:
+            state:
+              type: string
+              description: The current state of the job.
+              enum:
+                - ASSET_SCANNING_FAILED
+            data:
+              type: object
+
+    EngineProcessingStartedEvent:
+      allOf:
+        - $ref: '#/components/schemas/BaseEvent'
+        - description: Engine processing starting event.
+          type: object
+          properties:
+            state:
+              type: string
+              description: The current state of the job.
+              enum:
+                - ENGINE_PROCESSING_STARTED
+
+    EngineProcessingCompletedEvent:
+      allOf:
+        - $ref: '#/components/schemas/BaseEvent'
+        - description: Engine processing completed event.
+        
+          type: object
+          properties:
+            state:
+              type: string
+              description: The current state of the job.
+              enum:
+                - ENGINE_PROCESSING_COMPLETED
               
     CompletedEvent:
       allOf:
@@ -1611,6 +1683,11 @@ components:
               - $ref: '#/components/schemas/AssetUploadCompletedEvent'
               - $ref: '#/components/schemas/AssetUploadFailedEvent'
               - $ref: '#/components/schemas/AssetsUploadCompletedEvent'
+              - $ref: '#/components/schemas/AssetScanningStartedEvent'
+              - $ref: '#/components/schemas/AssetScanningCompletedEvent'
+              - $ref: '#/components/schemas/AssetScanningFailedEvent'
+              - $ref: '#/components/schemas/EngineProcessingStartedEvent'
+              - $ref: '#/components/schemas/EngineProcessingCompletedEvent'
               - $ref: '#/components/schemas/CompletedEvent'
               - $ref: '#/components/schemas/FailedEvent'
         paging:
@@ -1625,216 +1702,49 @@ components:
 
     InputAsset:
       type: object
+      description: The Url, from where the asset is to be fetched.
       required:
         - source
       properties:
         source:
           type: object
-          description: Path from where the asset is to be fetched.
-          oneOf:
-            - $ref: '#/components/schemas/PathBasedInputAsset'
-            - $ref: '#/components/schemas/IdBasedInputAsset'
-            - $ref: '#/components/schemas/UrlBasedInputAsset'
-            - $ref: '#/components/schemas/AdobeFontsBasedInputAsset'
+          required:
+            - url
+            - type
+          properties:
+            url:
+              type: string
+              description: URL of the asset.
+            type:
+              type: string
+              default: HTTP_GET
+              enum:
+                - HTTP_GET
+            headers:
+              type: object
+              description: These headers will be added in the GET request of url. There can be multiple header key value pairs specified here.
+              additionalProperties:
+                type: string
+            cache:
+              type: object
+              required:
+                - key
+              properties:
+                key:
+                  type: string
+                  description: Asset identifier
+                ttl:
+                  type: integer
+                  default: 48
+                  description: TTL in hours it can be maximum 96hrs and minimum 1hr
+                useCache:
+                  type: boolean
+                  default: false
+                  description: Parameter that control enabling or disabling of caching
         destination:
           type: string
           description: This provides a path relative to a temporary base directory (working directory) where resource would be downloaded. This would be used to identify the assets within the parameters.
             It cannot go up using '..' or '/'. Should be a valid file name.
-
-    UrlBasedOutputAsset:
-      type: object
-      required:
-        - url
-        - type
-      properties:
-        url:
-          type: string
-          description: URL of the asset.
-        type:
-          type: string
-          default: HTTP_PUT
-          enum:
-            - HTTP_POST
-            - HTTP_PUT
-        headers:
-          type: object
-          description: These headers will be added in the PUT or POST request of url. There can be multiple header key value pairs specified here.
-          additionalProperties:
-            type: string
-
-    UrlBasedInputAsset:
-      type: object
-      required:
-        - url
-        - type
-      properties:
-        url:
-          type: string
-          description: URL of the asset.
-        type:
-          type: string
-          default: HTTP_GET
-          enum:
-            - HTTP_GET
-        headers:
-          type: object
-          description: These headers will be added in the GET request of url. There can be multiple header key value pairs specified here.
-          additionalProperties:
-            type: string
-        cache:
-          type: object
-          required:
-            - key
-          properties:
-            key:
-              type: string
-              description: Asset identifier
-            ttl:
-              type: integer
-              default: 48
-              description: TTL in hours it can be maximum 96hrs and minimum 1hr
-            useCache:
-              type: boolean
-              default: false
-              description: Parameter that control enabling or disabling of caching
-
-    IdBasedInputAsset:
-      type: object
-      required:
-        - assetId
-        - type
-      properties:
-        assetId:
-          type: string
-          description: Asset ID.
-        type:
-          type: string
-          default: ACP
-          enum:
-            - ACP
-        version:
-          type: string
-          description: version of asset
-        token:
-          type: string
-          description: Token that is required for authentication to download/upload asset.
-        cache:
-          type: object
-          properties:
-            key:
-              type: string
-              description: Asset identifier
-            ttl:
-              type: integer
-              default: 48
-              description: TTL in hours it can be maximum 96hrs and minimum 1hr
-            useCache:
-              type: boolean
-              default: false
-              description: Parameter that control enabling or disabling of caching
-
-    IdBasedOutputAsset:
-      type: object
-      required:
-        - assetId
-        - type
-      properties:
-        assetId:
-          type: string
-          description: Asset ID.
-        type:
-          type: string
-          default: ACP
-          enum:
-            - ACP
-        version:
-          type: string
-          description: version of asset
-        token:
-          type: string
-          description: Token that is required for authentication to download/upload asset.
-
-    PathBasedInputAsset:
-      type: object
-      required:
-        - path
-        - repositoryId
-        - type
-      properties:
-        path:
-          type: string
-          description: Path of the asset.
-        repositoryId:
-          type: string
-          description: Repository ID.
-        type:
-          type: string
-          default: ACP
-          enum:
-            - ACP
-        version:
-          type: string
-          description: version of asset
-        token:
-          type: string
-          description: Token that is required for authentication to download/upload asset.
-        cache:
-          type: object
-          properties:
-            key:
-              type: string
-              description: Asset identifier
-            ttl:
-              type: integer
-              default: 48
-              description: TTL in hours it can be maximum 96hrs and minimum 1hr
-            useCache:
-              type: boolean
-              default: false
-              description: Parameter that control enabling or disabling of caching
-
-    PathBasedOutputAsset:
-      type: object
-      required:
-        - path
-        - repositoryId
-        - type
-      properties:
-        path:
-          type: string
-          description: Path of the asset.
-        repositoryId:
-          type: string
-          description: Repository ID.
-        type:
-          type: string
-          default: ACP
-          enum:
-            - ACP
-        version:
-          type: string
-          description: version of asset
-        token:
-          type: string
-          description: Token that is required for authentication to download/upload asset.
-
-    AdobeFontsBasedInputAsset:
-      type: object
-      description: One of 'postscriptName' or 'fontId' must be provided.
-      required:
-        - type
-      properties:
-        postscriptName:
-          type: string
-          description: Adobe font postscript name.
-        fontId:
-          type: string
-          description: Adobe font Id. This is same as typekit Id. 
-        type:
-          type: string
-          default: ADOBE_FONT
-          enum:
-            - ADOBE_FONT
 
     OutputAsset:
       description: The url, where the output assets are to be posted after the job processing.
@@ -1845,11 +1755,24 @@ components:
       properties:
         destination:
           type: object
-          description: Destination from where the asset is to be uploaded.
-          oneOf:
-            - $ref: '#/components/schemas/PathBasedOutputAsset'
-            - $ref: '#/components/schemas/IdBasedOutputAsset'
-            - $ref: '#/components/schemas/UrlBasedOutputAsset'
+          required:
+            - url
+            - type
+          properties:
+            url:
+              type: string
+              description: URL of the asset.
+            type:
+              type: string
+              default: HTTP_PUT
+              enum:
+                - HTTP_POST
+                - HTTP_PUT
+            headers:
+              type: object
+              description: These headers will be added in the PUT or POST request of url. There can be multiple header key value pairs specified here.
+              additionalProperties:
+                type: string
         source:
           type: string
           description: This provides a path relative of the output where resource would be generated.
