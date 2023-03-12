@@ -104,11 +104,16 @@ The json structure of all the events is available in the [API Spec](https://adob
 | ASSET_DOWNLOAD_STARTED    | Generated when a specified input asset download starts |
 | ASSET_DOWNLOAD_COMPLETED  | Generated when a specified input download is complete  |
 | ASSETS_DOWNLOAD_COMPLETED | Generated when all the assets are downloaded           |
-| RUNNING                   | Generated when execution starts with app-engine        |
+| ENGINE_PROCESSING_STARTED | Generated when execution starts with app-engine        |
+| ENGINE_PROCESSING_COMPLETED| Generated when execution end on app-engine            |
+| RUNNING                   | Generated while execution is going on at app-engine    |
 | ASSETS_UPLOAD_STARTED     | Generated when assets upload started                   |
 | ASSET_UPLOAD_STARTED      | Generated when specified asset upload started          |
 | ASSET_UPLOAD_COMPLETED    | Generated when specified asset upload completed        |
 | ASSETS_UPLOAD_COMPLETED   | Generated when all assets upload completed             |
+| ASSET_SCANNING_STARTED    | Generated when capability script scanning is started   |
+| ASSET_SCANNING_COMPLETED  | Generated when capability script scanning is completed |
+| ASSET_SCANNING_FAILED     | Generated when capability script scanning is failed    |
 | COMPLETED                 | Generated when execution of a capability is complete   |
 | FAILED                    | Generated if capability execution fails                |
 

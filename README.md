@@ -82,22 +82,7 @@ The platform supports multiple asset types. These asset types signify storage re
     <td>mandatory</td>
     <td>Any pre-signed /public URL</td>
   </tr>
-  <tr>
-    <td rowspan="3">ACP (Adobe cloud storage)</td>
-    <td>assetId</td>
-    <td rowspan="3">one of the two</td>
-    <td>Asset URN on ACP</td>
-  </tr>
-  <tr>
-    <td rowspan="2">repositoryId<BR>path</td>
-    <td>Id of the repository on ACP where assets are stored</td>
-  </tr>
-  <tr>
-    <td>Path of an asset in the repository on ACP <BR> Note: ACP supports UNIX style paths only</td>
-  </tr>
 </table>
-
-Please note: ACP is supported with [OAuth integration](#accessing-apis) only.
 
 __HTTP_GET__ example
 ```json
@@ -109,30 +94,6 @@ __HTTP_GET__ example
     "destination" : "jobasset/template.indt"
 }
 ```
-
-__ACP (method 1) via assetId__ example
-```json
-{
-    "source" : {
-        "type" : "ACP",
-        "assetId" : "urn:aaid:sc:AP:03de4659-2bc8-4148-b98a-8bd1359e8833"
-    },
-    "destination" : "jobasset/template.indt"
-}
-```
-
-__ACP (method 2) via repositoryId & path__ example
-```json
-{
-    "source" : {
-        "type" : "ACP",
-        "repositoryId": "urn:aaid:sc:AP:f6d925d5-e58e-531f-91db-8d43e0f024cf",
-        "path": "/files/7AUG/AdobeStock_322173431.indt"
-    },
-    "destination" : "jobasset/template.indt"
-}
-```
-
 In all the examples above, the data is divided into source and destination. The first attribute, 'source' is where the asset is downloaded from. The second attribute 'destination' refers to the location where the asset would be downloaded to. More on this can be found under links.
 
 ### Providing output assets
@@ -156,22 +117,7 @@ Like input assets, the platform supports multiple asset types for output as well
     <td>mandatory</td>
     <td>Any pre-signed /public URL</td>
   </tr>
-  <tr>
-    <td rowspan="3">ACP (Adobe cloud storage) </td>
-    <td>assetId</td>
-    <td rowspan="3">one of the two</td>
-    <td>Asset URN on ACP</td>
-  </tr>
-  <tr>
-    <td rowspan="2">repositoryId<BR>path</td>
-    <td>Id of the repository on ACP where assets are stored</td>
-  </tr>
-  <tr>
-    <td>Path of an asset in the repository on ACP <BR> Note: ACP supports UNIX style paths only</td>
-  </tr>
 </table>
-
-Please note: ACP is supported with [OAuth integration](#accessing-apis) only.
 
 __HTTP_PUT__ or __HTTP_POST__ example
 ```json
@@ -184,29 +130,6 @@ __HTTP_PUT__ or __HTTP_POST__ example
 }
 ```
 URL should be a pre-signed POST URL in case of HTTP_POST and in case type is HTTP_PUT, URL should be a pre-signed PUT URL.
-
-__ACP (method 1) via assetId__ example
-```json
-{
-    "destination" : {
-        "type" : "ACP",
-        "assetId" : "urn:aaid:sc:AP:03de4659-2bc8-4148-b98a-8bd1359e8833"
-    },
-    "source" : "jobasset/template.indt"
-}
-```
-
-__ACP (method 2) via repositoryId & path__ example
-```json
-{
-    "destination" : {
-        "type" : "ACP",
-        "repositoryId": "urn:aaid:sc:AP:f6d925d5-e58e-531f-91db-8d43e0f024cf",
-        "path": "/files/INDESIGN"
-    },
-    "source" : "jobasset/template.indt"
-}
-```
 
 ### Supported file storage
 Currently, the following storage types are supported to reference your assets from:
@@ -623,34 +546,6 @@ The response corresponding to it is as follows
 ### Consuming the APIs provided by InDesign Cloud Services
 You can find the detailed [API documentation here](https://adobedocs.github.io/indesign-api-docs/). Sample request for some of the APIs are provided below:
 
-#### PDF rendition using repositoryId and path.
-Creates and returns new PDF from a specific InDesign document. The following example is using repositoryId and path
-```curl
-curl --location --request POST 'https://indesign.adobe.io/api/v1/capability/indesign/rendition/pdf' \
---header 'Authorization: bearer <YOUR_OAUTH_TOKEN>' \
---header 'x-api-key: <YOUR_API_KEY>' \
---header 'Content-Type: application/json' \
---data-raw '{
-    "assets":[
-        {
-            "source": {
-                "type": "ACP",
-                "repositoryId": "urn:aaid:sc:AP:00474483-13cf-4840-933b-b8c01d112a78",
-                "path": "Cheese_final.indd"
-            },
-            "destination" : "Cheese_final.indd"
-        }
-    ],
-    "params":{
-         "jobType":"RENDITION_PDFPRINT",
-         "targetDocuments": [
-            "Cheese_final.indd"
-         ],
-         "outputFileBaseString": "template_rendition"
-    }
-}
-```
-
 #### PDF rendition using pre-signed URL
 Creates and returns new PDF from a specific InDesign document. The following example is using pre-signed URL and a custom font
 ```curl
@@ -697,24 +592,22 @@ curl --location --request POST 'https://indesign.adobe.io/api/v1/capability/inde
     "assets": [
         {
             "source": {
-                "type": "ACP",
-                "repositoryId": "urn:aaid:sc:AP:00474483-13cf-4840-933b-b8c01d112a78",
-                "path": "NoError-50tags-160page.indd"
+                "url":"<YOUR PRE-SIGNED URL>",
+                "type":"HTTP_GET"
             },
-            "destination": "NoError-50tags-160page.indd"
+            "destination" : "dataMergeTemplate.indd"
         },
         {
             "source": {
-                "type": "ACP",
-                "repositoryId": "urn:aaid:sc:AP:00474483-13cf-4840-933b-b8c01d112a78",
-                "path": "batang.ttc"
+                "url":"<YOUR PRE-SIGNED URL>",
+                "type":"HTTP_GET"
             },
             "destination": "batang.ttc"
         }
     ],
     "params": {
         "jobType": "DATAMERGE_TAGS",
-        "targetDocument": "NoError-50tags-160page.indd",
+        "targetDocument": "dataMergeTemplate.indd",
         "includePageItemIdentifiers": true
     }
 }
@@ -731,36 +624,36 @@ curl --location --request POST 'https://indesign.adobe.io/api/v1/capability/inde
     "assets": [
         {
             "source": {
-                "type": "ACP",
-                "repositoryId": "urn:aaid:sc:AP:00474483-13cf-4840-933b-b8c01d112a78",
-                "path": "dtemp.indd"
+                "url":"<YOUR PRE-SIGNED URL>",
+                "type":"HTTP_GET"
             },
-            "destination": "dtemp.indd"
+            "destination" : "dataMergeTemplate.indd"
         },
         {
             "source": {
-                "type": "ACP",
-                "repositoryId": "urn:aaid:sc:AP:00474483-13cf-4840-933b-b8c01d112a78",
-                "path": "Directory_Names.csv"
+                "url":"<YOUR PRE-SIGNED URL>",
+                "type":"HTTP_GET"
             },
             "destination": "Directory_Names.csv"
         }
     ],
+    "params": {
+        "jobType": "DATAMERGE_MERGE",
+        "targetDocument": "dataMergeTemplate.indd",
+        "outputType": "PDF",
+        "outputFolderPath": "outputfolder",
+        "outputFileBaseString" : "merged"
+        "dataSource": "Directory_Names.csv"
+    }
     "outputs": [ // custom user output
         {
             "destination": {
-                "type": "ACP",
-                "assetId": "urn:aaid:sc:AP:00474483-13cf-4840-933b-b8c01d112a78"
-            }
+                "type": "HTTP_PUT",
+                "url": "<YOUR PUT-SIGNED URL>"
+            },
+            "source": "outputfolder/merged.pdf"
         }
-    ],
-    "params": {
-        "jobType": "DATAMERGE_MERGE",
-        "targetDocument": "dtemp.indd",
-        "outputType": "PDF",
-        "outputFolderPath": "outputfolder",
-        "dataSource": "Directory_Names.csv"
-    }
+    ]
 }
 ```
 
@@ -772,7 +665,7 @@ InDesign Cloud Services exposes a way for third party to come onboard and deploy
 There are few points which must be kept in mind while writing a script for InDesign Cloud Services.
 
 #### Scripts
-To run a script with InDesign Cloud Services, the script should be confirming to what can be run on an InDesignServer. Also the scripts can't be run as is. There are certain assumptions w.r.t. input to the script and output frm it, which needs to be modified. These nuances are discussed in the next few sections.
+To run a script with InDesign Cloud Services, the script should be confirming to what can be run on an InDesignServer. Also the scripts can't be run as is. There are certain assumptions w.r.t. input to the script and output from it, which needs to be modified. These nuances are discussed in the next few sections.
 
 #### Accepting input in script
 Executing script relies on the user inputs along with information about the working directory from the platform. All this information is passed to the script via a single argument i.e. "parameters". The structure of the parameters is as follows:
@@ -813,7 +706,7 @@ Details of the attributes within the data passed to script is as follows:
   </tr>
 </table>
 
-The existing scripts will need little tweaking to accept the arguments correctly. So an existing sample script wil look like this
+The existing scripts will need little tweaking to accept the arguments correctly. So an existing sample script will look like this
 ```javascript
     var arg1 = app.scriptArgs.get('argument1')
     var arg2 = app.scriptArgs.get('argument2')
