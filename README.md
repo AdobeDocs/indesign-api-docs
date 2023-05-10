@@ -80,7 +80,7 @@ The platform supports multiple asset types. These asset types signify storage re
     <td>HTTP_GET</td>
     <td>url</td>
     <td>mandatory</td>
-    <td>Any pre-signed /public URL</td>
+    <td>Pre-signed URL</td>
   </tr>
 </table>
 
@@ -109,13 +109,13 @@ Like input assets, the platform supports multiple asset types for output as well
     <td>HTTP_PUT</td>
     <td>url</td>
     <td>mandatory</td>
-    <td>Any pre-signed /public URL</td>
+    <td>Pre-signed URL</td>
   </tr>
   <tr>
     <td>HTTP_POST</td>
     <td>url</td>
     <td>mandatory</td>
-    <td>Any pre-signed /public URL</td>
+    <td>Pre-signed URL</td>
   </tr>
 </table>
 
