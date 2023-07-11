@@ -1,74 +1,69 @@
 # InDesign Cloud Services
 
 ## Introduction
-The InDesign Cloud Services enables you to make edits, query data and run workflows on ID file. This document will help you onboard to the services, familiarize you with the available features, and get you started with some basic usage examples.
-
+The InDesign Cloud Services enables you to make edit, query data, and run workflows on an ID file. This document will help you onboard to the services, familiarize you with the available features, and get you started with some basic usage examples.
 ## Onboarding & setup
 ### OnBoarding
 1. The user should be registered on [Developer Pre-release program](https://www.adobeprerelease.com/beta/D1A76A97-F7DC-4552-DE3C-FF5F211C7492/apply) (This would bind the developer to NDA).
 2. The user should fill up this [form](https://forms.office.com/Pages/ResponsePage.aspx?id=Wht7-jR7h0OUrtLBeN7O4b96s5AZBCJOvELTJf9VO8hUQTBCMjhZTjVIS0VYQzFGN1lFVjVSM0JROC4u) for being a part of the Beta program of InDesign Cloud Services.
 
-After this, the developers will be shortlisted and they will be enrolled in the beta program. Individual developers will be shared with their client_id and client_secret and other relevant details.
+After this, we will be shortlisting and enroll the developers in the beta program. We will be sharing the client_id and client_secret and other relevant details with individual developers.
 
 ### Setup
-The user will have to generate an access token using the details shared above. The exact steps to make it work are as follows:
+You must generate an access token using the details shared above and follow these steps to setup:
 
-1. Download [node](https://nodejs.org/en/download/) and install on your machine.
-2. Download and extract the [sample code](https://github.com/AdobeDocs/adobeio-auth/tree/stage/JWT/samples/adobe-jwt-node).
-3. Edit the contents of the config file (config.js) by replacing relevant data for clientId , clientSecret and other attributes from the data shared with you at the time of acceptance.
-4. Execute
-```
-npm install
-node app.js
-```
+1. Download the [node](https://nodejs.org/en/download/) and install it on your machine.
+2. Download and extract the [sample code](https://github.com/AdobeDocs/adobeio-auth/tree/stage/JWT/samples/adobe-jwt-node).
+3. Edit the contents of the config file (config.js) by replacing relevant data for clientId , clientSecret, and other attributes from the data shared with you at the time of acceptance.
+4. Execute.
+    ```
+    npm install
+    node app.js
+    ```
+After successfully completing the above steps, you’ll get an 'access_token' in response. The token will be valid for 24hrs, after which you must re-generate it. Use this token in your API calls to make them work.
 
-After successful completion of above steps, the user will get 'access_token' in response. The token will be valid for 24hrs, beyond which it  needs to be generated again. Use this token in your API calls to make them work.
+## Accessing APIs
 
-### Accessing APIs
-There are two types of authentication which will be supported for InDesign Cloud Services:
+InDesign Cloud Services support two types of authentication :
 
 1. __Service Account Integration__: For service-to-service integrations, you will need a JSON Web Token (JWT) that encapsulates your client credentials and authenticates the identity of your integration. You then exchange the JWT for the access token that authorizes access.
-2. __OAuth integration__: (Coming soon) If your integration needs to access content or a service on behalf of an end user, that user must be authenticated as well. Your integration will need to pass the OAuth token granted by the Adobe IMS.
+2. __OAuth integration__: (Coming soon) If your integration needs to access content or a service on behalf of an end user, that user must be authenticated as well. Your integration must pass the OAuth token granted by the Adobe IMS.
 
-A skeleton cURL request for accessing the APIs is provided below
-```curl
-curl --location --request POST <endpoint> \
---header 'Authorization: <access_token>' \
---header 'x-api-key: <client_id>' \
---header 'Content-Type: application/json' \
---data-raw '{
-    "assets":[
-        ...
-    ],
-    "params":{
-        ...
-    },
-    "outputs":[
-        ...
-    ]
-}
-```
-
+    Here’s a skeleton cURL request to accessing the APIs :
+    ```curl
+    curl --location --request POST <endpoint> \
+    --header 'Authorization: <access_token>' \
+    --header 'x-api-key: <client_id>' \
+    --header 'Content-Type: application/json' \
+    --data-raw '{
+        "assets": [
+            ...
+        ],
+        "params": {
+            ...
+        },
+        "outputs": [
+            ...
+        ]
+    }
+    ```
 ## Working with the InDesign Cloud Services
+You can use InDesign Cloud Services in two ways:
 
-InDesign Cloud Services can be used in two ways: 
-1. Consuming the APIs provided by InDesign Cloud Services. You can find the [API documentation here](https://adobedocs.github.io/indesign-api-docs/).
-2. Exposing your own APIs with the help of custom scripts. The documentation can be found [here](#exposing-your-own-apis).
+1. Consume the APIs provided by InDesign Cloud Services. You can find the [API documentation here](https://adobedocs.github.io/indesign-api-docs/).
+2. Expose your own APIs with the help of custom scripts. You can find the documentation [here](#exposing-your-own-apis).
 
-Both scenarios will be covered a bit later, but first let us go over the common points. We'll discuss various points below and their examples can be seen in conjunction with the API documentation shared above.
-
+We will cover both scenarios in the coming sections, but first, let us go over the common points. We'll discuss various points below and; their examples can be seen in conjunction with the API documentation shared above.
 ### Understanding body of the request
-As shown in the [skeleton request](#accessing-apis) above, there are three main parts of the body of the request. These parts and their significance can be understood from the information below:
+As shown in the [skeleton request](#accessing-apis) above, there are three main parts of the body of the request. Here’s the information to understand these parts and their significance:
 
-1. "assets": This part is where the caller can specify input assets for the request to be processed successfully. More information can be found [below](#providing-input-assets).
-2. "outputs": The caller can specify the locations where the output assets can be uploaded to. More details can be found [below](#providing-output-assets). In absence of this, the outputs assets will be stored in a temporary repository and a pre-signed url will be shared for those assets which will be valid for 24hrs.
-3. "params": This part is where the caller can specify information regarding what to do of the input assets.
+1. "assets": This part is where the caller can specify input assets for the request to be processed successfully. More information can be found [below](#provide-input-assets).
+2. "outputs": Specify the locations where to upload the output assets. You can find More more details can be found here[below](#provide-output-assets). In the absence of this, the outputs assets are stored in a temporary repository, and a pre-signed URL will be shared for those assets, which will be valid for 24hrs.
+3. "params": Specify information regarding what to do with the input assets.
 
-Please refer to [API documentation](https://adobedocs.github.io/indesign-api-docs/) for more details.
-
-### Providing input assets
-
-The platform supports multiple asset types. These asset types signify storage repositories from which platform can download.  The information pertaining to the input assets can be given within the "assets" array within body of the request.Supported types are as follows: 
+    You can refer to [API documentation](https://adobedocs.github.io/indesign-api-docs/) for more details.
+### Provide input assets
+The platform supports multiple asset types. These asset types signify storage repositories from which the platform can download. You can provide the input asset information within the "assets" array . Here are the supported types :
 <table style="background-color:White;">
   <tr>
     <th>Type</th>
@@ -94,10 +89,12 @@ __HTTP_GET__ example
     "destination" : "jobasset/template.indt"
 }
 ```
-In all the examples above, the data is divided into source and destination. The first attribute, 'source' is where the asset is downloaded from. The second attribute 'destination' refers to the location where the asset would be downloaded to. More on this can be found under links.
+In all the above examples, you can view that data is divided into source and destination. The first attribute, `'source'` is where the asset is downloaded from. The second attribute `'destination'` refers to the location where the asset would be downloaded to. You can find more information in below sections.
 
-### Providing output assets
-Like input assets, the platform supports multiple asset types for output as well. These asset types signify storage repositories to which platform can upload. This information can be given within the "outputs" array within the body of the request. Supported types are as follows: 
+### Provide output assets
+Like input assets, the platform supports multiple asset types for output as well. These asset types signify storage repositories to which platform can upload. You can provide this information in the `"outputs"` array within the body of the request. 
+Here are the supported types:
+
 <table style="background-color:White;">
   <tr>
     <th>Type</th>
@@ -132,21 +129,26 @@ __HTTP_PUT__ or __HTTP_POST__ example
 URL should be a pre-signed POST URL in case of HTTP_POST and in case type is HTTP_PUT, URL should be a pre-signed PUT URL.
 
 ### Supported file storage
-Currently, the following storage types are supported to reference your assets from:
-- AWS S3: By using a presigned GET/PUT/POST URL
-- Dropbox: Generate temporary upload/download links using https://dropbox.github.io/dropbox-api-v2-explorer/
-- Azure: By using Shared Access Signature (SAS) in Azure Storage, for GET/PUT/POST operations.
+Here are the supported storage types to refer your assets from:
 
+- AWS S3: Use a presigned GET/PUT/POST URL
+- Dropbox: Generate temporary upload/download links using [link](https://dropbox.github.io/dropbox-api-v2-explorer/)
+- Azure: Use a Shared Access Signature (SAS) in Azure Storage, for GET/PUT/POST operations.
+## Links & Working directory
+Links is one of the most important features of InDesign. You can place and link content within the same document or even across different documents. This also helps in keeping the assets and the document decoupled. Links can be corresponding to texts, graphics etc.
 
-### Links & Working directory
-Links is one of the most important features of InDesign. You can place and link content within the same document or even across different documents. This also helps in keeping the assets and the document decoupled. Links can be corresponding to texts, graphics etc. 
+* InDesign APIs support the processing of documents with links. 
+* To process a request, a temporary folder/directory is created. which is called as the working directory for the request.
+* All the input assets mentioned in the request are downloaded and kept in the working directory.
+* Within the working directory the location of individual asset is governed by the relative path mentioned in the 'destination' attribute.
+* Please note, that to refer to the same asset in the rest of the params, the value mentioned in the destination property is to be used.
 
-InDesign APIs support the processing of documents with links. To process a request a temporary folder/directory is created. This directory is called the working directory for the request. In the request all the input assets mentioned in the request are downloaded and kept in the working directory. Within the working directory the location of individual asset is governed by the relative path mentioned in the 'destination' attribute. Please note, that to refer to the same asset in the rest of the params, the value mentioned in the destination property is to be used. To make links work, it can be done in two ways:
+You can use the following ways to make links work, it can be done in two ways:
+1. Maintaining relative paths of assets to the target document. While doing this, you need to  place the files outside of the working directory.
+2. If you place the linked assets parallel to the target document, the links get resolved and the assets are picked.
 
-1. Maintaining relative paths of assets to the target document. While doing this one must understand that the files should be placed outside of the working directory.
-2. If the linked assets are placed parallel to the target document, the links get resolved and the assets are picked. 
-
-Sometimes the documents contain custom links which are not understood by InDesign. To enable proper execution of the job, the custom URLs can be relinked to assets provided in the request. An example of it is as follows:
+Sometimes the documents contain custom links which are not understood by InDesign. To enable proper execution of the job, the custom URLs can be relinked to assets provided in the request. 
+Here’s an example for this:
 ```json
 {
     "params": {
@@ -168,13 +170,29 @@ Sometimes the documents contain custom links which are not understood by InDesig
     }
 }
 ```
-In this example the existing URI "customScheme:4c189e2d-315e-4fab-a8c2-45690e44d1f0" in document "TargetDocument.indd" cannot be interpreted by InDesign by itself. The caller would have provided an input asset with "destination" attribute as "SomeAsset.png". By using the above example the caller is asking to relink the links with specified URI to be relinked to the new asset which is present at <Working_Directory>/SomeNewAsset.png
-### Fonts 
-Just like links, fonts are also very important. The support of fonts is as follows:
-#### Adobe fonts
-Adobe fonts are currently supported only with [OAuth integration](#accessing-apis) where the end user can be identified. These are yet not supported with [Service account integration](#accessing-apis). The fonts are fetched automatically, on behalf of the requestor and thus nothing needs to be done while making a request. Please note that the list of supported fonts is dependent on the account used to make the call. The way it works is that the platform iterates over all the InDesign documents brought in the temporary working directory by iterating over the input asset list. As a pre job step, these documents are opened and list of Adobe fonts is extracted from it. These documents are closed and fonts are downloaded. When the fonts' download is complete, the actual job script is run.
+In this example the existing URI `"customScheme:4c189e2d-315e-4fab-a8c2-45690e44d1f0"` in document `"TargetDocument.indd"` cannot be interpreted by InDesign by itself. The caller would have provided an input asset with `"destination"` attribute as `"SomeAsset.png"`.
 
-There may be certain cases where the search for Adobe Fonts will not help. The first case is when the Adobe fonts are not being used in the document, hence it does not make sense to open the document and search for those. The second case is of scenario where the service account integration is used for connecting with the APIs. In these scenarios, the caller has the option to skip the font search. For more details please look at the following example, where a specific document is to be searched for Adobe Fonts:
+By using the above example the caller is asking to relink the links with specified URI to be relinked to the new asset which is present at <Working_Directory>/SomeNewAsset.png
+
+<br>
+
+## Fonts
+Just like links, fonts are also very important. The support of fonts is as follows:
+### Adobe fonts
+Adobe fonts are currently supported only with [OAuth integration](#accessing-apis) where the end user can be identified. These are not yet supported with [Service account integration](#accessing-apis). 
+* The fonts are fetched automatically, on behalf of the requestor and thus nothing needs to be done while making a request. 
+* The list of supported fonts is dependent on the account used to make the call.
+* Platform iterates over all the InDesign documents brought in the temporary working directory. Then pre-job is executed.
+* As a pre-job step, these documents are opened and, the list of Adobe fonts is extracted from it. These documents are closed, and fonts are downloaded.
+* When the fonts' download is complete, the actual job script is run.
+
+Here are cases where the search from Adobe Fonts will not help : 
+1. When the Adobe fonts are not being used in the document, hence it does not make sense to open the document and search for those.
+
+2. Where the service account integration is used for connecting with the APIs.
+
+In these scenarios, the caller has the option to skip the font search. For more details please look at the [Optimisation](#optimizations) section.
+Here’s an example, where a specific document is to be searched for Adobe Fonts:
 ```json
 {
     "params": {
@@ -190,10 +208,9 @@ There may be certain cases where the search for Adobe Fonts will not help. The f
     }
 }
 ```
-For more information around this please refer to the API documentation.
-
-#### Custom fonts
-Custom fonts or user fonts can be provided as a regular asset. An example:
+For more information around this, please refer to the API documentation.
+### Custom fonts
+Custom fonts or user fonts can be provided as a regular asset. Here’s an example:
 ```json
 {
 
@@ -215,8 +232,7 @@ Custom fonts or user fonts can be provided as a regular asset. An example:
     ]
 }
 ```
-
-For the fonts to be picked properly, please place it in the "Document Fonts" folder parallel to the document which uses it. Or, if the fonts are kept under some other folder say "fontFolder", please specify the font directory as 
+For the fonts to be picked properly, please place it in the "Document Fonts" folder parallel to the document which uses it. Or, if the fonts are kept under some other folder say like "fontFolder", please specify the font directory as follows:
 ```json
 {
     "params": {
@@ -231,10 +247,38 @@ For the fonts to be picked properly, please place it in the "Document Fonts" fol
 }
 ```
 In absence of any font directory being mentioned, the working directory will be added as the font directory.
+### Optimizations
+There are certain optimizations which a user can employ to make the APIs more performant.
 
-### Getting status of a job
-Now that the request is sent, how can one get the status of the request. This is demonstrated with an example below. Suppose the user triggers a rendition call with a 3 page document. The request will look something like
-
+1. If the font directories are to be added, don’t use the directories with InDesign documents, as opening of these files will create additional lock files and will in turn trigger recalculation of the font resources. 
+As a best practice, try to keep the fonts in "Document Fonts" or in an isolated directory. If all the hierarchy of the downloaded fonts have been properly mentioned as lying in "Document Fonts" folder parallel to individual documents then following can be used to bring in a level of optimization. This will avoid addition of any font directory and might thus result in performance benefits.
+```json
+{
+    "params": {
+        "generalSettings": {
+            "fonts": {
+                "fontsDirectories": []
+            }
+        }
+    }
+}
+```
+2. Skipping the Adobe fonts search is another way to optimize the call. It can be done by providing includeDocuments as an empty array.
+```json
+{
+    "params": {
+        "generalSettings": {
+            "fonts": {
+                "adobeFonts": {
+                    "includeDocuments": []
+                }
+            }
+        }
+    }
+}
+```
+### Get the status of a job
+Now that the request is sent, how can one get the status of the request. This is demonstrated with an example below. Suppose the user triggers a rendition call with a 3 page document, the request will look something like this:
 ```curl
 curl --location --request POST 'https://indesign.adobe.io/api/v1/capability/indesign/rendition/png' \
 --header 'Authorization: <access_token>' \
@@ -260,7 +304,6 @@ curl --location --request POST 'https://indesign.adobe.io/api/v1/capability/inde
     }
 }'
 ```
-
 The response to the request will be something like
 ```json
 {
@@ -271,11 +314,13 @@ The response to the request will be something like
     "id": "ee9f6ee4-ea8c-40d5-a548-f7a0e5a2ca85"
 }
 ```
+* `"id"`: Corresponds to the jobID. Use this to know the status.
+* `"latest"`: Use this to get the latest status event of the job.
+* `"all"`: Use this to get all the status events in a paginated format.
 
-The "id" in the response, corresponds to the requestID or jobID. It can be further used to know the status. The value in "latest" can be used to get the latest status event of the job. Likewise the value in "all" can be used to get all status events in a paginated format.
 
-__Latest__ request
-This will give the latest event generated in the process.
+__Latest__ request
+Use this to get the latest event generated in the process.
 ```curl
 curl --location --request GET 'https://indesign.adobe.io/api/v1/capability/status/ee9f6ee4-ea8c-40d5-a548-f7a0e5a2ca85' \
 --header 'Authorization: <access_token>' \
@@ -476,9 +521,9 @@ __All__ response
 }
 ```
 
-__Please note__: The nextUrl can be used to retrieve further status events. 
+__Please Note__: You can use the nextUrl to retrieve further status events.
 
-To check for specific events, please refer to following example, where "ASSET_UPLOAD_COMPLETED" event is looked for.
+Here’s an example to check for specific events, please refer to following example, where "ASSET_UPLOAD_COMPLETED" event is looked for.
 
 ```curl
 curl --location --request GET 'https://indesign.adobe.io/api/v1/capability/status/all/ee9f6ee4-ea8c-40d5-a548-f7a0e5a2ca85?state=ASSET_UPLOAD_COMPLETED' \
@@ -486,7 +531,7 @@ curl --location --request GET 'https://indesign.adobe.io/api/v1/capability/statu
 --header 'x-api-key: <client_id>'
 ```
 
-The response corresponding to it is as follows
+Here’s the response corresponding to it :
 ```json
 {
     "events": [
@@ -542,12 +587,11 @@ The response corresponding to it is as follows
     }
 }
 ```
+## Consume the APIs provided by InDesign Cloud Services
+You can find the detailed [API documentation here](https://adobedocs.github.io/indesign-api-docs/). Here are some sample requests for the APIs :
 
-### Consuming the APIs provided by InDesign Cloud Services
-You can find the detailed [API documentation here](https://adobedocs.github.io/indesign-api-docs/). Sample request for some of the APIs are provided below:
-
-#### PDF rendition using pre-signed URL
-Creates and returns new PDF from a specific InDesign document. The following example is using pre-signed URL and a custom font
+### PDF rendition using pre-signed URL
+Creates and returns new PDF from a specific InDesign document. The following example uses pre-signed URL and a custom font
 ```curl
 curl --location --request POST 'https://indesign.adobe.io/api/v1/capability/indesign/rendition/pdf' \
 --header 'Authorization: bearer <YOUR_OAUTH_TOKEN>' \
@@ -579,8 +623,7 @@ curl --location --request POST 'https://indesign.adobe.io/api/v1/capability/inde
     }
 }
 ```
-
-#### DataMerge - Tags
+### DataMerge - Tags
 Retrieves the data merge tags from the document.
 
 ```curl
@@ -613,7 +656,7 @@ curl --location --request POST 'https://indesign.adobe.io/api/v1/capability/inde
 }
 ```
 
-#### DataMerge - Merge
+### DataMerge - Merge
 Creates and returns merged InDesign documents or PDFs that are created after merging the data and the given template.
 ```curl
 curl --location --request POST 'https://indesign.adobe.io/api/v1/capability/indesign/dataMerge/merge' \
@@ -657,246 +700,371 @@ curl --location --request POST 'https://indesign.adobe.io/api/v1/capability/inde
 }
 ```
 
-### Exposing your own APIs
-Many times, the requirement of the end user are very specific and cannot be fulfilled in a generic manner. To address these sort of cases, some custom work may be needed to be done.
+## __Exposing your own APIs__
+Many times, the requirements of the end users are very specific and cannot be fulfilled in a generic manner. Some custom work may be needed to address these cases,.
 
-InDesign Cloud Services exposes a way for third party to come onboard and deploy their custom scripts as end points. The script writer can define the custom attributes and values which will make sense for a particular endpoint. These can be done by deploying capability bundle. To understand more about capabilities, their deployment and using them, please refer to this [documentation](Capability.md).
+InDesign Cloud Services exposes a way for third- party developers to come onboard and deploy their custom scripts as end points. The script writer can define the custom attributes and values which will make sense for a particular endpoint. These can be done by deploying the capability bundle. To understand more about capabilities, their deployment and using them, please refer to this [documentation](Capability.md).
 
 There are few points which must be kept in mind while writing a script for InDesign Cloud Services.
 
-#### Scripts
-To run a script with InDesign Cloud Services, the script should be confirming to what can be run on an InDesignServer. Also the scripts can't be run as is. There are certain assumptions w.r.t. input to the script and output from it, which needs to be modified. These nuances are discussed in the next few sections.
+* To run a script with InDesign Cloud Services, the script must be compatible to run with InDesignServer. However, any script that can be run on InDesignServer can't be run as is.
 
-#### Accepting input in script
-Executing script relies on the user inputs along with information about the working directory from the platform. All this information is passed to the script via a single argument i.e. "parameters". The structure of the parameters is as follows:
+* While writing a new script or modifing exisiting scripts for InDesign Cloud Services, there are few nuances which the developer must takecare with respect to "input to the script" and "output" from script”. These nuances are discussed in the next few sections.
 
-```json
-{
-    "assets": [
-        ...
-    ],
-    "params": {
-        ...
-    },
-    "jobID": "0c531425-bc82-43c0-89b7-0e851cd56061",
-    "workingFolder": <Some path>
-}
-```
-Details of the attributes within the data passed to script is as follows:
-<table style="background-color:White;">
-  <tr>
-    <th>Attribute</th>
-    <th>Mapping/Meaning</th>
-  </tr>
-  <tr>
-    <td>assets</td>
-    <td>&lt;RequestBody&gt;/assets</td>
-  </tr>
-  <tr>
-    <td>params</td>
-    <td>&lt;RequestBody&gt;/params</td>
-  </tr>
-  <tr>
-    <td>jobID</td>
-    <td>The job ID</td>
-  </tr>
-  <tr>
-    <td>workingFolder</td>
-    <td>The working directory for the job</td>
-  </tr>
-</table>
+### __Accepting input in custom script__
 
-The existing scripts will need little tweaking to accept the arguments correctly. So an existing sample script will look like this
-```javascript
-    var arg1 = app.scriptArgs.get('argument1')
-    var arg2 = app.scriptArgs.get('argument2')
+* Case 1 : Script does not require any input/argument.
 
-    // Some processing
-```
-
-To make it work with the InDesign Cloud Services, some tweaking needs to be done. Please follow the steps below to make the script work
-
-1. Send the arguments within the params of the request body
-```json
-    "params": {
-        "argument1": <data corresponding to argument1>,
-        "argument2": <data corresponding to argument2>,
-        ...
-    }
-```
-2. Within the script, modify the fetching mechanism. Please use the following as a reference script.
-```javascript
-    var parameters = app.scriptArgs.get('parameters')
-    var arg1 = parameters['argument1'] // or var arg1 = parameters.argument1
-    var arg2 = parameters['argument2'] // or var arg2 = parameters.argument2
-
-    // Some processing
-```
-#### Providing output from script
-As for the input there would be certain assumptions in the script corresponding to the output to be provided back. Please follow the below instructions to provide the data correctly.
-
-__Execution is successful__
-
-In case of successful execution of the script, the following attributes are expected.
-```json
-{
-    "status": "SUCCESS",
-    "assetsToBeUploaded": [
-        {
-            "path": <url of file to be uploaded, relative to working directory>,
-            "data"
-        }
-    ],
-    "dataURL": <url of data file, relative to working directory>
-}
-```
-Caution: Anything outside of these attributes might be logged as data to be investigated.
-
-For creating the return data in case of a success, the following script can be used.
-```javascript
-var assets = []
-
-/* Creates the package to be returned in case job is successful.
-    @param assetsToBeUploaded: Information about the files to be uploaded. 
-    @param data: The data in dictionary (object) format to be returned back.
-    @return:     the package to be returned 
-*/
-GetSuccessReturnObj = function (assetsToBeUploaded, data) {
-  var obj = {}
-  obj.status = 'SUCCESS'
-  obj.assetsToBeUploaded = assetsToBeUploaded
-  if (data) {
-    obj.dataURL = WriteToFile(data)
-  } else {
-      obj.dataURL = ''
-  }
-  return JSON.stringify(obj)
-}
-
-/* Add an asset which is to be uploaded and sent back to the caller.
-    @param assetPath: Path of the file to be uploaded, relative to the working directory.
-    @param data: The data in dictionary (object) format to be associated with this asset. This data will be provided to the user with ASSET_UPLOAD_COMPLETED event. e.g. If the asset to be added, looks like this:
-        {
-            "path" : "design.jpeg",
-            "data" : {
-                "abcd" : "pqr",
-                "xyz" : "mno"
-            }
-        }
-    The ASSET_UPLOAD_COMPLETED will look like:
-        {
+    In this case, system by default send string type argument named `"parameters"` as following:
+    ```json
+    {
+        "assets": [
+            {"path": "doc.indd"},
+            {"path": "image.pdf"},
             ...
-            "data":{
-                ... //Some metadata added by platform.
-                "source":"design.jpeg"
-                "abcd": "pqr",
-                "xyz": "mno"
+        ],
+        "params": {
+
+        },
+        "jobID": "0c531425-bc82-43c0-89b7-0e851cd56061",
+        "workingFolder": <Some path>
+    }
+    ```
+    The above mentioned json will be received in the form of `"string"`. Which further needs to be parsed inside the script to retrive the value of attributes. In this case `"params"` attribute will be empty. Since, the script does not need an argument.
+
+*   Case 2 : Script accepts some input argument.
+In this case, system by default  send string type argument named `"parameters"` which also, include input arguments e.g. "arg1", "arg2".
+    
+    So, In order to use the argument `"parameters"` must be parsed. And then you must extract the value of arg1 and arg2.
+    ```json
+    {
+        "assets": [
+            {"path":"doc.indd"},
+            {"path":"image.pdf"},
+            ...
+        ],
+        "params": {
+            "arg1": <data corresponding to argument1>,
+            "arg2": <data corresponding to argument2>,
+            ...
+        },
+        "jobID": "0c531425-bc82-43c0-89b7-0e851cd56061",
+        "workingFolder": <Some path>
+    }
+    ```
+    You must tweak the existing scripts to accept the arguments correctly e.g.
+    <table>
+        <tr>
+        <th>Old Script</th>
+        <th>New Script</th>
+        </tr>
+        <tr>
+        <td><p> var arg1 = app.scriptArgs.get('argument1')<br>
+        var arg2 = app.scriptArgs.get('argument2')<br><br>
+        // Some processing</p></td>
+        <td><p>var parameters = app.scriptArgs.get('parameters')    <br>
+        // parse "parameters" so, that values can be extracted.     <br>
+        var arg1 = parameters['argument1'] <br>
+        var arg2 = parameters['argument2'] <br><br>
+        // Some processing</p></td>
+        </tr>
+    </table>
+
+    The execution of any script depends on the following attributes:
+
+    <table style="background-color:white;">
+      <tr>
+        <th>Attribute</th>
+        <th>Input Request Mapping</th>
+        <th>Description</th>
+      </tr>
+      <tr>
+        <td>assets</td>
+        <td>assets->destination field</td>
+        <td>This contain list of input assets. like indd,pdf or jpeg etc.</td>
+      </tr>
+      <tr>
+        <td>params</td>
+        <td>params</td>
+        <td>User input/arguments that are used inside script</td>
+      </tr>
+      <tr>
+        <td>jobID</td>
+        <td>Auto generated</td>
+        <td>The job ID</td>
+      </tr>
+      <tr>
+        <td>workingFolder</td>
+        <td>Auto generated</td>
+        <td>The working folder for the job. This is the base directory. Inside this directory all the assets and scripts downloaded. e.g c:\\baseFolder\assets </td>
+      </tr>
+    </table>
+    
+    </br> 
+
+
+    Here’s the sample input and sample script code to open document and close a document.
+
+    * Sample Input request body
+        ```json
+        {
+            "assets": [
+                {
+                    "source": {
+                        "type": "HTTP_GET",
+                        "url": "Pre-signed url of document"
+                    },
+                    "destination": "doc.indd"
+                }
+            ],
+            "params": {
+                "targetDocument": "doc.indd"
             }
         }
-*/
-AddAssetToBeUploaded = function (assetPath, data) {
-  var assetToBeUploaded = {}
-  assetToBeUploaded.path = assetPath
-  if (data !== undefined) {
-    assetToBeUploaded.data = data
-  }
-  assets.push(assetToBeUploaded)
-}
+        ```
+    * Transformed Input request. That is sent to script
+        ```json
+        {
+            "assets": [
+                {
+                    "path": "doc.indd"
+                }
+            ],
+            "params": {
+                "targetDocument": "doc.indd"
+            },
+            "jobID": "0c531425-bc82-43c0-89b7-0e851cd56061",
+            "workingFolder": "c:\\baseFolder\\assets"
+        }
+        ```
+    * Sample code that takes above mentioned input. This code opens docuemnt and closes the document.
+        ```javascript
+         
+            var input = app.scriptArgs.get('parameters')
+            var allParameters = JSON.parse(input)
 
-// Actual processing
+            // Set the working folder. This is the directory within which all the  input and output assets are to be managed.
+            var basePath = allParameters["workingFolder"]
 
-// Return data
-return GetSuccessReturnObj(assets, data)
-```
+            var documentToOpen = allParameters["params"]["targetDocument"]
 
-In both the cases above, it can be observed that the data is being shared in a file, and not directly. This is to take care of cases where the data becomes too big to send back. This also helps in keeping the performance optimized. In case no data is to be sent, empty string should be passed in dataURL. Missing dataURL will be treated as an error. A sample write function can be as follows:
-```javascript
-/* Utility to write the data to be sent back, in a file.
-    @param data: Data which is to be written.
-    @param filePath: OPTIONAL: The name of the file.
-    @return:     the package to be returned 
-*/
-WriteToFile = function (data, filePath) {
-  var fileURL, newFile
-  if (filePath === undefined) {
-    filePath = 'data.json'
-  }
-  fileURL = workingDirectory + filePath
-  newFile = File(fileURL)
-  newFile.encoding = 'UTF8'
-  newFile.open('write')
-  if (newFile.write(JSON.stringify(data))) {
-    // Data was successfully written'
-    newFile.close()
-    return filePath
-  } else {
-    // 'Data write failed'
-    throw ex
-  }
-}
-```
+            documentPath = basePath + "\\" + documentToOpen
+            document = app.open(File(documentPath))
+            document.close()
+        ```
 
-__Execution failed__
+</br>
 
-Expected failure object
-```json
-{
-    "status": "FAILURE",
-    "errorCode": <Error code>,
-    "errorString": <Error Message>,
-}
-```
+### __Providing output from custom script__
 
-The following script can be used as a starting point to create the return object for failed cases.
-```javascript
-/* Creates the package to be returned in case the job has failed.
-    @param assetPath: Path of the file to be uploaded, relative to the working directory.
-    @return:     the package to be returned 
-*/
-GetFailureReturnObj = function (errorCode, errorString) {
-  var obj = {}
-  obj.status = 'FAILURE'
-  obj.errorCode = errorCode
-  obj.errorString = errorString
-  return JSON.stringify(obj)
-}
+A developer must follow certain rules in order to output data, file or log from a script. Please follow these instructions to provide output correctly :
 
-// Actual processing where some error occurred
-return GetFailureReturnObj(errorCode, errorString)
-```
+* __Execution is successful__
 
-#### Logging
-While writing your own scripts, debugging forms an important part of the whole process. Likewise, to keep track of what decisions were made during a script execution, one may feel the need to log the steps. To take care of this logging of data can be done during script execution. This can be done in two ways
-- Collecting all the logs in an array and then dumping them using a function similar to WriteToFile. This needs to be accompanied with addition of the relative path to list of assets to be uploaded.
-- Second way is to log data in the application's log. Following script calls can be used to redirect the provided log to application's log.
-```
-// The following should come in the application log which can be dumped using generalSettings/appLogs/logsRelativePath
-app.consoleout('Logging in app\'s std::out')
-app.consoleerr('Logging in app\'s std::err')
-```
+    The following attributes are expected in return as json string, if the script execution is successful.
 
-The application's log can be dumped using generalSettings/appLogs/logsRelativePath
-```
-"params": {
-  "targetDocument": "doc.indd",
-  "outputPath": "idmlDoc.idml",
-  "generalSettings": {
-    "appLogs": {
-      "logsRelativePath": "appLog.txt"
+    ```json
+    {
+        "status": "SUCCESS",
+        "assetsToBeUploaded": [
+            {
+                "path": <Relative path of file to be uploaded w.r.t working folder>,
+                "data": <Data in dictionary (object) format to be associated with this asset>
+            }
+        ],
+        "dataURL": <Relative path of json file w.r.t working folder>
     }
-  }
-}
-```
+    ```
+    Caution: Anything outside of these attributes might be logged as data to be     investigated.
 
-#### Sample script
-A sample script can be found under [Example](Example/). The main script is sample.jsx and rest are supporting scripts.
+    <table style="background-color:white;">
+      <tr>
+        <th>Attribute</th>
+        <th>Description</th>
+        <th>Optional/Mandatory</th>
+      </tr>
+      <tr>
+        <td>dataURL</td>
+        <td>This should have path of json file w.r.t working folder. And it should be created inside working folder</td>
+        <td>Mandatory</td>
+      </tr>
+      <tr>
+        <td>status</td>
+        <td>Status of execution (SUCCESS/FAILURE)</td>
+        <td>Mandatory</td>
+      </tr>
+      <tr>
+        <td>assetToBeUploaded</td>
+        <td>Array for assets that need to uploaded. This can be empty</td>
+        <td>Mandatory</td>
+      </tr>
+    </table>
 
-### Guidelines for capability development
-There are certain things that a script writer should keep in mind while writing scripts. These points are:
+    </br>
 
-1. __Set appropriate preferences__: Many times the script execution is dependent on the preferences set for the application or the document. Before executing the relevant portion of script, please make sure that the desired preferences are set. As a good practice, reset the preferences to their original value once the execution is complete.
+
+
+    * Here’s a sample code returning a successful execution. Without data and without any output file.
+        ```javascript
+        /* Creates object to be returned when job is successful. object should be    stringify  before returning. 
+        */
+        function GetSuccessReturnObj() {
+            var obj = {}
+            
+            obj.status = 'SUCCESS'
+            obj.assetsToBeUploaded = []
+            obj.dataURL = ''
+            
+            return JSON.stringify(obj)
+
+        }
+        ```
+    * Here’s a sample code returning a successful execution. With data and without any output file.
+        ```javascript
+        /*  Creates object to be returned when job is successful. Data is written into a json file, which should be created inside working folder.
+            @param data: The data in dictionary (object) format to be returned back.
+            Object should be stringifiedy before returning. 
+         */
+    
+         function GetSuccessReturnObj(data) {
+            var obj = {}
+            
+            obj.status = 'SUCCESS'
+            obj.assetsToBeUploaded = []
+            obj.dataURL = WriteToFile(data)
+            
+            return JSON.stringify(obj)
+         }
+         function WriteToFile ( data ) {
+            var newFile
+            var fileName = 'data.json'
+            var filePath = workingFolder + '\\' + fileName
+            newFile = File(filePath)
+            newFile.encoding = 'UTF8'
+            newFile.open('write')
+            newFile.write(JSON.stringify(data))
+            newFile.close()
+            return filePath  
+        }
+        ```
+
+    * Here’s a sample code returning a successful execution. With/Without data and with output file.
+        ```javascript
+        /*  Create array of asset which is to be uploaded and sent back to the caller.
+            assetPath: Path of the file to be uploaded, relative to the working folder.
+            data: The data in dictionary (object) format to be associated with this asset. (It is optional)
+            This data will be provided to the user with ASSET_UPLOAD_COMPLETED  event. 
+        */
+
+         var assets = []
+         var assetToBeUploaded = {}
+         
+         assetToBeUploaded.path = assetPath
+         assetToBeUploaded.data = data //this is optional
+         assets.push(assetToBeUploaded)
+         
+         
+         function GetSuccessReturnObj(assets, data) {
+            var obj = {}
+            obj.status = 'SUCCESS'
+            obj.assetsToBeUploaded = assets
+            if (data) {
+                obj.dataURL = WriteToFile(data)
+            } else {
+                obj.dataURL = ''
+            }
+            return JSON.stringify(obj)
+        }
+        ```
+    * In the above cases, it can be observed that the data is being shared in a json file, and not directly. This is to take care of cases where the data becomes too big to send back.
+    * In case no data is to be sent, empty string should be passed in 'dataURL'.
+* __Execution failed__
+
+    In case of failed execution of the script, the following attributes are expected in return as json string.
+    ```json
+    {
+        "status": "FAILURE",
+        "errorCode": <Error code>,
+        "errorString": <Error Message>,
+    }
+    ```
+
+    <table style="background-color:white;">
+      <tr>
+        <th>Attribute</th>
+        <th>Output Request Mapping</th>
+        <th>Meaning</th>
+      </tr>
+      <tr>
+        <td>status</td>
+        <td>Status of execution (SUCCESS/FAILURE)</td>
+        <td>Mandatory</td>
+      </tr>
+        <tr>
+        <td>errorCode</td>
+        <td>ErrorCode of the error</td>
+        <td>Optional</td>
+      </tr>
+      <tr>
+        <td>errorString</td>
+        <td>Description of error</td>
+        <td>Optional</td>
+      </tr>
+    </table>
+
+
+
+    Here’s a sample code to use as a starting point, to create the return object for failed cases.
+    ```javascript
+    /*  Creates json string that is returned in case the job has failed.
+    @param errorCode: Error code detail.
+    @param errorString: Description about error.
+    @return: json string.
+    */
+
+    function GetFailureReturnObj(errorCode, errorString) {
+        var obj = {}
+        obj.status = '‘FAILURE'’
+        obj.errorCode = errorCode
+        obj.errorString = errorString
+        return JSON.stringify(obj)
+    }
+    ```
+
+### __Logging__
+While writing your own scripts, debugging forms an important part of the whole process. Likewise, to keep track of what decisions were made during a script execution, one may feel the need to log the steps. You can log the data during script execution. This can be done in two ways
+
+- Collecting all the logs in an array and then dumping them with a function similar to WriteToFile. This must be accompanied with addition of the relative path to list of assets to be uploaded.
+- Second way is to log data in the application's log. You can use the following script calls to redirect the provided log to application's log.
+    ```javascript
+    // The following should come in the application log, which can be dumped using      generalSettings/appLogs/logsRelativePath
+    app.consoleout('Logging in app\'s std::out')
+    app.consoleerr('Logging in app\'s std::err')
+    ```
+    You can dump the application's log into a file, with the addition of `"generalSetting"` as mentioned below:.
+    ```json
+    "params": {
+        "targetDocument": "doc.indd",
+        "outputPath": "idmlDoc.idml",
+        "generalSettings": {
+            "appLogs": {
+                "logsRelativePath": "appLog.txt"
+            }
+        }
+    }
+    ```
+
+### __Complete Sample script__
+A sample script can be found under [Example](Example/). where the main script is sample.jsx and rest are supporting scripts.
+- This script has the functionality to create `idml` from indesign document.
+- This script can be treated as a baseline script that has the handling of input and output.
+
+### __Guidelines for capability development__
+Here are a few things that a script writer must keep in mind while writing scripts. These points are:
+
+1. __Set appropriate preferences__: Many times the script execution is dependent on the preferences set for the application or the document. Before executing the relevant portion of script, please ensure that the desired preferences are set. As a good practice, reset the preferences to their original value once the execution is complete.
 2. __No socket programming__: The container running the script is a closed one and any kind of socket programming is discouraged.
-3. __Work within the working directory__: For a job, working directory is the designated space for the script to work on. Scripts are supposed to be working on files within this and are not supposed to look outside.
+3. __Work within the working folder__: For a job, working folder is the designated space for the script to work on. Scripts are supposed to be working on files within this and are not supposed to look outside.
 4. __Code Readability Requirements__: Developers must not obfuscate the code or conceal the functionality of their capability. This also applies to any external code or resource fetched by the extension package. Minification is allowed, including the following forms:
     - Removal of whitespace, newlines, code comments, and block delimiters
     - Shortening of variable and function names
@@ -907,12 +1075,13 @@ There are certain things that a script writer should keep in mind while writing 
     - Enumerate system resources such as files, networking configuration, etc.
     - Mine cryptocurrency
 
-### Current Limitations
-There are a few limitations to the APIs you should be aware of ahead of time:
-- Error handling is a work in progress. Sometimes you may not see the most helpful of messages
+### __Current Limitations__
+Here are a few limitations to the APIs you should be aware of ahead of time:
+- Error handling is a work in progress. Sometimes you may not see the most helpful of messages.
 
-### Retries
-For increased reliability and stability we have added a retry mechanism for all API calls, and have some recommendations on how to handle these:
+### __Retries__
+For increased reliability and stability we have added a retry mechanism for all API calls, and here are some recommendations on how to handle these:
+
 - You should only retry requests that have a 5xx response code. A 5xx error response indicates there was a problem processing the request on the server.
 - You should implement an exponential back-off retry strategy with 3 retry attempts.
 - You should not retry requests for any other response code.
