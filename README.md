@@ -32,7 +32,7 @@ InDesign Cloud Services support two types of authentication :
     Here’s a skeleton cURL request to accessing the APIs :
     ```curl
     curl --location --request POST <endpoint> \
-    --header 'Authorization: <access_token>' \
+    --header 'Authorization: bearer <access_token>' \
     --header 'x-api-key: <client_id>' \
     --header 'Content-Type: application/json' \
     --data-raw '{
@@ -281,7 +281,7 @@ As a best practice, try to keep the fonts in "Document Fonts" or in an isolated 
 Now that the request is sent, how can one get the status of the request. This is demonstrated with an example below. Suppose the user triggers a rendition call with a 3 page document, the request will look something like this:
 ```curl
 curl --location --request POST 'https://indesign.adobe.io/api/v1/capability/indesign/rendition/png' \
---header 'Authorization: <access_token>' \
+--header 'Authorization: bearer <access_token>' \
 --header 'x-api-key: <client_id>' \
 --header 'Content-Type: application/json' \
 --data-raw '{
@@ -323,7 +323,7 @@ __Latest__ request
 Use this to get the latest event generated in the process.
 ```curl
 curl --location --request GET 'https://indesign.adobe.io/api/v1/capability/status/ee9f6ee4-ea8c-40d5-a548-f7a0e5a2ca85' \
---header 'Authorization: <access_token>' \
+--header 'Authorization: bearer <access_token>' \
 --header 'x-api-key: <client_id>'
 ```
 
@@ -367,7 +367,7 @@ __Latest__ response
 __All__ request
 ```curl
 curl --location --request GET 'https://indesign.adobe.io/api/v1/capability/status/all/ee9f6ee4-ea8c-40d5-a548-f7a0e5a2ca85' \
---header 'Authorization: <access_token>' \
+--header 'Authorization: bearer <access_token>' \
 --header 'x-api-key: <client_id>'
 ```
 
@@ -527,7 +527,7 @@ Here’s an example to check for specific events, please refer to following exam
 
 ```curl
 curl --location --request GET 'https://indesign.adobe.io/api/v1/capability/status/all/ee9f6ee4-ea8c-40d5-a548-f7a0e5a2ca85?state=ASSET_UPLOAD_COMPLETED' \
---header 'Authorization: <access_token>' \
+--header 'Authorization: bearer <access_token>' \
 --header 'x-api-key: <client_id>'
 ```
 
