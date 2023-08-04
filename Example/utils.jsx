@@ -142,11 +142,15 @@ UTILS.UpdateDocumentLinks = function (document) {
 
   UTILS.Log('Number of links: ' + numLinks)
   for (linkItr = 0; linkItr < numLinks; linkItr++) {
-    link = links[linkItr]
-    uri = link.linkResourceURI
-    UTILS.Log(linkItr + ': URI: ' + uri)
-    if (link.status === LinkStatus.LINK_OUT_OF_DATE) {
-      outOfDateLinks.push(link.id)
+    try{
+      link = links[linkItr]
+      uri = link.linkResourceURI
+      UTILS.Log(linkItr + ': URI: ' + uri)
+      if (link.status === LinkStatus.LINK_OUT_OF_DATE) {
+        outOfDateLinks.push(link.id)
+      }
+    } catch (err) {
+      UTILS.Log('Link status unknown : ' + err)
     }
   }
   numLinks = outOfDateLinks.length
@@ -170,9 +174,13 @@ UTILS.EmbedDocumentLinks = function (document) {
   var linkItr, link
 
   for (linkItr = 0; linkItr < numLinks; linkItr++) {
-    link = links[linkItr]
-    if (link.status === LinkStatus.NORMAL) {
-      link.unlink()
+    try {
+      link = links[linkItr]
+      if (link.status === LinkStatus.NORMAL) {
+        link.unlink()
+      }
+    } catch (err) {
+      UTILS.Log('Unable to embed link: status is unknown : ' + err)
     }
   }
 }
