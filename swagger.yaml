@@ -1,9 +1,8 @@
 openapi: 3.0.0
 info:
-  description: Documentation for InDesign Cloud Services. This document provides a
-    detailed specification of the various exposed APIs, that can be leveraged by developers. 
+  description: Documentation for InDesign APIs (Beta) - Firefly Services. This document provides a detailed specification of the various exposed APIs, that can be leveraged by developers. 
   version: 0.1.0
-  title: InDesign Services.
+  title: InDesign APIs (Beta) - Firefly Services
   contact:
     email: idservices@adobe.com
 tags:
@@ -16,20 +15,20 @@ security:
   - BearerAuth: [] 
 paths:
 
-  /api/v1/capability/indesign/rendition/jpeg:
+  /v3/create-rendition:
     post:
       tags:
         - rendition
-      summary: Creates JPEG renditions.
-      description: Creates and returns JPEG renditions of a specific InDesign document.
-        Output rendition has mimetype 'image/jpeg'. For the structure of StatusCompletedResponse/output/data refer to RenditionOutputData. Also for the list of possible error codes in FailedEvent refer to RenditionFailedData.
-      operationId: jpegJob
+      summary: Creates JPEG,PNG or PDF renditions.
+      description: Creates and returns JPEG,PNG or PDF renditions of a specific InDesign document.
+        Output rendition has mimetype 'image/jpeg' for jpeg, 'image/png' for png and 'application/pdf' for pdf. For the structure of output/data refer to RenditionOutputData. Also for the list of possible error codes in failedEvent refer to RenditionFailedData.
+      operationId: renditionJob
       requestBody:
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/JPEGRenditionRequest"
-        description: Job request object that specifies parameters for the generation of JPEG.
+              $ref: "#/components/schemas/CreateRenditionRequest"
+        description: Job request object that specifies parameters for the generation of JPEG, PNG or PDF.
           output.
         required: true
       responses:
@@ -45,80 +44,20 @@ paths:
           $ref: "#/components/responses/NotFound"
         500:
           $ref: "#/components/responses/InternalServerError"
-
-  /api/v1/capability/indesign/rendition/png:
-    post:
-      tags:
-        - rendition
-      summary: Creates PNG renditions.
-      description: Creates and returns new PNG renditions of a specific InDesign document.
-        Output rendition has mimetype 'image/png'. For the structure of StatusCompletedResponse/output/data refer to RenditionOutputData. Also for the list of possible error codes in FailedEvent refer to RenditionFailedData.
-      operationId: pngJob
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: "#/components/schemas/PNGRenditionRequest"
-        description: Job request object that specifies parameters for generation of PNG.
-          output.
-        required: true
-      responses:
-        202:
-          $ref: '#/components/responses/Accepted'
-        400:
-          $ref: "#/components/responses/BadParams"
-        401:
-          $ref: "#/components/responses/Unauthorized"
-        403:
-          $ref: "#/components/responses/Forbidden"
-        404:
-          $ref: "#/components/responses/NotFound"
-        500:
-          $ref: "#/components/responses/InternalServerError"
-
-  /api/v1/capability/indesign/rendition/pdf:
-    post:
-      tags:
-        - rendition
-      summary: Creates PDF renditions.
-      description: Creates and returns new PDF from a specific InDesign document. Output
-        rendition has mimetype 'application/pdf'. For the structure of StatusCompletedResponse/output/data refer to RenditionOutputData. Also for the list of possible error codes in FailedEvent refer to RenditionPDFFailedData.
-      operationId: pdfPrintJob
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: "#/components/schemas/PDFRenditionRequest"
-        description: Job request object that specifies parameters for generation of PDF.
-          output.
-        required: true
-      responses:
-        202:
-          $ref: '#/components/responses/Accepted'
-        400:
-          $ref: "#/components/responses/BadParams"
-        401:
-          $ref: "#/components/responses/Unauthorized"
-        403:
-          $ref: "#/components/responses/Forbidden"
-        404:
-          $ref: "#/components/responses/NotFound"
-        500:
-          $ref: "#/components/responses/InternalServerError"
-
-  /api/v1/capability/indesign/dataMerge/merge:
+      
+  /v3/merge-data:
     post:
       tags:
         - dataMerge
       summary: Performs data merge.
       description: Creates and returns merged InDesign documents or PDFs that are created after merging the data and the given template.
-        Output rendition has mimetype 'application/pdf' or 'application/x-indesign'. For the structure of StatusCompletedResponse/output/data refer to DataMergeOutputData. Also for the list of possible error codes in FailedEvent refer to DataMergeFailedData.
+        Output rendition has mimetype 'image/jpeg' for jpeg, 'image/png' for png, 'application/pdf' for pdf or 'application/x-indesign' for indd. For the structure of StatusCompletedResponse/output/data refer to DataMergeOutputData. Also for the list of possible error codes in FailedEvent refer to DataMergeFailedData.
       operationId: dataMerge
       requestBody:
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/DataMergeRequest"
+              $ref: "#/components/schemas/MergeDataRequest"
         description: Job request object that specifies parameters for merging the data as per the given template.
         required: true
       responses:
@@ -135,7 +74,7 @@ paths:
         500:
           $ref: "#/components/responses/InternalServerError"
 
-  /api/v1/capability/indesign/dataMerge/tags:
+  /v3/merge-data-tags:
     post:
       tags:
         - dataMerge
@@ -146,7 +85,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/DataMergeTagsRequest"
+              $ref: "#/components/schemas/MergeDataTagsRequest"
         description: Job request object that specifies parameters for retrieving the data merge tags.
         required: true
       responses:
@@ -163,7 +102,7 @@ paths:
         500:
           $ref: "#/components/responses/InternalServerError"
 
-  /api/v1/capability/status/{id}:
+  /v3/status/{id}:
     get:
       summary: Gets latest status for a job.
       description: Returns the latest status event of a capability execution.
@@ -182,46 +121,17 @@ paths:
               schema:
                 type: object
                 oneOf:
-                  - $ref: '#/components/schemas/QueuedEvent'
-                  - $ref: '#/components/schemas/RunningEvent'
-                  - $ref: '#/components/schemas/AssetsDownloadStartedEvent'
-                  - $ref: '#/components/schemas/AssetDownloadStartedEvent'
-                  - $ref: '#/components/schemas/AssetDownloadCompletedEvent'
-                  - $ref: '#/components/schemas/AssetDownloadFailedEvent'
-                  - $ref: '#/components/schemas/AssetsDownloadCompletedEvent'
-                  - $ref: '#/components/schemas/AssetsUploadStartedEvent'
-                  - $ref: '#/components/schemas/AssetUploadStartedEvent'
-                  - $ref: '#/components/schemas/AssetUploadCompletedEvent'
-                  - $ref: '#/components/schemas/AssetUploadFailedEvent'
-                  - $ref: '#/components/schemas/AssetsUploadCompletedEvent'
-                  - $ref: '#/components/schemas/AssetScanningStartedEvent'
-                  - $ref: '#/components/schemas/AssetScanningCompletedEvent'
-                  - $ref: '#/components/schemas/AssetScanningFailedEvent'
-                  - $ref: '#/components/schemas/EngineProcessingStartedEvent'
-                  - $ref: '#/components/schemas/EngineProcessingCompletedEvent'
-                  - $ref: '#/components/schemas/CompletedEvent'
-                  - $ref: '#/components/schemas/FailedEvent'
-
-  /api/v1/capability/status/all/{id}:
-    get:
-      summary: Gets status events for a job.
-      description: Returns the status of a capability execution. The API returns the latest 10 events in paginated form. The 'nextURL' can be invoked to fetch the next set of events.
-      parameters:
-        - name: id
-          in: path
-          description: ID, for which the status has to be retrieved.
-          required: true
-          schema:
-            type: string
-      responses:
-        '200':
-          description: Status of a capability execution.
-          content:
-            application/json:
+                  - $ref: '#/components/schemas/notstartedEvent'
+                  - $ref: '#/components/schemas/runningEvent'
+                  - $ref: '#/components/schemas/succeededEvent'
+                  - $ref: '#/components/schemas/failedEvent'
+          headers:
+            retry-after:
               schema:
-                $ref: '#/components/schemas/StatusResponse'
+                type: integer
+              description: Number of retries  
 
-  /api/v2/capability:
+  /v3/capability:
     post:
       summary: Submit custom capability.
       description: Submit the capability bundle. Returns the URL for posting execution request against the capability
@@ -266,7 +176,7 @@ paths:
         500:
           $ref: "#/components/responses/InternalServerError"
 
-  /api/v2/capability/{product}/{organization}/{capability}:
+  /v3/capability/{product}/{organization}/{capability}:
     post:
       summary: Submit capability execution request.
       description: Define the input assets and parameters with which the capability should be executed against the app engine.
@@ -317,7 +227,7 @@ paths:
           $ref: "#/components/responses/InternalServerError"
 
 servers:
-  - url: https://indesign.adobe.io/
+  - url: https://indesign-stage.adobe.io/
 components:
   securitySchemes:
     ApiKeyAuth:
@@ -335,12 +245,22 @@ components:
         application/json:
           schema:
             properties:
-              id:
+              jobId:
                 type: string
                 description: ID
-              status_url:
+              statusUrl:
                 type: string
                 description: Status URL
+      headers:
+        link:
+          schema:
+            type: string
+          description: status url for retry
+        retry-after:
+          schema:
+            type: integer
+          description: Number of retries  
+        
     BadParams:
       description: Bad Parameter
       content:
@@ -377,8 +297,11 @@ components:
       properties:
         message:
           type: string
+        error_code:
+          type: string
       required:
         - message
+        - error_code
 
     BaseJobRequest:
       description: Base job request for any job.
@@ -587,7 +510,7 @@ components:
     RenditionFailedData:
       allOf:
         - $ref: '#/components/schemas/FailedEvent'
-        - description: Failed Event for JPEG and PNG Rendition APIs. For details of error codes refer to ErrorCodesAndDefinitions.
+        - description: Failed Event for JPEG, PNG or PDF Rendition APIs. For details of error codes refer to ErrorCodesAndDefinitions.
           type: object
           properties:
             data:
@@ -597,45 +520,11 @@ components:
                   type: integer
                   description: The error code.
                   enum:
-                    - 1002
-                    - 1004
-                    - 2002
-                    - 2003
-                    - 2005
-                    - 2006
-                    - 2007
-                    - 2008
-                    - 2011
-                    - 2012
-                    - 2013
+                    - 'runtime_error'
+                    - 'capability_error'
+                    - 'validation_error'
 
-    RenditionPDFFailedData:
-      allOf:
-        - $ref: '#/components/schemas/FailedEvent'
-        - description: Failed Event for PDF Rendition API. For details of error codes refer to ErrorCodesAndDefinitions.
-          type: object
-          properties:
-            data:
-              type: object
-              properties:
-                code:
-                  type: integer
-                  description: The error code.
-                  enum:
-                    - 1002
-                    - 1003
-                    - 1004
-                    - 2002
-                    - 2003
-                    - 2005
-                    - 2006
-                    - 2007
-                    - 2008
-                    - 2011
-                    - 2012
-                    - 2013
-
-    JPEGRenditionRequest:
+    CreateRenditionRequest:
       allOf:
         - $ref: '#/components/schemas/BaseJobRequestWithOutput'
         - description: Inputs and properties with which the job should be processed.
@@ -647,14 +536,8 @@ components:
               type: object
               required:
               - targetDocuments
-              - jobType
+              - outputMediaType
               properties:
-                jobType:
-                  description: The type of job.
-                  type: string
-                  default: RENDITION_JPEG
-                  enum:
-                    - RENDITION_JPEG
                 targetDocuments:
                   description: List of documents to render as per the given parameters. Currently, only one document is supported.
                   type: array
@@ -662,6 +545,13 @@ components:
                     type: string
                   minItems: 1
                   maxItems: 1
+                outputMediaType:
+                  description: The type output rendition to be created.
+                  type: string
+                  enum:
+                    - 'image/jpeg'
+                    - 'image/png'
+                    - 'application/pdf'
                 exportingSpread:
                   type: boolean
                   default: false
@@ -676,19 +566,19 @@ components:
                 quality:
                   type: string
                   description: Defines the quality of the output.
-                  default: MEDIUM
+                  default: medium
                   enum:
-                    - LOW
-                    - MEDIUM
-                    - HIGH
-                    - MAXIMUM
+                    - low
+                    - medium
+                    - high
+                    - maximum
                 renderingStyle:
                   type: string
                   description: Specifies formatting options for the converted JPEG images.
-                  default: BASELINE_ENCODING
+                  default: baseline_encoding
                   enum:
-                    - BASELINE_ENCODING
-                    - PROGRESSIVE_ENCODING
+                    - baseline_encoding
+                    - progressive_encoding
                 resolution:
                   type: integer
                   default: 72
@@ -698,11 +588,11 @@ components:
                 colorSpace:
                   type: string
                   description: Specifies formatting options for converted JPEG images.
-                  default: RGB
+                  default: rgb
                   enum:
-                    - RGB
-                    - CMYK
-                    - GRAY
+                    - rgb
+                    - cmyk (only for jpeg)
+                    - gray
                 embedColorProfile:
                   type: boolean
                   default: true
@@ -723,197 +613,66 @@ components:
                 colorSettingsFile:
                   type: string
                   description: The color settings file to be used for generating a rendition.
-                outputFileBaseString:
-                  type: string
-                  description: The name of the output file.
-                outputFolderPath:
-                  type: string
-                  description: The path of the output folder.
-
-    PNGRenditionRequest:
-      allOf:
-        - $ref: '#/components/schemas/BaseJobRequestWithOutput'
-        - description: Inputs and properties with which the job should be processed.
-          type: object
-          required:
-            - params
-          properties:
-            params:
-              type: object
-              required:
-              - targetDocuments
-              - jobType
-              properties:
-                jobType:
-                  description: The type of job.
-                  type: string
-                  default: RENDITION_PNG
-                  enum:
-                    - RENDITION_PNG
-                targetDocuments:
-                  description: List of documents to render as per the given parameters. Currently, only one document is supported.
-                  type: array
-                  items:
-                    type: string
-                  minItems: 1
-                  maxItems: 1
-                exportingSpread:
-                  type: boolean
-                  default: false
-                  description: Specify true for considering range as spread numbers, false for considering range as pages.  
-                pageRange:
-                  type: string
-                  default: All
-                  description: Page ranges. The ranges are based on index of the page within
-                    the document. Value can be 'All' along with numeral ranges. Also,
-                    if exportingSpread is true, this range would represent spread
-                    indices in the document.
-                quality:
-                  type: string
-                  description: Defines the quality of the output.
-                  default: MEDIUM
-                  enum:
-                    - LOW
-                    - MEDIUM
-                    - HIGH
-                    - MAXIMUM
-                resolution:
-                  type: integer
-                  default: 72
-                  description: Specifies the resolution of the final image.
-                  minimum: 1
-                  maximum: 2400
-                colorSpace:
-                  type: string
-                  description: Specifies formatting options for converted PNG images.
-                  default: RGB
-                  enum:
-                    - RGB
-                    - GRAY
-                antiAlias:
-                  type: boolean
-                  default: true
-                  description: If true, use anti-aliasing for text and vectors during export.
-                simulateOverprint:
-                  type: boolean
-                  default: false
-                  description: If true, simulates the effects of overprinting spot and processes
-                    colors in the same way they would occur when you print.
-                useDocumentBleeds:
-                  type: boolean
-                  default: false
-                  description: If true, uses the document's bleed settings in the exported PNG.
                 transparentBackground:
                   type: boolean
                   default: false
-                  description: If true, uses a transparent background for the exported PNG.
-                colorSettingsFile:
-                  type: string
-                  description: The color settings file to be used for generating a rendition.
-                outputFileBaseString:
-                  type: string
-                  description: The name of the output file.
-                outputFolderPath:
-                  type: string
-                  description: The path of the output folder.
-
-    PDFRenditionRequest:
-      description: Inputs and properties with which the job should be processed. In absence of
-        params, job will be processed with "High Quality Print" as the
-        preset/setting.
-      allOf:
-        - $ref: '#/components/schemas/BaseJobRequestWithOutput'
-        - description: Properties with which the job should be processed.
-          type: object
-          required:
-            - params
-          properties:
-            params:
-              type: object
-              required:
-              - targetDocuments
-              - jobType
-              properties:
-                jobType:
-                  description: The type of job.
-                  type: string
-                  default: RENDITION_PDFPRINT
-                  enum:
-                    - RENDITION_PDFPRINT
-                targetDocuments:
-                  description: List of documents to render as per the given parameters. Currently, only one document is supported.
-                  type: array
-                  items:
-                    type: string
-                  minItems: 1
-                  maxItems: 1
-                exportingSpread:
-                  type: boolean
-                  default: false
-                  description: Specify true if you consider range as spread numbers, false if you consider range as pages. 
-                pageRange:
-                  type: string
-                  default: All
-                  description: Page ranges. The ranges are based on index of the page within
-                    the document. Value can be 'All' along with numeral ranges. Also,
-                    if exportingSpread is true, this range would represent spread
-                    indices in the document.
+                  description: If true, uses a transparent background for the exported PNG. This is valid only for PNG rendition.
                 createSeparateFiles:
                   type: boolean
                   default: false
                   description: Specify true for creating separate PDF files for all the specified
-                    pages/spreads.
+                    pages/spreads. This is applicable only in case of pdf rendition.
                 optimizeForFastWebView:
                   type: boolean
                   default: true
-                  description: Specify true for optimizing the PDF for faster web viewing.
+                  description: Specify true for optimizing the PDF for faster web viewing. This is applicable only in case of pdf rendition.
                 embedPageThumbnails:
                   type: boolean
                   default: false
-                  description: Specify true for embedding page thumbnails.
+                  description: Specify true for embedding page thumbnails. This is applicable only in case of pdf rendition.
                 includeBookmarks:
                   type: boolean
                   default: false
                   description: If true, displays bookmarks and table of contents entries as
-                    links in the bookmarks pane of the PDF document. If false, bookmarks are not exported. 
+                    links in the bookmarks pane of the PDF document. If false, bookmarks are not exported. This is applicable only in case of pdf rendition.
                 includeHyperlinks:
                   type: boolean
                   default: false
-                  description: If true, includes hyperlinks when exporting the document.
+                  description: If true, includes hyperlinks when exporting the document. This is applicable only in case of pdf rendition.
                 exportNonprintingObjects:
                   type: boolean
                   default: false
-                  description: If true, makes non-printing objects visible in the PDF document.
+                  description: If true, makes non-printing objects visible in the PDF document. This is applicable only in case of pdf rendition.
                 exportGuidesAndGrids:
                   type: boolean
                   default: false
-                  description: If true, includes visible guides and baseline grids in the PDF
+                  description: If true, includes visible guides and baseline grids in the PDF. This is applicable only in case of pdf rendition.
                     document.
                 createTaggedPDF:
                   type: boolean
                   default: true
-                  description: If true, creates a tagged PDF file.
+                  description: If true, creates a tagged PDF file. This is applicable only in case of pdf rendition.
                 includeInteractiveElements:
                   type: string
-                  description: Specifies the option to draw interactive elements.
-                  default: DO_NOT_INCLUDE
+                  description: Specifies the option to draw interactive elements. This is applicable only in case of pdf rendition.
+                  default: do_not_include
                   enum:
-                    - DO_NOT_INCLUDE
-                    - APPEARANCE_ONLY
+                    - do_not_include
+                    - appearance_only
                 exportWhichLayers:
                   type: string
-                  description: The layers to be exported.
-                  default: EXPORT_ALL_LAYERS
+                  description: The layers to be exported. This is applicable only in case of pdf rendition.
+                  default: export_all_layers
                   enum:
-                    - EXPORT_ALL_LAYERS
-                    - EXPORT_VISIBLE_LAYERS
-                    - EXPORT_VISIBLE_PRINTABLE_LAYERS
+                    - export_all_layers
+                    - export_visible_layers
+                    - export_visible_printable_layers
                 jobOptionsFile:
                   type: string
-                  description: The file which will be used as PDF creation settings file during the export. This will take precedence over pdfPreset attribute.
+                  description: The file which will be used as PDF creation settings file during the export. This will take precedence over pdfPreset attribute. This is applicable only in case of pdf rendition.
                 pdfPreset:
                   type: string
-                  description: The export style to be used.
+                  description: The export style to be used. This is applicable only in case of pdf rendition.
                   default: High Quality Print
                   enum:
                     - High Quality Print
@@ -929,7 +688,8 @@ components:
                   type: string
                   description: The path of the output folder.
 
-    DataMergeRequest:
+
+    MergeDataRequest:
       allOf:
         - $ref: '#/components/schemas/BaseJobRequestWithOutput'
         - description: Inputs for the data merge request.
@@ -942,39 +702,32 @@ components:
               required:
               - targetDocument
               - dataSource
-              - jobType
               properties:
-                jobType:
-                  description: The type of job.
-                  type: string
-                  default: DATAMERGE_MERGE
-                  enum:
-                    - DATAMERGE_MERGE
                 targetDocument:
                   description: The tagged document to be used as template for merging.
                   type: string
                 dataSource:
                   description: The data source files to be used.
                   type: string
-                outputType:
+                outputMediaType:
                   description: The type of required output.
                   type: string
                   enum:
-                    - JPEG
-                    - PNG
-                    - INDD
-                    - PDF
-                  default: INDD
+                    - 'image/jpeg'
+                    - 'image/png'
+                    - 'application/pdf'
+                    - 'application/x-indesign'
+                  default: 'application/x-indesign'
                 exportSettings:
                   type: object
                   description: The settings corresponding to the output format.
                   properties:
                     jobOptionsFile:
                       type: string
-                      description: Only relevant if outputType is "PDF". The file, which will be used as PDF creation settings file during the export. This will take precedence over pdfPreset attribute.
+                      description: Only relevant if outputMediaType is "application/pdf". The file, which will be used as PDF creation settings file during the export. This will take precedence over pdfPreset attribute.
                     pdfPreset:
                       type: string
-                      description: The PDF export style to be used. This is relevant if outputType is "PDF".
+                      description: The PDF export style to be used. This is relevant if outputMediaType is "application/pdf".
                       default: High Quality Print
                       enum:
                         - High Quality Print
@@ -986,14 +739,14 @@ components:
                     quality:
                       type: string
                       description: Defines the quality of the output for JPEG and PNG formats.
-                      default: MEDIUM
+                      default: medium
                       enum:
-                        - LOW
-                        - MEDIUM
-                        - HIGH
-                        - MAXIMUM
+                        - low
+                        - medium
+                        - high
+                        - maximum
                     linkImages:
-                      description: Only relevant if outputType is "INDD". If true, links images to the target document. If false, embeds linked images, already referred in the target document.
+                      description: Only relevant if outputMediaType is "application/x-indesign". If true, links images to the target document. If false, embeds linked images, already referred in the target document.
                       type: boolean
                       default: false
                 recordRange:
@@ -1009,12 +762,12 @@ components:
                     arrangeBy:
                       description: |
                         The order in which to arrange records in the target document.
-                        * `ROWS_FIRST` - Arranges records by row.
-                        * `COLUMNS_FIRST` - Arranges records by column.
+                        * `rows_first` - Arranges records by row.
+                        * `columns_first` - Arranges records by column.
                       type: string
                       enum:
-                        - ROWS_FIRST
-                        - COLUMNS_FIRST
+                        - rows_first
+                        - columns_first
                     bottomMargin:
                       description: The offset value of the bottom margin in the target document. The values can be specified like '1 pt', '1 pica'. '1' etc. If a number is mentioned in the string, it will be used as a value in pica.
                       type: string
@@ -1037,28 +790,28 @@ components:
                   description: These are the options for image placement which will be used while merging images in the document.
                   type: object
                   properties:
-                    centreImage:
+                    centerImage:
                       description: If true, centers the image in the frame while preserving the frame size as content size and proportions. If the content is larger than the frame, content around the edges is obscured by the bounding box of the frame. This doesn't work with 'Content_Aware_Fit' fittingOption.
                       type: boolean
                     fittingOption:
                       description: |
                         Method of fitting content in a frame.
-                        * `CONTENT_AWARE_FIT` - Selects best crop region of the content for the frame based on Adobe Sensei. Note: Preserves frame size but it might scale the content size. If this fitting is set, centerImage property is turned-off.
-                        * `FILL_PROPORTIONAL` - Resizes content to fill the frame while preserving the proportions of the content. If the content and frame have different proportions, some of the content is obscured by the bounding box of the frame.
-                        * `FIT_CONTENT_TO_FRAME` - Resizes content to fit the frame. Note: Content that is a different size than the frame appears stretched or squeezed.
-                        * `FIT_FRAME_TO_CONTENT` - Resizes the frame so it fits the content.
-                        * `HONOUR_EXISTING_STYLE` - Apply the frame fitting based on existing setting applied on the original frame.
-                        * `PRESERVE_SIZES` - Preserves the original sizes of the frame and the content. Note: Content that is larger than the frame is obscured around the edges.
-                        * `PROPORTIONAL` - Resizes content to fit the frame while preserving content proportions. If the content and frame have different proportions, an empty space occurs in the frame.
+                        * `content_aware_fit` - Selects best crop region of the content for the frame based on Adobe Sensei. Note: Preserves frame size but it might scale the content size. If this fitting is set, centerImage property is turned-off.
+                        * `fill_proportional` - Resizes content to fill the frame while preserving the proportions of the content. If the content and frame have different proportions, some of the content is obscured by the bounding box of the frame.
+                        * `fit_content_to_frame` - Resizes content to fit the frame. Note: Content that is a different size than the frame appears stretched or squeezed.
+                        * `fit_frame_to_content` - Resizes the frame so it fits the content.
+                        * `honor_existing_style` - Apply the frame fitting based on existing setting applied on the original frame.
+                        * `preserve_sizes` - Preserves the original sizes of the frame and the content. Note: Content that is larger than the frame is obscured around the edges.
+                        * `proportional` - Resizes content to fit the frame while preserving content proportions. If the content and frame have different proportions, an empty space occurs in the frame.
                       type: string
                       enum:
-                        - CONTENT_AWARE_FIT
-                        - FILL_PROPORTIONAL
-                        - FIT_CONTENT_TO_FRAME
-                        - FIT_FRAME_TO_CONTENT
-                        - HONOUR_EXISTING_STYLE
-                        - PRESERVE_SIZES
-                        - PROPORTIONAL
+                        - content_aware_fit
+                        - fill_proportional
+                        - fit_content_to_frame
+                        - fit_frame_to_content
+                        - honor_existing_style
+                        - preserve_sizes
+                        - proportional
                     linkImages:
                       description: If true, links images to the target document. If false, embeds images in the target document. This is in reference to the images being brought in the document while merging.
                       type: boolean
@@ -1080,7 +833,7 @@ components:
                   type: string
                   description: The path of the output folder.
 
-    DataMergeOutputData:
+    MergeDataOutputData:
       allOf:
         - $ref: '#/components/schemas/BaseOutputData'
         - description: The data pertaining to the merged records.
@@ -1094,7 +847,7 @@ components:
                 properties:
                   recordIndex:
                     type: string
-                    description: Indicates the record numbers for which the data is provided here.
+                    description: Indicates the record numbers for which the data is provided here.`
                   outputs:
                     description: The list of outputs corresponding to this record.
                     type: array
@@ -1116,7 +869,7 @@ components:
               $ref: '#/components/schemas/WarningResponse'
               description: Warnings generated for the template.
   
-    DataMergeFailedData:
+    MergeDataFailedData:
       allOf:
         - $ref: '#/components/schemas/FailedEvent'
         - description: Failed Event for Data Merge API. For details of error codes refer to ErrorCodesAndDefinitions.
@@ -1129,19 +882,11 @@ components:
                   type: integer
                   description: The error code.
                   enum:
-                    - 1002
-                    - 1003
-                    - 1004
-                    - 2002
-                    - 2003
-                    - 2005
-                    - 2007
-                    - 2008
-                    - 2011
-                    - 2012
-                    - 2013
+                    - 'runtime_error'
+                    - 'capability_error'
+                    - 'validation_error'
 
-    DataMergeTagsRequest:
+    MergeDataTagsRequest:
       allOf:
         - $ref: '#/components/schemas/BaseJobRequest'
         - description: Filters according to which the information related to data merge tags would be retrieved.
@@ -1152,15 +897,8 @@ components:
             params:
               type: object
               required:
-                - jobType
                 - targetDocument
               properties:
-                jobType:
-                  description: The type of job.
-                  type: string
-                  default: DATAMERGE_TAGS
-                  enum:
-                    - DATAMERGE_TAGS
                 targetDocument:
                   description: The tagged document to be used for extraction of tags.
                   type: string
@@ -1168,15 +906,16 @@ components:
                   description: The data source file to be used for extracting and matching the tags.
                   type: string
                 filter:
-                  type: string
-                  default: All
-                  description: Accepted values are "All", "Text", "Image" and "QR". Multiple values can be provided. For example, "Text, Image"
+                  description: Accepted values are "all", "text", "image" and "qr". Multiple values can be provided. Default value is "all". Example, ["Text, Image"]
+                  type: array
+                  items:
+                    type: string
                 includePageItemIdentifiers:
                   type: boolean
                   description: If true, the information for associated page items is added to the tags extracted from the document.
                   default: false
 
-    DataMergeTagsOutputData:
+    MergeDataTagsOutputData:
       allOf:
         - $ref: '#/components/schemas/BaseOutputData'
         - description: The data corresponding to the tags from the documents and the data source file, if provided.
@@ -1195,9 +934,9 @@ components:
                     type: string
                     description: Type of the tag.
                     enum:
-                      - Image
-                      - Text
-                      - QR
+                      - image
+                      - text
+                      - qr
                   parentPageItems:
                     description: Information about the page items where the tag is present, if it is requested.
                     type: array
@@ -1241,15 +980,15 @@ components:
                     type: string
                     description: Type of the tag.
                     enum:
-                      - Image
-                      - Text
-                      - QR
+                      - image
+                      - text
+                      - qr
                   status:
                     type: string
                     description: Status or relevance of the tag in context to the target document.
                     enum:
-                      - Match
-                      - Extra
+                      - match
+                      - extra
             dataSourceValidation:
               description: Provided when both target document and data source are given. This will include data from validation of the data source against the target document.
               type: object
@@ -1266,7 +1005,7 @@ components:
               $ref: '#/components/schemas/WarningResponse'
               description: Warnings generated during the execution of the request.
 
-    DataMergeTagsFailedData:
+    MergeDataTagsFailedData:
       allOf:
         - $ref: '#/components/schemas/FailedEvent'
         - description: Failed Event for Data Merge Tags API. For details of error codes refer to ErrorCodesAndDefinitions.
@@ -1279,397 +1018,260 @@ components:
                   type: integer
                   description: The error code.
                   enum:
-                    - 1002
-                    - 2002
-                    - 2005
-                    - 2007
-                    - 2008
-                    - 2009
-                    - 2010
-                    - 2011
-                    - 2012
-                    - 2013
-
+                    - 'runtime_error'
+                    - 'capability_error'
+                    - 'validation_error'
+    
     BaseEvent:
       type: object
       description: Base event response for any job.
       properties:
-        eventId:
-          description: Event ID for the latest event.
+        jobId:
+          description: Guid ID for the Job.
           type: string
-        id:
-          description: Capability Execution ID.
-          type: string
-        timestamp:
-          type: number
-          description: Epoch time
 
-    QueuedEvent:
+    notstartedEvent:
       allOf:
         - $ref: '#/components/schemas/BaseEvent'
-        - description: Queued Event
+        - description: Job is in queued state.
           type: object
           properties:
-            state:
+            status:
               type: string
               description: The current state of the job.
               enum:
-                - QUEUED
+                - not_started
 
-    RunningEvent:
+    runningEvent:
       allOf:
         - $ref: '#/components/schemas/BaseEvent'
-        - description: Running Event
+        - description: Job is in running state.
           type: object
           properties:
-            state:
+            status:
               type: string
               description: The current state of the job.
               enum:
-                - RUNNING
-            data:
-              type: object
-              properties:
-                percent:
-                  type: string
+                - running
+            message :
+              type: string
+              description: Description of current running state.
 
-    AssetsDownloadStartedEvent:
+    succeededEvent:
       allOf:
         - $ref: '#/components/schemas/BaseEvent'
-        - description: Assets download started Event.
+        - description: Job is completed.
           type: object
           properties:
-            state:
+            status:
               type: string
               description: The current state of the job.
               enum:
-                - ASSETS_DOWNLOAD_STARTED
+                - completed
             data:
               type: object
-              properties:
-                total:
-                  type: string
-                  description: Number of assets to download.
-
-    AssetDownloadStartedEvent:
-      allOf:
-        - $ref: '#/components/schemas/BaseEvent'
-        - description: Asset download start event.
-          type: object
-          properties:
-            state:
-              type: string
-              description: The current state of the job.
-              enum:
-                - ASSET_DOWNLOAD_STARTED
-            data:
-              type: object
-
-    AssetDownloadCompletedEvent:
-      allOf:
-        - $ref: '#/components/schemas/BaseEvent'
-        - description: Asset download complete event.
-          type: object
-          properties:
-            state:
-              type: string
-              description: The current state of the job.
-              enum:
-                - ASSET_DOWNLOAD_COMPLETED
-            data:
-              type: object              
-  
-    AssetDownloadFailedEvent:
-      allOf:
-        - $ref: '#/components/schemas/BaseEvent'
-        - description: Asset download failed event.
-          type: object
-          properties:
-            state:
-              type: string
-              description: The current state of the job.
-              enum:
-                - ASSET_DOWNLOAD_FAILED
-            data:
-              type: object
-    
-    AssetsDownloadCompletedEvent:
-      allOf:
-        - $ref: '#/components/schemas/BaseEvent'
-        - description: Assets download complete event.
-          type: object
-          properties:
-            state:
-              type: string
-              description: The current state of the job.
-              enum:
-                - ASSETS_DOWNLOAD_COMPLETED
-            data:
-              type: object
-              
-    AssetsUploadStartedEvent:
-      allOf:
-        - $ref: '#/components/schemas/BaseEvent'
-        - description: Assets upload start event
-          type: object
-          properties:
-            state:
-              type: string
-              description: The current state of the job.
-              enum:
-                - ASSETS_UPLOAD_STARTED
-            data:
-              type: object
-              properties:
-                total:
-                  type: string
-                  description: Number of assets to upload.
-
-    AssetUploadStartedEvent:
-      allOf:
-        - $ref: '#/components/schemas/BaseEvent'
-        - description: Asset upload start event.
-          type: object
-          properties:
-            state:
-              type: string
-              description: The current state of the job.
-              enum:
-                - ASSET_UPLOAD_STARTED
-            data:
-              type: object
-              
-    AssetUploadCompletedEvent:
-      allOf:
-        - $ref: '#/components/schemas/BaseEvent'
-        - description: Asset upload completed event.
-          type: object
-          properties:
-            state:
-              type: string
-              description: The current state of the job.
-              enum:
-                - ASSET_UPLOAD_COMPLETED
-            data:
-              type: object
-              
-    AssetUploadFailedEvent:
-      allOf:
-        - $ref: '#/components/schemas/BaseEvent'
-        - description: Asset upload failed event.
-          type: object
-          properties:
-            state:
-              type: string
-              description: The current state of the job.
-              enum:
-                - ASSET_UPLOAD_FAILED
-            data:
-              type: object
-              
-    AssetsUploadCompletedEvent:
-      allOf:
-        - $ref: '#/components/schemas/BaseEvent'
-        - description: Assets upload completed event.
-          type: object
-          properties:
-            state:
-              type: string
-              description: The current state of the job.
-              enum:
-                - ASSETS_UPLOAD_COMPLETED
-            data:
-              type: object
-
-    AssetScanningStartedEvent:
-      allOf:
-        - $ref: '#/components/schemas/BaseEvent'
-        - description: Asset Scanning started event.
-          type: object
-          properties:
-            state:
-              type: string
-              description: The current state of the job.
-              enum:
-                - ASSET_SCANNING_STARTED
-            data:
-              type: object
-
-    AssetScanningCompletedEvent:
-      allOf:
-        - $ref: '#/components/schemas/BaseEvent'
-        - description: Asset Scanning completed event.
-          type: object
-          properties:
-            state:
-              type: string
-              description: The current state of the job.
-              enum:
-                - ASSET_SCANNING_COMPLETED
-            data:
-              type: object
-
-    AssetScanningFailedEvent:
-      allOf:
-        - $ref: '#/components/schemas/BaseEvent'
-        - description: Asset scanning failed event.
-          type: object
-          properties:
-            state:
-              type: string
-              description: The current state of the job.
-              enum:
-                - ASSET_SCANNING_FAILED
-            data:
-              type: object
-
-    EngineProcessingStartedEvent:
-      allOf:
-        - $ref: '#/components/schemas/BaseEvent'
-        - description: Engine processing starting event.
-          type: object
-          properties:
-            state:
-              type: string
-              description: The current state of the job.
-              enum:
-                - ENGINE_PROCESSING_STARTED
-
-    EngineProcessingCompletedEvent:
-      allOf:
-        - $ref: '#/components/schemas/BaseEvent'
-        - description: Engine processing completed event.
-        
-          type: object
-          properties:
-            state:
-              type: string
-              description: The current state of the job.
-              enum:
-                - ENGINE_PROCESSING_COMPLETED
-              
-    CompletedEvent:
-      allOf:
-        - $ref: '#/components/schemas/BaseEvent'
-        - description: Completed Event.
-          type: object
-          properties:
-            state:
-              type: string
-              description: The current state of the job.
-              enum:
-                - COMPLETED
-            data:
-              description: The data returned from execution of capability. If the data is less than 250 kB, then the data would be provided here.
-              type: object
+              description: Output response from  current state of the job.
             dataURL:
-              description: The data returned from execution of capability. If the data is more than 250 kB and less the 20 MB, it will be provided as a presigned URL. If it is more than 20 MB, the job will fail with error code 413.
               type: string
-
-    FailedEvent:
+              description: The data returned from execution of capability. If the data is more than 250 kB and less the 20 MB, it will be provided as a presigned URL. If it is more than 20 MB, the job will fail.
+            outputs:
+              type: object
+              description: This contains list of URL for all the generated assets 
+                  
+    failedEvent:
       allOf:
         - $ref: '#/components/schemas/BaseEvent'
-        - description: Failed Event
+        - description: Job is in failed state.
           type: object
           properties:
-            state:
+            status:
               type: string
               description: The current state of the job.
               enum:
-                - FAILED
-            data:
-              type: object
-              properties:
-                reason:
-                  type: string
-                  description: The description of the error message.
-                code:
-                  type: integer
-                  description: The error code.
+                - failed
+            error_code:
+              type: string
+              description: Error code for failure.
+            message:
+              type: string
+              description: Error message for failure 
+
 
     ErrorCodesAndDefinitions:
       allOf:
-        - $ref: '#/components/schemas/CommonErrorCodesAndDefinitions'
         - type: object
-          description: Error codes from capabilities and their definitions. The codes also include 5xx error codes which are common across APIs.
+          description: Error codes from capabilities and their definitions.
           properties:
-            1001:
-              description: 'Internal script error. Ideally this should not come.'
-            1002:
-              description: 'Error during processing.'
-            1003:
-              description: 'No PDF Preset could be set.'
-            1004:
-              description: 'Unable to create specified output directory.'
-            2001:
-              description: 'Expected array'
-            2002:
-              description: 'Expected boolean.'
-            2003:
-              description: 'Expected integer.'
-            2004:
-              description: 'Expected number.'
-            2005:
-              description: 'Expected string.'
-            2006:
-              description: 'Incorrect range provided.'
-            2007:
-              description: 'Key not found in object.'
-            2008:
-              description: 'No matching enum value found.'
-            2009:
-              description: 'Empty filter provided for extraction of tags.'
-            2010:
-              description: 'Empty data source found.'
-            2011:
-              description: 'Relative path not acceptable.'
-            2012:
-              description: 'Mismatch in jobType.'
-            2013:
-              description: 'Either the params attribute is not found in the request or it is not in the correct format'
-
-    CommonErrorCodesAndDefinitions:
-      type: object
-      description: Error codes which are valid for all the capabilities and their definitions
-      properties:
-        501: 
-          description: 'Internal error: Unable to connect to server for communication'
-        502:
-          description: 'Params error: Unable to send the script to the server. Please check the path of the script'
-        503:
-          description: 'Internal error: Error parsing the response from application'
-        504:
-          description: 'Application error: Script execution failed'
-        601:
-          description: 'Params error: Relative path not acceptable'
-        602:
-          description: 'Params error: Expected string'
-        603:
-          description: 'Params error: Expected integer'
-        604:
-          description: 'Params error: Expected boolean'
-        605:
-          description: 'Params error: Expected array'
-        606:
-          description: 'Params error: Expected object'
-        701:
-          description: 'Capability error: Malformed file'
-        702:
-          description: 'Capability error: Script did not return anything'
-        703:
-          description: 'Capability error: Script did not return the response data'
-        704:
-          description: 'Capability error: Script threw an uncaught exception'
-        705:
-          description: 'Capability error: Expected array'
-        706:
-          description: 'Capability error: Expected object after parsing data at dataURL'
-        707:
-          description: 'Capability error: Relative path not acceptable'
-        708:
-          description: 'Capability error: Invalid data received'
+            runtime_error:
+              type: string
+              description : |
+                - Runtime error: Unable to connect to server for communication.
+                - Runtime error: Error parsing the response from application.
+                - Runtime script error. This should not had happened.
+                - Runtime error: Error during processing.
+                - Runtime error: Unable to create specified output directory.
+                - PreJob runtime script error. This should not had happened.
+                - PreJob runtime error: Error during processing.
+                - PreJob runtime error: Unable to create specified output directory.
+                - Application error: Script execution failed.
+                - Error during processing.
+            capability_error:
+              type: string
+              description: |
+                - Capability error: No PDF Preset could be set.
+                - Capability error: Unable to relink. Relink failed for 'parameterName'.
+                - Capability error: Unable to place. Place failed for 'parameterName'.
+                - Capability error: Cannot open file.
+            validation_error:
+              type: string
+              description: |
+                - Validation error: Expected array for property 'parameterName'.
+                - Validation error: Expected boolean 'parameterName' is the provided value for property 'parameterName'.
+                - Validation error: Expected integer 'parameterName' is the provided value for property 'parameterName'.
+                - Validation error: Expected number 'parameterName' is the provided value for property 'parameterName'.
+                - Validation error: Expected string 'parameterName' is the provided value for property 'parameterName'.
+                - Validation error: Incorrect range provided. Culprit Value is 'parameterName'.
+                - Validation error: Key not found in object. Missing key is 'parameterName'.
+                - Validation error: No matching enum value found. 'parameterName' is the provided value for property 'parameterName'.
+                - Validation error: Empty filter provided for extraction of tags.
+                - Validation error: Empty data source found.
+                - Validation error: Relative path not acceptable. Path provided is 'parameterName'
+                - Validation error: Mismatch in jobType. Provided value is 'parameterName'
+                - Validation error: Either the params is not found in the request or it is not in the correct format.
+                - Validation error: Required parameters are missing. Please check 'parameterName'
+                - Validation error: The link URI was not found. Provided link URI is 'parameterName'.
+                - Validation error: Expected object for property 'parameterName'.
+                - Validation error: At least one of the parameters should be present. Missing parameters are 'parameterName'
+                - Validation error: Unable to send the script to the server. Please check the path of the script.
+                - Validation error: The link id was not found. Provided link id is 'parameterName'.
+                - Validation error: Unable to send the script to the server. Please check the path of the script.
+                - Validation error: Relative path not acceptable. 'parameterName' is the provided value for property 'parameterName'.
+                - PreJob validation error: Expected array for property 'parameterName'.
+                - PreJob validation error: Expected boolean 'parameterName' is the provided value for property 'parameterName'.
+                - PreJob validation error: Expected integer 'parameterName' is the provided value for property 'parameterName'.
+                - PreJob validation error: Expected number 'parameterName' is the provided value for property 'parameterName'.
+                - PreJob validation error: Expected string 'parameterName' is the provided value for property 'parameterName'.
+                - PreJob validation error: Incorrect range provided. Culprit Value is 'parameterName'.
+                - PreJob validation error: Key not found in object. Missing key is 'parameterName'.
+                - PreJob validation error: No matching enum value found. 'parameterName' is the provided value for property 'parameterName'.
+                - PreJob validation error: Relative path not acceptable. Path provided is 'parameterName'  
+            application_error:
+              type: string
+              description : |
+                - Application error: Script execution failed.
+                - Error during processing.
+            resource_not_found:
+              type: string
+              description : |
+                - Error in resolving asset
+                - Job id not found
+            invalid_parameters:
+              type: string
+              description : |
+                - invalid capability bundle
+                - invalid extension
+                - invalid storage type
+                - invalid request parameters
+            access_error:
+              type: string
+              description : |
+                - api-key not allowed
+                - capability not found
+                - user does not have access to the resource
+                - private capability
+            unauthorised_error:
+              type: string
+              description : |
+                - Application error: Script execution failed.
+                - Error during processing.
+            unsupported_method:
+              type: string
+              description : |
+                - HTTP method used in the request is not allowed for the requested resource
+            request_not_acceptable:
+              type: string
+              description : |
+                - the server cannot produce a response that matches any of the acceptable media types specified in the Accept header.
+            invalid_content_type:
+              type: string
+              description : |
+                - Payload is in unsupported format
+            service_unavailable:
+              type: string
+              description : |
+                - Error while getting organization for user
+            timeout_error:
+              type: string
+              description : |
+                - Job execution exceeded timeout
+                - Job timeout occurred
 
     StatusResponse:
+      type: object
+      description:  Response body which is sent back on querying the status API.
+      properties:
+        events:
+          type: array
+          items:
+            oneOf:
+              - $ref: '#/components/schemas/notstartedEvent'
+              - $ref: '#/components/schemas/runningEvent'
+              - $ref: '#/components/schemas/succeededEvent'
+              - $ref: '#/components/schemas/failedEvent'
+
+    InputAsset:
+      type: object
+      description: The Url, from where the asset is to be fetched.
+      required:
+        - source
+      properties:
+        source:
+          type: object
+          required:
+            - url
+          properties:
+            url:
+              type: string
+              description: URL of the asset.
+            storageType:
+              type: string
+              description: This is optional parameter. It is recommended to provide this information.
+              enum:
+                - Azure
+                - Dropbox
+            
+        destination:
+          type: string
+          description: This provides a path relative to a temporary base directory (working directory) where resource would be downloaded. This would be used to identify the assets within the parameters.
+            It cannot go up using '..' or '/'. Should be a valid file name.
+
+    OutputAsset:
+      description: The url, where the output assets are to be posted after the job processing.
+      type: object
+      required:
+        - destination
+        - source
+      properties:
+        destination:
+          type: object
+          required:
+            - url
+          properties:
+            url:
+              type: string
+              description: URL of the asset.
+            storageType:
+              type: string
+              description: This is optional parameter. It is recommended to provide this information.
+              enum:
+                - Azure
+                - Dropbox
+        source:
+          type: string
+          description: This provides a path relative of the output where resource would be generated.
+            It cannot go up using '..' or '/'. Should be a valid file name.
+    
+    WebHookEvents:
       type: object
       description:  Response body which is sent back on querying the status API.
       properties:
@@ -1696,90 +1298,300 @@ components:
               - $ref: '#/components/schemas/EngineProcessingCompletedEvent'
               - $ref: '#/components/schemas/CompletedEvent'
               - $ref: '#/components/schemas/FailedEvent'
-        paging:
-          type: object
-          properties:
-            prevUrl:
-              type: string
-              description: url to previous 'n' events
-            nextUrl:
-              type: string
-              description: url to next 'n' events
-
-    InputAsset:
+    
+    BaseWebHookEvent:
       type: object
-      description: The Url, from where the asset is to be fetched.
-      required:
-        - source
+      description: Base event response for any job.
       properties:
-        source:
+        eventId:
+          description: Event ID for the latest event.
+          type: string
+        id:
+          description: Capability Execution ID.
+          type: string
+        timestamp:
+          type: string
+          description: Time stamp in ISO 8601 format
+    
+    QueuedEvent:
+      allOf:
+        - $ref: '#/components/schemas/BaseWebHookEvent'
+        - description: Queued Event
           type: object
-          required:
-            - url
-            - type
           properties:
-            url:
+            state:
               type: string
-              description: URL of the asset.
-            type:
-              type: string
-              default: HTTP_GET
+              description: The current state of the job.
               enum:
-                - HTTP_GET
-            headers:
+                - QUEUED
+
+    RunningEvent:
+      allOf:
+        - $ref: '#/components/schemas/BaseWebHookEvent'
+        - description: Running Event
+          type: object
+          properties:
+            state:
+              type: string
+              description: The current state of the job.
+              enum:
+                - RUNNING
+            data:
               type: object
-              description: These headers will be added in the GET request of url. There can be multiple header key value pairs specified here.
-              additionalProperties:
-                type: string
-            cache:
-              type: object
-              required:
-                - key
               properties:
-                key:
+                percent:
                   type: string
-                  description: Asset identifier
-                ttl:
-                  type: integer
-                  default: 48
-                  description: TTL in hours it can be maximum 96hrs and minimum 1hr
-                useCache:
-                  type: boolean
-                  default: false
-                  description: Parameter that control enabling or disabling of caching
-        destination:
-          type: string
-          description: This provides a path relative to a temporary base directory (working directory) where resource would be downloaded. This would be used to identify the assets within the parameters.
-            It cannot go up using '..' or '/'. Should be a valid file name.
 
-    OutputAsset:
-      description: The url, where the output assets are to be posted after the job processing.
-      type: object
-      required:
-        - destination
-        - source
-      properties:
-        destination:
+    AssetsDownloadStartedEvent:
+      allOf:
+        - $ref: '#/components/schemas/BaseWebHookEvent'
+        - description: Assets download started Event.
           type: object
-          required:
-            - url
-            - type
           properties:
-            url:
+            state:
               type: string
-              description: URL of the asset.
-            type:
-              type: string
-              default: HTTP_PUT
+              description: The current state of the job.
               enum:
-                - HTTP_POST
-                - HTTP_PUT
-            headers:
+                - ASSETS_DOWNLOAD_STARTED
+            data:
               type: object
-              description: These headers will be added in the PUT or POST request of url. There can be multiple header key value pairs specified here.
-              additionalProperties:
-                type: string
-        source:
-          type: string
-          description: This provides a path relative of the output where resource would be generated.
-            It cannot go up using '..' or '/'. Should be a valid file name.
+              properties:
+                total:
+                  type: string
+                  description: Number of assets to download.
+
+    AssetDownloadStartedEvent:
+      allOf:
+        - $ref: '#/components/schemas/BaseWebHookEvent'
+        - description: Asset download start event.
+          type: object
+          properties:
+            state:
+              type: string
+              description: The current state of the job.
+              enum:
+                - ASSET_DOWNLOAD_STARTED
+            data:
+              type: object
+
+    AssetDownloadCompletedEvent:
+      allOf:
+        - $ref: '#/components/schemas/BaseWebHookEvent'
+        - description: Asset download complete event.
+          type: object
+          properties:
+            state:
+              type: string
+              description: The current state of the job.
+              enum:
+                - ASSET_DOWNLOAD_COMPLETED
+            data:
+              type: object              
+  
+    AssetDownloadFailedEvent:
+      allOf:
+        - $ref: '#/components/schemas/BaseWebHookEvent'
+        - description: Asset download failed event.
+          type: object
+          properties:
+            state:
+              type: string
+              description: The current state of the job.
+              enum:
+                - ASSET_DOWNLOAD_FAILED
+            data:
+              type: object
+    
+    AssetsDownloadCompletedEvent:
+      allOf:
+        - $ref: '#/components/schemas/BaseWebHookEvent'
+        - description: Assets download complete event.
+          type: object
+          properties:
+            state:
+              type: string
+              description: The current state of the job.
+              enum:
+                - ASSETS_DOWNLOAD_COMPLETED
+            data:
+              type: object
+              
+    AssetsUploadStartedEvent:
+      allOf:
+        - $ref: '#/components/schemas/BaseWebHookEvent'
+        - description: Assets upload start event
+          type: object
+          properties:
+            state:
+              type: string
+              description: The current state of the job.
+              enum:
+                - ASSETS_UPLOAD_STARTED
+            data:
+              type: object
+              properties:
+                total:
+                  type: string
+                  description: Number of assets to upload.
+
+    AssetUploadStartedEvent:
+      allOf:
+        - $ref: '#/components/schemas/BaseWebHookEvent'
+        - description: Asset upload start event.
+          type: object
+          properties:
+            state:
+              type: string
+              description: The current state of the job.
+              enum:
+                - ASSET_UPLOAD_STARTED
+            data:
+              type: object
+              
+    AssetUploadCompletedEvent:
+      allOf:
+        - $ref: '#/components/schemas/BaseWebHookEvent'
+        - description: Asset upload completed event.
+          type: object
+          properties:
+            state:
+              type: string
+              description: The current state of the job.
+              enum:
+                - ASSET_UPLOAD_COMPLETED
+            data:
+              type: object
+              
+    AssetUploadFailedEvent:
+      allOf:
+        - $ref: '#/components/schemas/BaseWebHookEvent'
+        - description: Asset upload failed event.
+          type: object
+          properties:
+            state:
+              type: string
+              description: The current state of the job.
+              enum:
+                - ASSET_UPLOAD_FAILED
+            data:
+              type: object
+              
+    AssetsUploadCompletedEvent:
+      allOf:
+        - $ref: '#/components/schemas/BaseWebHookEvent'
+        - description: Assets upload completed event.
+          type: object
+          properties:
+            state:
+              type: string
+              description: The current state of the job.
+              enum:
+                - ASSETS_UPLOAD_COMPLETED
+            data:
+              type: object
+
+    AssetScanningStartedEvent:
+      allOf:
+        - $ref: '#/components/schemas/BaseWebHookEvent'
+        - description: Asset Scanning started event.
+          type: object
+          properties:
+            state:
+              type: string
+              description: The current state of the job.
+              enum:
+                - ASSET_SCANNING_STARTED
+            data:
+              type: object
+
+    AssetScanningCompletedEvent:
+      allOf:
+        - $ref: '#/components/schemas/BaseWebHookEvent'
+        - description: Asset Scanning completed event.
+          type: object
+          properties:
+            state:
+              type: string
+              description: The current state of the job.
+              enum:
+                - ASSET_SCANNING_COMPLETED
+            data:
+              type: object
+
+    AssetScanningFailedEvent:
+      allOf:
+        - $ref: '#/components/schemas/BaseWebHookEvent'
+        - description: Asset scanning failed event.
+          type: object
+          properties:
+            state:
+              type: string
+              description: The current state of the job.
+              enum:
+                - ASSET_SCANNING_FAILED
+            data:
+              type: object
+
+    EngineProcessingStartedEvent:
+      allOf:
+        - $ref: '#/components/schemas/BaseWebHookEvent'
+        - description: Engine processing starting event.
+          type: object
+          properties:
+            state:
+              type: string
+              description: The current state of the job.
+              enum:
+                - ENGINE_PROCESSING_STARTED
+
+    EngineProcessingCompletedEvent:
+      allOf:
+        - $ref: '#/components/schemas/BaseWebHookEvent'
+        - description: Engine processing completed event.
+        
+          type: object
+          properties:
+            state:
+              type: string
+              description: The current state of the job.
+              enum:
+                - ENGINE_PROCESSING_COMPLETED
+              
+    CompletedEvent:
+      allOf:
+        - $ref: '#/components/schemas/BaseWebHookEvent'
+        - description: Completed Event.
+          type: object
+          properties:
+            state:
+              type: string
+              description: The current state of the job.
+              enum:
+                - COMPLETED
+            data:
+              description: The data returned from execution of capability. If the data is less than 250 kB, then the data would be provided here.
+              type: object
+            dataURL:
+              description: The data returned from execution of capability. If the data is more than 250 kB and less the 20 MB, it will be provided as a presigned URL. If it is more than 20 MB, the job will fail with error code 413.
+              type: string
+
+    FailedEvent:
+      allOf:
+        - $ref: '#/components/schemas/BaseWebHookEvent'
+        - description: Failed Event
+          type: object
+          properties:
+            state:
+              type: string
+              description: The current state of the job.
+              enum:
+                - FAILED
+            data:
+              type: object
+              properties:
+                reason:
+                  type: string
+                  description: The description of the error message.
+                code:
+                  type: integer
+                  description: The error code.
