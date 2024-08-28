@@ -176,7 +176,7 @@ paths:
         500:
           $ref: "#/components/responses/InternalServerError"
 
-  /v3/capability/{product}/{organization}/{capability}:
+  /v3/{organization}/{capability}:
     post:
       summary: Submit capability execution request.
       description: Define the input assets and parameters with which the capability should be executed against the app engine.
@@ -184,12 +184,6 @@ paths:
         - name: x-gw-ims-org-id
           in: header
           description: Identifier for IMS organization as defined in Adobe's developer console
-          required: true
-          schema:
-            type: string
-        - name: product
-          in: path
-          description: Name of the target app engine as specified in capability manifest
           required: true
           schema:
             type: string
