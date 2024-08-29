@@ -376,19 +376,19 @@ components:
         Access-Control-Allow-Methods:
           schema:
             type: string
-          description: header indicates what HTTP methods are allowed
+          description: Header indicates what HTTP methods are allowed
         Access-Control-Allow-Headers:
           schema:
             type: string
-          description: header indicate which HTTP headers can be used during the actual request
+          description: Header indicate which HTTP headers can be used during the actual request
         Access-Control-Allow-Credentials:
           schema:
             type: string
-          description: header is used by servers to indicate that the client shall share HTTP responses
+          description: Header is used by servers to indicate that the client shall share HTTP responses
         Access-Control-Max-Age:
           schema:
             type: integer
-          description: header indicates how long the results of a preflight request
+          description: Header indicates how long the results of a preflight request
     BadParams:
       description: Bad Parameter
       content:
@@ -411,19 +411,19 @@ components:
         Access-Control-Allow-Methods:
           schema:
             type: string
-          description: header indicates what HTTP methods are allowed
+          description: Header indicates what HTTP methods are allowed
         Access-Control-Allow-Headers:
           schema:
             type: string
-          description: header indicate which HTTP headers can be used during the actual request
+          description: Header indicate which HTTP headers can be used during the actual request
         Access-Control-Allow-Credentials:
           schema:
             type: string
-          description: header is used by servers to indicate that the client shall share HTTP responses
+          description: Header is used by servers to indicate that the client shall share HTTP responses
         Access-Control-Max-Age:
           schema:
             type: integer
-          description: header indicates how long the results of a preflight request
+          description: Header indicates how long the results of a preflight request
     Unauthorized:
       description: Unauthorized
       content:
@@ -446,19 +446,19 @@ components:
         Access-Control-Allow-Methods:
           schema:
             type: string
-          description: header indicates what HTTP methods are allowed
+          description: Header indicates what HTTP methods are allowed
         Access-Control-Allow-Headers:
           schema:
             type: string
-          description: header indicate which HTTP headers can be used during the actual request
+          description: Header indicate which HTTP headers can be used during the actual request
         Access-Control-Allow-Credentials:
           schema:
             type: string
-          description: header is used by servers to indicate that the client shall share HTTP responses
+          description: Header is used by servers to indicate that the client shall share HTTP responses
         Access-Control-Max-Age:
           schema:
             type: integer
-          description: header indicates how long the results of a preflight request
+          description: Header indicates how long the results of a preflight request
     Forbidden:
       description: Forbidden
       content:
@@ -481,19 +481,19 @@ components:
         Access-Control-Allow-Methods:
           schema:
             type: string
-          description: header indicates what HTTP methods are allowed
+          description: Header indicates what HTTP methods are allowed
         Access-Control-Allow-Headers:
           schema:
             type: string
-          description: header indicate which HTTP headers can be used during the actual request
+          description: Header indicate which HTTP headers can be used during the actual request
         Access-Control-Allow-Credentials:
           schema:
             type: string
-          description: header is used by servers to indicate that the client shall share HTTP responses
+          description: Header is used by servers to indicate that the client shall share HTTP responses
         Access-Control-Max-Age:
           schema:
             type: integer
-          description: header indicates how long the results of a preflight request
+          description: Header indicates how long the results of a preflight request
     NotFound:
       description: Not found
       content:
@@ -516,19 +516,19 @@ components:
         Access-Control-Allow-Methods:
           schema:
             type: string
-          description: header indicates what HTTP methods are allowed
+          description: Header indicates what HTTP methods are allowed
         Access-Control-Allow-Headers:
           schema:
             type: string
-          description: header indicate which HTTP headers can be used during the actual request
+          description: Header indicate which HTTP headers can be used during the actual request
         Access-Control-Allow-Credentials:
           schema:
             type: string
-          description: header is used by servers to indicate that the client shall share HTTP responses
+          description: Header is used by servers to indicate that the client shall share HTTP responses
         Access-Control-Max-Age:
           schema:
             type: integer
-          description: header indicates how long the results of a preflight request
+          description: Header indicates how long the results of a preflight request
     InternalServerError:
       description: Internal server error
       content:
@@ -551,19 +551,19 @@ components:
         Access-Control-Allow-Methods:
           schema:
             type: string
-          description: header indicates what HTTP methods are allowed
+          description: Header indicates what HTTP methods are allowed
         Access-Control-Allow-Headers:
           schema:
             type: string
-          description: header indicate which HTTP headers can be used during the actual request
+          description: Header indicate which HTTP headers can be used during the actual request
         Access-Control-Allow-Credentials:
           schema:
             type: string
-          description: header is used by servers to indicate that the client shall share HTTP responses
+          description: Header is used by servers to indicate that the client shall share HTTP responses
         Access-Control-Max-Age:
           schema:
             type: integer
-          description: header indicates how long the results of a preflight request
+          description: Header indicates how long the results of a preflight request
   schemas:
     Error:
       type: object
