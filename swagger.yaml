@@ -23,6 +23,25 @@ paths:
       description: Creates and returns JPEG,PNG or PDF renditions of a specific InDesign document.
         Output rendition has mimetype 'image/jpeg' for jpeg, 'image/png' for png and 'application/pdf' for pdf. For the structure of output/data refer to RenditionOutputData. Also for the list of possible error codes in failedEvent refer to RenditionFailedData.
       operationId: renditionJob
+      parameters:
+        - name: x-gw-ims-org-id
+          in: header
+          description: Identifier for IMS organization as defined in Adobe's developer console. This is optional
+          required: false
+          schema:
+            type: string
+        - name: x-api-key
+          in: header
+          description: API key as defined in Adobe's developer console
+          required: true
+          schema:
+            type: string
+        - name: Authorization
+          in: header
+          description: Authorization token with bearer "token_value"
+          required: true
+          schema:
+            type: string
       requestBody:
         content:
           application/json:
@@ -53,6 +72,25 @@ paths:
       description: Creates and returns merged InDesign documents or PDFs that are created after merging the data and the given template.
         Output rendition has mimetype 'image/jpeg' for jpeg, 'image/png' for png, 'application/pdf' for pdf or 'application/x-indesign' for indd. For the structure of StatusCompletedResponse/output/data refer to DataMergeOutputData. Also for the list of possible error codes in FailedEvent refer to DataMergeFailedData.
       operationId: dataMerge
+      parameters:
+        - name: x-gw-ims-org-id
+          in: header
+          description: Identifier for IMS organization as defined in Adobe's developer console. This is optional
+          required: false
+          schema:
+            type: string
+        - name: x-api-key
+          in: header
+          description: API key as defined in Adobe's developer console
+          required: true
+          schema:
+            type: string
+        - name: Authorization
+          in: header
+          description: Authorization token with bearer "token_value"
+          required: true
+          schema:
+            type: string
       requestBody:
         content:
           application/json:
@@ -81,6 +119,25 @@ paths:
       summary: Gets data merge tags
       description: Retrieves the data merge tags from the document. For the structure of StatusCompletedResponse/output/data refer to DataMergeTagsOutputData. Also for the list of possible error codes in FailedEvent refer to DataMergeFailedData.
       operationId: dataMergeTags
+      parameters:
+        - name: x-gw-ims-org-id
+          in: header
+          description: Identifier for IMS organization as defined in Adobe's developer console. This is optional
+          required: false
+          schema:
+            type: string
+        - name: x-api-key
+          in: header
+          description: API key as defined in Adobe's developer console
+          required: true
+          schema:
+            type: string
+        - name: Authorization
+          in: header
+          description: Authorization token with bearer "token_value"
+          required: true
+          schema:
+            type: string
       requestBody:
         content:
           application/json:
@@ -107,6 +164,24 @@ paths:
       summary: Gets latest status for a job.
       description: Returns the latest status event of a capability execution.
       parameters:
+        - name: x-gw-ims-org-id
+          in: header
+          description: Identifier for IMS organization as defined in Adobe's developer console. This is optional
+          required: false
+          schema:
+            type: string
+        - name: x-api-key
+          in: header
+          description: API key as defined in Adobe's developer console
+          required: true
+          schema:
+            type: string
+        - name: Authorization
+          in: header
+          description: Authorization token with bearer "token_value"
+          required: true
+          schema:
+            type: string
         - name: id
           in: path
           description: ID, for which the status has to be retrieved.
@@ -129,7 +204,15 @@ paths:
             retry-after:
               schema:
                 type: integer
-              description: Number of retries  
+              description: Number of retries
+            Content-Type:
+              schema:
+                type: string
+              description: Type of content returned e.g. application/json
+            Content-Length:
+              schema:
+                type: integer
+              description: Length of response content
 
   /v3/capability:
     post:
@@ -139,6 +222,18 @@ paths:
         - name: x-gw-ims-org-id
           in: header
           description: Identifier for IMS organization as defined in Adobe's developer console
+          required: true
+          schema:
+            type: string
+        - name: x-api-key
+          in: header
+          description: API key as defined in Adobe's developer console
+          required: true
+          schema:
+            type: string
+        - name: Authorization
+          in: header
+          description: Authorization token with bearer "token_value"
           required: true
           schema:
             type: string
@@ -184,6 +279,18 @@ paths:
         - name: x-gw-ims-org-id
           in: header
           description: Identifier for IMS organization as defined in Adobe's developer console
+          required: true
+          schema:
+            type: string
+        - name: x-api-key
+          in: header
+          description: API key as defined in Adobe's developer console
+          required: true
+          schema:
+            type: string
+        - name: Authorization
+          in: header
+          description: Authorization token with bearer "token_value"
           required: true
           schema:
             type: string
@@ -253,38 +360,210 @@ components:
         retry-after:
           schema:
             type: integer
-          description: Number of retries  
-        
+          description: Number of retries
+        Content-Type:
+          schema:
+            type: string
+          description: Type of content returned e.g. application/json
+        Content-Length:
+          schema:
+            type: integer
+          description: Length of response content
+        Access-Control-Allow-Origin:
+          schema:
+            type: string
+          description: Cross Origin Resource Sharing header
+        Access-Control-Allow-Methods:
+          schema:
+            type: string
+          description: header indicates what HTTP methods are allowed
+        Access-Control-Allow-Headers:
+          schema:
+            type: string
+          description: header indicate which HTTP headers can be used during the actual request
+        Access-Control-Allow-Credentials:
+          schema:
+            type: string
+          description: header is used by servers to indicate that the client shall share HTTP responses
+        Access-Control-Max-Age:
+          schema:
+            type: integer
+          description: header indicates how long the results of a preflight request
     BadParams:
       description: Bad Parameter
       content:
         application/json:
           schema:
             $ref: '#/components/schemas/Error'
+      headers:
+        Content-Type:
+          schema:
+            type: string
+          description: Type of content returned e.g. application/json
+        Content-Length:
+          schema:
+            type: integer
+          description: Length of response content
+        Access-Control-Allow-Origin:
+          schema:
+            type: string
+          description: Cross Origin Resource Sharing header
+        Access-Control-Allow-Methods:
+          schema:
+            type: string
+          description: header indicates what HTTP methods are allowed
+        Access-Control-Allow-Headers:
+          schema:
+            type: string
+          description: header indicate which HTTP headers can be used during the actual request
+        Access-Control-Allow-Credentials:
+          schema:
+            type: string
+          description: header is used by servers to indicate that the client shall share HTTP responses
+        Access-Control-Max-Age:
+          schema:
+            type: integer
+          description: header indicates how long the results of a preflight request
     Unauthorized:
       description: Unauthorized
       content:
         application/json:
           schema:
             $ref: '#/components/schemas/Error'
+      headers:
+        Content-Type:
+          schema:
+            type: string
+          description: Type of content returned e.g. application/json
+        Content-Length:
+          schema:
+            type: integer
+          description: Length of response content
+        Access-Control-Allow-Origin:
+          schema:
+            type: string
+          description: Cross Origin Resource Sharing header
+        Access-Control-Allow-Methods:
+          schema:
+            type: string
+          description: header indicates what HTTP methods are allowed
+        Access-Control-Allow-Headers:
+          schema:
+            type: string
+          description: header indicate which HTTP headers can be used during the actual request
+        Access-Control-Allow-Credentials:
+          schema:
+            type: string
+          description: header is used by servers to indicate that the client shall share HTTP responses
+        Access-Control-Max-Age:
+          schema:
+            type: integer
+          description: header indicates how long the results of a preflight request
     Forbidden:
       description: Forbidden
       content:
         application/json:
           schema:
             $ref: '#/components/schemas/Error'
+      headers:
+        Content-Type:
+          schema:
+            type: string
+          description: Type of content returned e.g. application/json
+        Content-Length:
+          schema:
+            type: integer
+          description: Length of response content
+        Access-Control-Allow-Origin:
+          schema:
+            type: string
+          description: Cross Origin Resource Sharing header
+        Access-Control-Allow-Methods:
+          schema:
+            type: string
+          description: header indicates what HTTP methods are allowed
+        Access-Control-Allow-Headers:
+          schema:
+            type: string
+          description: header indicate which HTTP headers can be used during the actual request
+        Access-Control-Allow-Credentials:
+          schema:
+            type: string
+          description: header is used by servers to indicate that the client shall share HTTP responses
+        Access-Control-Max-Age:
+          schema:
+            type: integer
+          description: header indicates how long the results of a preflight request
     NotFound:
       description: Not found
       content:
         application/json:
           schema:
             $ref: '#/components/schemas/Error'
+      headers:
+        Content-Type:
+          schema:
+            type: string
+          description: Type of content returned e.g. application/json
+        Content-Length:
+          schema:
+            type: integer
+          description: Length of response content
+        Access-Control-Allow-Origin:
+          schema:
+            type: string
+          description: Cross Origin Resource Sharing header
+        Access-Control-Allow-Methods:
+          schema:
+            type: string
+          description: header indicates what HTTP methods are allowed
+        Access-Control-Allow-Headers:
+          schema:
+            type: string
+          description: header indicate which HTTP headers can be used during the actual request
+        Access-Control-Allow-Credentials:
+          schema:
+            type: string
+          description: header is used by servers to indicate that the client shall share HTTP responses
+        Access-Control-Max-Age:
+          schema:
+            type: integer
+          description: header indicates how long the results of a preflight request
     InternalServerError:
       description: Internal server error
       content:
         application/json:
           schema:
             $ref: '#/components/schemas/Error'
+      headers:
+        Content-Type:
+          schema:
+            type: string
+          description: Type of content returned e.g. application/json
+        Content-Length:
+          schema:
+            type: integer
+          description: Length of response content
+        Access-Control-Allow-Origin:
+          schema:
+            type: string
+          description: Cross Origin Resource Sharing header
+        Access-Control-Allow-Methods:
+          schema:
+            type: string
+          description: header indicates what HTTP methods are allowed
+        Access-Control-Allow-Headers:
+          schema:
+            type: string
+          description: header indicate which HTTP headers can be used during the actual request
+        Access-Control-Allow-Credentials:
+          schema:
+            type: string
+          description: header is used by servers to indicate that the client shall share HTTP responses
+        Access-Control-Max-Age:
+          schema:
+            type: integer
+          description: header indicates how long the results of a preflight request
   schemas:
     Error:
       type: object
@@ -1054,14 +1333,14 @@ components:
     succeededEvent:
       allOf:
         - $ref: '#/components/schemas/BaseEvent'
-        - description: Job is completed.
+        - description: Job is succeeded.
           type: object
           properties:
             status:
               type: string
               description: The current state of the job.
               enum:
-                - completed
+                - succeeded
             data:
               type: object
               description: Output response from  current state of the job.
