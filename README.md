@@ -1,33 +1,28 @@
 # InDesign Cloud Services
 
 ## Introduction
-The InDesign Cloud Services enables you to make edit, query data, and run workflows on an ID file. This document will help you onboard to the services, familiarize you with the available features, and get you started with some basic usage examples.
+The InDesign API's enables you to make edit, query data, and run workflows on an ID file. This document will help you onboard to the API's, familiarize you with the available features, and get you started with some basic usage examples.
 ## Onboarding & setup
 ### OnBoarding
 1. The user should be registered on [Developer Pre-release program](https://www.adobeprerelease.com/beta/D1A76A97-F7DC-4552-DE3C-FF5F211C7492/apply) (This would bind the developer to NDA).
-2. The user should fill up this [form](https://forms.office.com/Pages/ResponsePage.aspx?id=Wht7-jR7h0OUrtLBeN7O4b96s5AZBCJOvELTJf9VO8hUQTBCMjhZTjVIS0VYQzFGN1lFVjVSM0JROC4u) for being a part of the Beta program of InDesign Cloud Services.
+2. The user should fill up this [form](https://forms.office.com/Pages/ResponsePage.aspx?id=Wht7-jR7h0OUrtLBeN7O4b96s5AZBCJOvELTJf9VO8hUQTBCMjhZTjVIS0VYQzFGN1lFVjVSM0JROC4u) for being a part of the Public Beta program of InDesign API's.
 
-After this, we will be shortlisting and enroll the developers in the beta program. We will be sharing the client_id and client_secret and other relevant details with individual developers.
+After this, we will be shortlisting and enroll the developers in the Public Beta program. We will be sharing the client_id and client_secret and other relevant details with individual developers.
 
 ### Setup
-You must generate an access token using the details shared above and follow these steps to setup:
-
-1. Download the [node](https://nodejs.org/en/download/) and install it on your machine.
-2. Download and extract the [sample code](https://github.com/AdobeDocs/adobeio-auth/tree/stage/JWT/samples/adobe-jwt-node).
-3. Edit the contents of the config file (config.js) by replacing relevant data for clientId , clientSecret, and other attributes from the data shared with you at the time of acceptance.
-4. Execute.
-    ```
-    npm install
-    node app.js
-    ```
+You must generate an access token using the details shared above, using the cURL shared:
+```curl
+curl -X POST 'https://ims-na1.adobelogin.com/ims/token/v3' \
+-H 'Content-Type: application/x-www-form-urlencoded' \
+-d 'grant_type=client_credentials&client_id=<client_id>&client_secret=<client_secret>&scope=openid,AdobeID,indesign_services,creative_cloud,creative_sdk'
+```
 After successfully completing the above steps, you’ll get an 'access_token' in response. The token will be valid for 24hrs, after which you must re-generate it. Use this token in your API calls to make them work.
 
 ## Accessing APIs
 
-InDesign Cloud Services support two types of authentication :
+InDesign API's support OAuth Server-to-Server authentication:
 
-1. __Service Account Integration__: For service-to-service integrations, you will need a JSON Web Token (JWT) that encapsulates your client credentials and authenticates the identity of your integration. You then exchange the JWT for the access token that authorizes access.
-2. __OAuth integration__: (Coming soon) If your integration needs to access content or a service on behalf of an end user, that user must be authenticated as well. Your integration must pass the OAuth token granted by the Adobe IMS.
+1. You can use the token generate in the above step to call InDesign API's
 
     Here’s a skeleton cURL request to accessing the APIs :
     ```curl
@@ -66,25 +61,25 @@ As shown in the [skeleton request](#accessing-apis) above, there are three mai
 The platform supports multiple asset types. These asset types signify storage repositories from which the platform can download. You can provide the input asset information within the "assets" array . Here are the supported types :
 <table style="background-color:White;">
   <tr>
-    <th>Type</th>
+    <th>storageType</th>
     <th>Required Parameter</th>
     <th>Nature</th>
     <th>Notes</th>
   </tr>
   <tr>
-    <td>HTTP_GET</td>
+    <td>Azure</td>
     <td>url</td>
-    <td>mandatory</td>
+    <td>optional</td>
     <td>Pre-signed URL</td>
   </tr>
 </table>
 
-__HTTP_GET__ example
+__Azure__ or __Aws__ example
 ```json
 {
     "source" : {
-        "type" : "HTTP_GET",
-        "url" : "https://xyz-input-asset.s3.amazonaws.com/Template.indt"
+        "storageType" : "Azure",
+        "url" : "https://xyz-blob.core.windows.net/Template.indt"
     },
     "destination" : "jobasset/template.indt"
 }
@@ -97,13 +92,13 @@ Here are the supported types:
 
 <table style="background-color:White;">
   <tr>
-    <th>Type</th>
+    <th>storageType</th>
     <th>Required Parameter</th>
     <th>Nature</th>
     <th>Notes</th>
   </tr>
   <tr>
-    <td>HTTP_PUT</td>
+    <td>Azure</td>
     <td>url</td>
     <td>mandatory</td>
     <td>Pre-signed URL</td>
@@ -116,20 +111,20 @@ Here are the supported types:
   </tr>
 </table>
 
-__HTTP_PUT__ or __HTTP_POST__ example
+__Azure__ or __AWS__ example
 ```json
 {
     "destination" : {
-        "type" : "HTTP_POST",
-        "url" : "https://xyz-input-asset.s3.amazonaws.com/AdobeStock_322173431.indt"
+        "type" : "Azure",
+        "url" : "https://xyz-blob.core.windows.net/Template.indt"
     },
     "source" : "jobasset/template.indt"
 }
 ```
-URL should be a pre-signed POST URL in case of HTTP_POST and in case type is HTTP_PUT, URL should be a pre-signed PUT URL.
+Each DAM provider may have thier own requirement on how to create PUT or POST pre signed urls. Please follow the documentation from individual DAM provider creating these urls.
 
 ### Supported file storage
-Here are the supported storage types to refer your assets from:
+InDesign API's supports following storage types to refer your assets from:
 
 - AWS S3: Use a presigned GET/PUT/POST URL
 - Dropbox: Generate temporary upload/download links using [link](https://dropbox.github.io/dropbox-api-v2-explorer/)
@@ -144,7 +139,7 @@ Links is one of the most important features of InDesign. You can place and link 
 * Please note, that to refer to the same asset in the rest of the params, the value mentioned in the destination property is to be used.
 
 You can use the following ways to make links work, it can be done in two ways:
-1. Maintaining relative paths of assets to the target document. While doing this, you need to  place the files outside of the working directory.
+1. Maintaining relative paths of assets to the target document. While doing this, you need to place the files outside of the working directory.
 2. If you place the linked assets parallel to the target document, the links get resolved and the assets are picked.
 
 Sometimes the documents contain custom links which are not understood by InDesign. To enable proper execution of the job, the custom URLs can be relinked to assets provided in the request. 
@@ -176,7 +171,7 @@ By using the above example the caller is asking to relink the links with specifi
 
 <br>
 
-## Fonts
+<!-- ## Fonts 
 Just like links, fonts are also very important. The support of fonts is as follows:
 ### Adobe fonts
 Adobe fonts are currently supported only with [OAuth integration](#accessing-apis) where the end user can be identified. These are not yet supported with [Service account integration](#accessing-apis). 
@@ -208,7 +203,7 @@ Here’s an example, where a specific document is to be searched for Adobe Fonts
     }
 }
 ```
-For more information around this, please refer to the API documentation.
+For more information around this, please refer to the API documentation. -->
 ### Custom fonts
 Custom fonts or user fonts can be provided as a regular asset. Here’s an example:
 ```json
@@ -280,7 +275,7 @@ As a best practice, try to keep the fonts in "Document Fonts" or in an isolated 
 ### Get the status of a job
 Now that the request is sent, how can one get the status of the request. This is demonstrated with an example below. Suppose the user triggers a rendition call with a 3 page document, the request will look something like this:
 ```curl
-curl --location --request POST 'https://indesign.adobe.io/api/v1/capability/indesign/rendition/png' \
+curl --location --request POST 'https://indesign.adobe.io/api/v3/create-rendition' \
 --header 'Authorization: bearer <access_token>' \
 --header 'x-api-key: <client_id>' \
 --header 'Content-Type: application/json' \
@@ -289,13 +284,13 @@ curl --location --request POST 'https://indesign.adobe.io/api/v1/capability/inde
         {
             "source": {
                 "url":<pre-signed url>,
-                "type":"HTTP_GET"
+                "storageType":"Azure"
             },
             "destination" : "3PageDoc.indd"
         }
     ],
     "params":{
-         "jobType":"RENDITION_PNG",
+         "outputMediaType":"image/png",
          "targetDocuments": [
             "3PageDoc.indd"
          ],
@@ -307,22 +302,18 @@ curl --location --request POST 'https://indesign.adobe.io/api/v1/capability/inde
 The response to the request will be something like
 ```json
 {
-    "statusUrls": {
-        "latest": "https://indesign.adobe.io/api/v1/capability/status/ee9f6ee4-ea8c-40d5-a548-f7a0e5a2ca85",
-        "all": "https://indesign.adobe.io/api/v1/capability/status/all/ee9f6ee4-ea8c-40d5-a548-f7a0e5a2ca85"
-    },
-    "id": "ee9f6ee4-ea8c-40d5-a548-f7a0e5a2ca85"
+    "statusUrl": "https://indesign.adobe.io/v3/status/ee9f6ee4-ea8c-40d5-a548-f7a0e5a2ca85",
+    "jobId": "ee9f6ee4-ea8c-40d5-a548-f7a0e5a2ca85"
 }
 ```
-* `"id"`: Corresponds to the jobID. Use this to know the status.
-* `"latest"`: Use this to get the latest status event of the job.
-* `"all"`: Use this to get all the status events in a paginated format.
+* `"jobId"`: Corresponds to the jobID. Use this to know the status.
+* `"statusUrl"`: Use this to get the latest status event of the job.
 
 
-__Latest__ request
+__Status__ request
 Use this to get the latest event generated in the process.
 ```curl
-curl --location --request GET 'https://indesign.adobe.io/api/v1/capability/status/ee9f6ee4-ea8c-40d5-a548-f7a0e5a2ca85' \
+curl --location --request GET 'https://indesign.adobe.io/v3/status/ee9f6ee4-ea8c-40d5-a548-f7a0e5a2ca85' \
 --header 'Authorization: bearer <access_token>' \
 --header 'x-api-key: <client_id>'
 ```
@@ -330,41 +321,42 @@ curl --location --request GET 'https://indesign.adobe.io/api/v1/capability/statu
 __Latest__ response
 ```json
 {
-    "eventId": "8175851e-f122-464c-9d02-fe08e7d6fc0f",
-    "data": {
-        "outputs": [
-            {
-                "renditions": [
-                    {
-                        "pageIndex": 1,
-                        "path": [
-                            "tmp964721/template_rendition.png"
-                        ]
-                    },
-                    {
-                        "pageIndex": 2,
-                        "path": [
-                            "tmp964721/template_rendition2.png"
-                        ]
-                    },
-                    {
-                        "pageIndex": 3,
-                        "path": [
-                            "tmp964721/template_rendition3.png"
-                        ]
-                    }
-                ],
-                "input": "3PageDoc.indd"
-            }
-        ]
-    },
-    "id": "ee9f6ee4-ea8c-40d5-a548-f7a0e5a2ca85",
-    "state": "COMPLETED",
-    "timestamp": 1623913539469
+	"jobId": "c1c86ece-90e5-48b0-8469-699ad440602c",
+	"timestamp": "2024-08-29T12:49:37.038Z",
+	"status": "succeeded",
+	"data": {
+		"records": [
+			{
+				"recordIndex": "1-2",
+				"outputs": [
+					{
+						"index": "All",
+						"path": [
+							"tmp405242/range1/template.pdf"
+						]
+					}
+				],
+				"warnings": {}
+			}
+		],
+		"warnings": {
+			"missingLinks": [
+				"file:/Users/user/Desktop/dataMerge/data.csv"
+			]
+		}
+	},
+	"outputs": [
+		{
+			"destination": {
+				"url": "<sample output url>"
+			},
+			"source": "tmp405242\\range1\\template.pdf"
+		}
+	]
 }
 ```
 
-__All__ request
+<!--__All__ request
 ```curl
 curl --location --request GET 'https://indesign.adobe.io/api/v1/capability/status/all/ee9f6ee4-ea8c-40d5-a548-f7a0e5a2ca85' \
 --header 'Authorization: bearer <access_token>' \
@@ -587,13 +579,14 @@ Here’s the response corresponding to it :
     }
 }
 ```
-## Consume the APIs provided by InDesign Cloud Services
+-->
+## Consume the APIs provided by InDesign API's
 You can find the detailed [API documentation here](https://adobedocs.github.io/indesign-api-docs/). Here are some sample requests for the APIs :
 
 ### PDF rendition using pre-signed URL
 Creates and returns new PDF from a specific InDesign document. The following example uses pre-signed URL and a custom font
 ```curl
-curl --location --request POST 'https://indesign.adobe.io/api/v1/capability/indesign/rendition/pdf' \
+curl --location --request POST 'https://indesign.adobe.io/v3/create-rendition' \
 --header 'Authorization: bearer <YOUR_OAUTH_TOKEN>' \
 --header 'x-api-key: <YOUR_API_KEY>' \
 --header 'Content-Type: application/json' \
@@ -602,20 +595,20 @@ curl --location --request POST 'https://indesign.adobe.io/api/v1/capability/inde
         {
             "source": {
                 "url":"<YOUR PRE-SIGNED URL>",
-                "type":"HTTP_GET"
+                "storageType":"Azure"
             },
             "destination" : "Cheese_final.indd"
         },
         {
             "source": {
                 "url":"<YOUR PRE-SIGNED URL>",
-                "type":"HTTP_GET"
+                "storageType":"Azure"
             },
             "destination" : "Abelone-FREE.otf"
         }
     ],
     "params":{
-         "jobType":"RENDITION_PDFPRINT",
+         "outputMediaType": "image/jpeg",
          "targetDocuments": [
             "Cheese_final.indd"
          ],
@@ -627,7 +620,7 @@ curl --location --request POST 'https://indesign.adobe.io/api/v1/capability/inde
 Retrieves the data merge tags from the document.
 
 ```curl
-curl --location --request POST 'https://indesign.adobe.io/api/v1/capability/indesign/dataMerge/tags' \
+curl --location --request POST 'https://indesign.adobe.io/v3/merge-data-tags' \
 --header 'Authorization: bearer <YOUR_OAUTH_TOKEN>' \
 --header 'x-api-key: <YOUR_API_KEY>' \
 --header 'Content-Type: application/json' \
@@ -636,20 +629,20 @@ curl --location --request POST 'https://indesign.adobe.io/api/v1/capability/inde
         {
             "source": {
                 "url":"<YOUR PRE-SIGNED URL>",
-                "type":"HTTP_GET"
+                "storageType":"Azure"
             },
             "destination" : "dataMergeTemplate.indd"
         },
         {
             "source": {
                 "url":"<YOUR PRE-SIGNED URL>",
-                "type":"HTTP_GET"
+                "storageType":"Azure"
             },
             "destination": "batang.ttc"
         }
     ],
     "params": {
-        "jobType": "DATAMERGE_TAGS",
+        "outputMediaType": "application/x-indesign",
         "targetDocument": "dataMergeTemplate.indd",
         "includePageItemIdentifiers": true
     }
@@ -659,7 +652,7 @@ curl --location --request POST 'https://indesign.adobe.io/api/v1/capability/inde
 ### DataMerge - Merge
 Creates and returns merged InDesign documents or PDFs that are created after merging the data and the given template.
 ```curl
-curl --location --request POST 'https://indesign.adobe.io/api/v1/capability/indesign/dataMerge/merge' \
+curl --location --request POST 'https://indesign.adobe.io/v3/merge-data' \
 --header 'Authorization: bearer <YOUR_OAUTH_TOKEN>' \
 --header 'x-api-key: <YOUR_API_KEY>' \
 --header 'Content-Type: application/json' \
@@ -668,22 +661,21 @@ curl --location --request POST 'https://indesign.adobe.io/api/v1/capability/inde
         {
             "source": {
                 "url":"<YOUR PRE-SIGNED URL>",
-                "type":"HTTP_GET"
+                "storageType":"Azure"
             },
             "destination" : "dataMergeTemplate.indd"
         },
         {
             "source": {
                 "url":"<YOUR PRE-SIGNED URL>",
-                "type":"HTTP_GET"
+                "storageType":"Azure"
             },
             "destination": "Directory_Names.csv"
         }
     ],
     "params": {
-        "jobType": "DATAMERGE_MERGE",
         "targetDocument": "dataMergeTemplate.indd",
-        "outputType": "PDF",
+        "outputMediaType": "application/x-indesign",
         "outputFolderPath": "outputfolder",
         "outputFileBaseString" : "merged"
         "dataSource": "Directory_Names.csv"
@@ -691,7 +683,6 @@ curl --location --request POST 'https://indesign.adobe.io/api/v1/capability/inde
     "outputs": [ // custom user output
         {
             "destination": {
-                "type": "HTTP_PUT",
                 "url": "<YOUR PUT-SIGNED URL>"
             },
             "source": "outputfolder/merged.pdf"
@@ -811,7 +802,7 @@ In this case, system by default  send string type argument named `"parameters"`
             "assets": [
                 {
                     "source": {
-                        "type": "HTTP_GET",
+                        "storageType": "Azure",
                         "url": "Pre-signed url of document"
                     },
                     "destination": "doc.indd"
