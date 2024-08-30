@@ -1,16 +1,17 @@
-# InDesign Cloud Services
+# InDesign APIs (Beta) - Firefly Services
 
 ## Introduction
 The InDesign API's enables you to make edit, query data, and run workflows on an ID file. This document will help you onboard to the API's, familiarize you with the available features, and get you started with some basic usage examples.
 ## Onboarding & setup
 ### OnBoarding
-1. The user should be registered on [Developer Pre-release program](https://www.adobeprerelease.com/beta/D1A76A97-F7DC-4552-DE3C-FF5F211C7492/apply) (This would bind the developer to NDA).
-2. The user should fill up this [form](https://forms.office.com/Pages/ResponsePage.aspx?id=Wht7-jR7h0OUrtLBeN7O4b96s5AZBCJOvELTJf9VO8hUQTBCMjhZTjVIS0VYQzFGN1lFVjVSM0JROC4u) for being a part of the Public Beta program of InDesign API's.
+1. The user should be registered on [Developer Pre-release program](https://www.adobeprerelease.com/beta/50846D62-3CAD-452E-E470-856FC4DF619B) (This would bind the developer to NDA).
+2. The user should fill up this [form](https://forms.office.com/Pages/ResponsePage.aspx?id=Wht7-jR7h0OUrtLBeN7O4Qb48L5AnYdEvC_rhDzps-dUNElFRDJFT0lKNTI2UjRURTVNTFc4QkNIQi4u) for being a part of the Public Beta program of InDesign API's.
+3. Please use the same email id for pre-release sign up and filling the form
 
-After this, we will be shortlisting and enroll the developers in the Public Beta program. We will be sharing the client_id and client_secret and other relevant details with individual developers.
+After this, we  will be sharing the client_id and client_secret and other relevant details with developers.
 
 ### Setup
-You must generate an access token using the details shared above, using the cURL shared:
+User can generate an access token using details provided by Adobe via following cURL request:
 ```curl
 curl -X POST 'https://ims-na1.adobelogin.com/ims/token/v3' \
 -H 'Content-Type: application/x-www-form-urlencoded' \
