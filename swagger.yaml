@@ -204,7 +204,7 @@ paths:
             retry-after:
               schema:
                 type: integer
-              description: Number of retries
+              description: Number of seconds until the user should try again
             Content-Type:
               schema:
                 type: string
@@ -360,7 +360,7 @@ components:
         retry-after:
           schema:
             type: integer
-          description: Number of retries
+          description: Number of seconds until the user should try again
         Content-Type:
           schema:
             type: string
