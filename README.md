@@ -43,10 +43,10 @@ InDesign API's support OAuth Server-to-Server authentication:
         ]
     }
     ```
-## Working with the InDesign Cloud Services
-You can use InDesign Cloud Services in two ways:
+## Working with the InDesign APIs
+You can use InDesign APIs in two ways:
 
-1. Consume the APIs provided by InDesign Cloud Services. You can find the [API documentation here](https://adobedocs.github.io/indesign-api-docs/).
+1. Consume the out of box APIs. You can find these [API documentation here](https://adobedocs.github.io/indesign-api-docs/).
 2. Expose your own APIs with the help of custom scripts. You can find the documentation [here](#exposing-your-own-apis).
 
 We will cover both scenarios in the coming sections, but first, let us go over the common points. We'll discuss various points below and; their examples can be seen in conjunction with the API documentation shared above.
@@ -695,13 +695,13 @@ curl --location --request POST 'https://indesign.adobe.io/v3/merge-data' \
 ## __Exposing your own APIs__
 Many times, the requirements of the end users are very specific and cannot be fulfilled in a generic manner. Some custom work may be needed to address these cases,.
 
-InDesign Cloud Services exposes a way for third- party developers to come onboard and deploy their custom scripts as end points. The script writer can define the custom attributes and values which will make sense for a particular endpoint. These can be done by deploying the capability bundle. To understand more about capabilities, their deployment and using them, please refer to this [documentation](Capability.md).
+InDesign APIs exposes a way for third- party developers to come onboard and deploy their custom scripts as end points. The script writer can define the custom attributes and values which will make sense for a particular endpoint. These can be done by deploying the capability bundle. To understand more about capabilities, their deployment and using them, please refer to this [documentation](Capability.md).
 
-There are few points which must be kept in mind while writing a script for InDesign Cloud Services.
+There are few points which must be kept in mind while writing a script for InDesign APIs.
 
-* To run a script with InDesign Cloud Services, the script must be compatible to run with InDesignServer. However, any script that can be run on InDesignServer can't be run as is.
+* To run a script with InDesign APIs, the script must be compatible to run with InDesignServer. However, any script that can be run on InDesignServer can't be run as is.
 
-* While writing a new script or modifing exisiting scripts for InDesign Cloud Services, there are few nuances which the developer must takecare with respect to "input to the script" and "output" from script”. These nuances are discussed in the next few sections.
+* While writing a new script or modifing exisiting scripts for InDesign APIs, there are few nuances which the developer must takecare with respect to "input to the script" and "output" from script”. These nuances are discussed in the next few sections.
 
 ### __Accepting input in custom script__
 
