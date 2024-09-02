@@ -62,7 +62,7 @@ There is no need to define an entry point if the default values are being used f
 |----------|--------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|----------|
 | type     | string | The type of entry point. Valid values are capability	                                                                                                                                     | No       |
 | path     | string | The file path should be used based on the type. The default is to look for the files in the root directory of the zip file. However, this can be any nested path as well in the zip file. | 	No      |
-| language | string | The language of the script.                                                                                                                                                               | Yes      | 
+| language | string | The language of the script. It can be extend script, UXP script or javascript.                                                                                                                                                               | Yes      | 
 
 
 ## 2. Post a Capability Bundle
@@ -99,23 +99,10 @@ The json structure of all the events is available in the [API Spec](https://adob
 
 | Event Name                | Description                                            |
 |---------------------------|--------------------------------------------------------|
-| QUEUED                    | Generated at the time of creation of job               |
-| ASSETS_DOWNLOAD_STARTED   | Generated when assets download start                   |
-| ASSET_DOWNLOAD_STARTED    | Generated when a specified input asset download starts |
-| ASSET_DOWNLOAD_COMPLETED  | Generated when a specified input download is complete  |
-| ASSETS_DOWNLOAD_COMPLETED | Generated when all the assets are downloaded           |
-| ENGINE_PROCESSING_STARTED | Generated when execution starts with app-engine        |
-| ENGINE_PROCESSING_COMPLETED| Generated when execution end on app-engine            |
-| RUNNING                   | Generated while execution is going on at app-engine    |
-| ASSETS_UPLOAD_STARTED     | Generated when assets upload started                   |
-| ASSET_UPLOAD_STARTED      | Generated when specified asset upload started          |
-| ASSET_UPLOAD_COMPLETED    | Generated when specified asset upload completed        |
-| ASSETS_UPLOAD_COMPLETED   | Generated when all assets upload completed             |
-| ASSET_SCANNING_STARTED    | Generated when capability script scanning is started   |
-| ASSET_SCANNING_COMPLETED  | Generated when capability script scanning is completed |
-| ASSET_SCANNING_FAILED     | Generated when capability script scanning is failed    |
-| COMPLETED                 | Generated when execution of a capability is complete   |
-| FAILED                    | Generated if capability execution fails                |
+| not_started                    | Generated at the time of creation of job               |
+| running                   | Generated while execution is going on at app-engine    |
+| succeeded                 | Generated when execution of a capability is complete   |
+| failed                    | Generated if capability execution fails                |
 
 In future the execution events will also be available to a configured web-hook. 
 
