@@ -30,7 +30,7 @@ A manifest.json must be bundled inside the capability zip. A typical manifest wo
 ## Submitting a capability
 ```yaml {requestMaker: true}
   defaultMethod: POST
-  url: https://indesign.adobe.io/api/v2/capability
+  url: https://indesign.adobe.io/v3/capability
   headers:
     Authorization: Bearer your_token
     X-Api-Key: your_api_key
@@ -40,7 +40,7 @@ A manifest.json must be bundled inside the capability zip. A typical manifest wo
     file: @<CAPABILITY_BUNDLE_ZIP>
 ```
 ```
-curl --location --request POST 'https://indesign.adobe.io/api/v2/capability' \
+curl --location --request POST 'https://indesign.adobe.io/v3/capability' \
 --header 'Authorization: bearer <TOKEN>'
 --header 'x-api-key: <API-KEY>' \
 --header 'x-gw-ims-org-id': ABCDEF123B6CCB7B0A495E2E@AdobeOrg \
@@ -49,7 +49,7 @@ curl --location --request POST 'https://indesign.adobe.io/api/v2/capability' \
 Expected Response: HTTP 202
 ```json
 {
-    "url": "https://indesign.adobe.io/api/v2/capability/indesign/1f5c78ba4c57a0d3f3877796031de3b4/rendition/jpeg",
+    "url": "https://indesign.adobe.io/v3/1f5c78ba4c57a0d3f3877796031de3b4/rendition/jpeg",
     "capability": "rendition/jpeg",
     "version": "1.0.13"
 }
@@ -58,7 +58,7 @@ Expected Response: HTTP 202
 ## Executing a capability
 ```yaml {requestMaker: true}
   defaultMethod: POST
-  url: https://indesign.adobe.io/api/v2/capability/indesign/1f5c78ba4c57a0d3f3877796031de3b4/rendition/jpeg
+  url: https://indesign.adobe.io/v3/1f5c78ba4c57a0d3f3877796031de3b4/rendition/jpeg
   headers:
     Authorization: Bearer your_token
     X-Api-Key: your_api_key
@@ -68,15 +68,15 @@ Expected Response: HTTP 202
         "assets": [
                     {
                         "source": {
-                                    "type": "HTTP_GET",
-                                    "url": "https://demo-asset.s3.us-west-1.amazonaws.com/myStorage/template.indt"
+                                    "url": "https://demo-asset.s3.us-west-1.amazonaws.com/myStorage/template.indt",
+                                    "storageType": "AWS"
                                   },
                         "destination": "template.indt"
                     },
                     {
                         "source": {
-                                    "type": "HTTP_GET",
-                                    "url": "https://demo-asset.s3.us-west-1.amazonaws.com/myStorage/font.ttf"
+                                    "url": "https://demo-asset.s3.us-west-1.amazonaws.com/myStorage/font.ttf",
+                                    "storageType": "AWS"
                                   },
                         "destination": "font.ttf"
                     }
@@ -89,7 +89,7 @@ Expected Response: HTTP 202
 ```
 
 ```
-curl --location --request POST 'https://indesign.adobe.io/api/v2/capability/indesign/1f5c78ba4c57a0d3f3877796031de3b4/rendition/jpeg' \
+curl --location --request POST 'https://indesign.adobe.io/v3/1f5c78ba4c57a0d3f3877796031de3b4/rendition/jpeg' \
 --header 'Authorization: Bearer <TOKEN>' \
 --header 'x-api-key: <API-KEY>' \
 --header 'Content-Type: application/json' \
@@ -97,15 +97,15 @@ curl --location --request POST 'https://indesign.adobe.io/api/v2/capability/inde
   "assets": [
     {
       "source": {
-        "type": "HTTP_GET",
-        "url": "https://demo-asset.s3.us-west-1.amazonaws.com/myStorage/template.indt"
+        "url": "https://demo-asset.s3.us-west-1.amazonaws.com/myStorage/template.indt",
+        "storageType": "AWS"
       },
       "destination": "template.indt"
     },
     {
       "source": {
-        "type": "HTTP_GET",
-        "url": "https://demo-asset.s3.us-west-1.amazonaws.com/myStorage/font.ttf"
+        "url": "https://demo-asset.s3.us-west-1.amazonaws.com/myStorage/font.ttf",
+        "storageType": "AWS"
       },
       "destination": "font.ttf"
     }
@@ -119,18 +119,15 @@ curl --location --request POST 'https://indesign.adobe.io/api/v2/capability/inde
 Expected Response: HTTP 202
 ```json
 {
-    "statusUrls": {
-        "latest": "https://indesign.adobe.io/api/v1/capability/status/be6aa811-8e0c-4b35-8b8b-e19a49bd4a36",
-        "all": "https://indesign.adobe.io/api/v1/capability/status/all/be6aa811-8e0c-4b35-8b8b-e19a49bd4a36"
-    },
-    "id": "be6aa811-8e0c-4b35-8b8b-e19a49bd4a36"
+  "id": "be6aa811-8e0c-4b35-8b8b-e19a49bd4a36",
+  "statusUrls": "https://indesign.adobe.io/v3/status/be6aa811-8e0c-4b35-8b8b-e19a49bd4a36"
 }
 ```
 
-## Fetching current execution status
+## Fetching execution status
 ```yaml {requestMaker: true}
   defaultMethod: GET
-  url: https://indesign.adobe.io/api/v1/capability/status/be6aa811-8e0c-4b35-8b8b-e19a49bd4a36
+  url: https://indesign.adobe.io/v3/status/be6aa811-8e0c-4b35-8b8b-e19a49bd4a36
   headers:
     Authorization: Bearer your_token
     X-Api-Key: your_api_key
@@ -138,24 +135,7 @@ Expected Response: HTTP 202
 ```
 
 ```
-curl --location --request GET 'https://indesign.adobe.io/api/v1/capability/status/be6aa811-8e0c-4b35-8b8b-e19a49bd4a36' \
---header 'Authorization: Bearer <TOKEN>' \
---header 'x-api-key: <API-KEY>'
-```
-Expected Response: HTTP 200
-
-## Fetching all execution statuses
-```yaml {requestMaker: true}
-  defaultMethod: GET
-  url: https://indesign.adobe.io/api/v1/capability/status/all/be6aa811-8e0c-4b35-8b8b-e19a49bd4a36
-  headers:
-    Authorization: Bearer your_token
-    X-Api-Key: your_api_key
-    Content-Type: application/json
-```
-
-```
-curl --location --request GET 'https://indesign.adobe.io/api/v1/capability/status/all/be6aa811-8e0c-4b35-8b8b-e19a49bd4a36' \
+curl --location --request GET 'https://indesign.adobe.io/v3/status/be6aa811-8e0c-4b35-8b8b-e19a49bd4a36' \
 --header 'Authorization: Bearer <TOKEN>' \
 --header 'x-api-key: <API-KEY>'
 ```
