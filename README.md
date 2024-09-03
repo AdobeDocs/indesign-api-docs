@@ -1,16 +1,9 @@
 # InDesign APIs (Beta) - Firefly Services
 
 ## Introduction
-The InDesign APIs allow you to edit, query data, and run workflows on an ID file. This document will help you onboard to the APIs, familiarize you with the available features, and get you started with some basic usage examples.
-## Onboarding & setup
-### OnBoarding
-1. The user should be registered on [Developer Pre-release program](https://www.adobeprerelease.com/beta/50846D62-3CAD-452E-E470-856FC4DF619B) (This would bind the developer to NDA).
-2. The user should fill up this [form](https://forms.office.com/Pages/ResponsePage.aspx?id=Wht7-jR7h0OUrtLBeN7O4Qb48L5AnYdEvC_rhDzps-dUNElFRDJFT0lKNTI2UjRURTVNTFc4QkNIQi4u) for being a part of the Public Beta program of InDesign APIs.
-3. Please use the same email ID for pre-release signup and filling out the form.
+The InDesign APIs allow you to edit, query data, and run workflows on an InDesign file. This document will help you onboard to the APIs, familiarize you with the available features, and get you started with some basic usage examples.
 
-After this, we  will share the client_id and client_secret and other relevant details with developers.
-
-### Setup
+## Setup
 Users can generate an access token using details provided by Adobe via the following cURL request:
 ```curl
 curl -X POST 'https://ims-na1.adobelogin.com/ims/token/v3' \
