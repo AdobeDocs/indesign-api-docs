@@ -1,22 +1,23 @@
 # FAQs - InDesign APIs
 
 [1. What is the difference between InDesign Server and InDesign
-APIs?](#FAQsInDesignAPIs-WhatisthedifferencebetweenInDesignServerandInDesignAPIs?)
+APIs?](https://github.com/AdobeDocs/indesign-api-docs/blob/main/FAQs.md#1-what-is-the-difference-between-indesign-server-and-indesign-apis)
 
-[2. What is the general workflow of calling an InDesign API?](#FAQsInDesignAPIs-WhatisthegeneralworkflowofcallinganInDesignAPI?)
+[2. What is the general workflow of calling an InDesign API?](https://github.com/AdobeDocs/indesign-api-docs/blob/main/FAQs.md#2-what-is-the-general-workflow-of-calling-an-indesign-api)
 
-[3. What do I do if an API call fails?](#FAQsInDesignAPIs-WhatdoIdoifanAPIcallfails?)
-[4. What are the file storage types supported by InDesign APIs?](#FAQsInDesignAPIs-WhatarethefilestoragetypessupportedbyInDesignAPIs?)
+[3. What do I do if an API call fails?](https://github.com/AdobeDocs/indesign-api-docs/blob/main/FAQs.md#3-what-do-i-do-if-an-api-call-fails)
 
-[5. What is the maximum number of assets we can pass in a single payload?](#FAQsInDesignAPIs-Whatisthemaximumnumberofassetswecanpassinasinglepayload?)
+[4. What are the file storage types supported by InDesign APIs?](https://github.com/AdobeDocs/indesign-api-docs/blob/main/FAQs.md#4-what-are-the-file-storage-types-supported-by-indesign-apis)
 
-[6. What if my customer wants to know their usage?](#FAQsInDesignAPIs-Whatifmycustomerwantstoknowtheirusage?)
+[5. What is the maximum number of assets we can pass in a single payload?](https://github.com/AdobeDocs/indesign-api-docs/blob/main/FAQs.md#5-what-is-the-maximum-number-of-assets-we-can-pass-in-a-single-payload)
 
-[7. What are the rate limits for the InDesign API?](#FAQsInDesignAPIs-WhataretheratelimitsfortheInDesignAPI?)
+[6. What if my customer wants to know their usage?](https://github.com/AdobeDocs/indesign-api-docs/blob/main/FAQs.md#6-what-if-my-customer-wants-to-know-their-usage)
 
-[8. Can the customer request that the rate limits be changed?](#FAQsInDesignAPIs-Canthecustomerrequestthattheratelimitsbechanged?)
+[7. What are the rate limits for the InDesign API?](https://github.com/AdobeDocs/indesign-api-docs/blob/main/FAQs.md#7-what-are-the-rate-limits-for-the-indesign-api)
 
-[9. What are the current limitations?](#FAQsInDesignAPIs-Whatarethecurrentlimitations?)
+[8. Can the customer request that the rate limits be changed?](https://github.com/AdobeDocs/indesign-api-docs/blob/main/FAQs.md#8-can-the-customer-request-that-the-rate-limits-be-changed)
+
+[9. What are the current limitations?](https://github.com/AdobeDocs/indesign-api-docs/blob/main/FAQs.md#9-what-are-the-current-limitations)
 
 ### 1. What is the difference between InDesign Server and InDesign APIs?
 
