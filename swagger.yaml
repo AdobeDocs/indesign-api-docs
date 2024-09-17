@@ -328,7 +328,7 @@ paths:
           $ref: "#/components/responses/InternalServerError"
 
 servers:
-  - url: https://indesign-stage.adobe.io/
+  - url: https://indesign.adobe.io/
 components:
   securitySchemes:
     ApiKeyAuth:
