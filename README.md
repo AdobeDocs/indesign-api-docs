@@ -574,6 +574,12 @@ Here’s the response corresponding to it :
 }
 ```
 -->
+### Events Stream with Adobe I/O Events and Webhooks
+InDesign APIs events provide all the job processing details, similar to those shown in the status calls of InDesign APIs. However, InDesign APIs events are more comprehensive and real-time, unlike the status calls which only include "not-started," "running," "completed," and "failed" statuses.
+
+InDesign APIs are currently in Beta thus cannot be enabled without a PreRelease agreement. After a PreRelease agreement is in place, user need to connect with Adobe for enabling events stream.
+
+
 ## Consume the APIs provided by InDesign APIs
 You can find the detailed [API documentation here](https://adobedocs.github.io/indesign-api-docs/). Here are some sample requests for the APIs :
 
