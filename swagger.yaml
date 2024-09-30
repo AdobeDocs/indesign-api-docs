@@ -598,11 +598,11 @@ components:
                   type: object
                   properties:
                     adobeFonts:
-                      description: The list of documents to include or exclude from the search for Adobe Fonts. If missing, it means all the documents are to be checked for Adobe Fonts.
+                      description: The list of documents to include or exclude from the search for Adobe Fonts.
                       type: object
                       properties:
                         includeDocuments:
-                          description: The list will specify the documents to check for adobe fonts. No other document will be checked for Adobe Fonts. Empty means no document to be checked for.
+                          description: The list will specify the documents to check for adobe fonts. No other document will be checked for Adobe Fonts.
                           type: array
                           items:
                             type: string
