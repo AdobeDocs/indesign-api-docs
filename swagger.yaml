@@ -602,7 +602,7 @@ components:
                       type: object
                       properties:
                         includeDocuments:
-                          description: The list will specify the documents to check for adobe fonts. No other document will be checked for Adobe Fonts. Empty means no document to be checked for. If absent, then all the input documents are to be checked.
+                          description: The list will specify the documents to check for adobe fonts. No other document will be checked for Adobe Fonts. Empty means no document to be checked for.
                           type: array
                           items:
                             type: string
