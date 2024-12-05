@@ -597,22 +597,6 @@ components:
                   description: Settings related to fonts.
                   type: object
                   properties:
-                    adobeFonts:
-                      description: The list of documents to include or exclude from the search for Adobe Fonts.
-                      type: object
-                      properties:
-                        includeDocuments:
-                          description: The list will specify the documents to check for adobe fonts. No other document will be checked for Adobe Fonts.
-                          type: array
-                          items:
-                            type: string
-                            description: This provides a path relative to a temporary base directory (working directory) where the document can be found. It cannot go up using '..' or '/'. Should be a valid file name.
-                        excludeDocuments:
-                          description: The list will specify the documents to exclude from search. The documents mentioned here will be removed from document list mentioned in includeDocuments parameter or in absence of that parameter from the complete list of documents which can be gathered from the assets params.
-                          type: array
-                          items:
-                            type: string
-                            description: This provides a path relative to a temporary base directory (working directory) where the document can be found. It cannot go up using '..' or '/'. Should be a valid file name.
                     fontsDirectories:
                       description: This lists the directories to be used as font directories for the input InDesign documents. "Document Fonts" in parallel to the document will continue to work even without specifying. In absence of this, temporary base directory (working directory) will be considered as a font directory.
                       type: array
