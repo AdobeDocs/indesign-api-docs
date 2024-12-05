@@ -59,7 +59,6 @@ WIP
     - Scope: Specifies the level of access that the application is requesting from the OAuth server.
 - After successfully completing the above steps, you’ll get an 'access_token' in response. The token will be valid for 24hrs, after which you must re-generate it. Use this token in your API calls to make them work.
 
-#### 
 ### Getting Started
 Let's first understand what exactly is a curl request.
 
@@ -69,6 +68,7 @@ InDesign API's support OAuth Server-to-Server authentication. You can use the to
 
 Here’s a skeleton curl request to accessing the APIs :
 
+<!-- Real Cool Heading -->
 ```curl
 curl --location --request POST <endpoint> \
 --header 'Authorization: bearer <access_token>' \
@@ -95,7 +95,7 @@ You can use InDesign APIs in two ways:
 We will cover both scenarios in the coming sections, but first, let us go over the common points. We'll discuss various points below, and their examples can be seen in conjunction with the API documentation shared above.
 
 #### Understanding the body of the Request
-As shown in the skeleton request (WIP LINK) above, there are three main parts to the body of the request. Here’s the information to understand these parts and their significance:
+As shown in the [skeleton request wip] above, there are three main parts to the body of the request. Here’s the information to understand these parts and their significance:
 
 1. **"assets"**: This part is where the caller can specify input assets for the request to be processed successfully. More information can be found below(LINK WIP).
 
@@ -190,7 +190,7 @@ In all the above examples, you can see that data is divided into source and dest
 #### Output Assets
 Like input assets, the platform supports multiple asset types for output. These asset types signify storage repositories to which platform can upload. You can provide this information in the "outputs" array within the body of the request. 
 
-WIP Assets type differ from input and output?
+Assets type differ from input and output? 
 <!-- Azure	url	mandatory	Pre-signed URL -->
 <!-- HTTP_POST	url	mandatory	Pre-signed URL -->
 
@@ -749,9 +749,11 @@ A developer must follow certain rules in order to output data, files, or logs fr
 Please refer to the [API Guide](https://adobedocs.github.io/indesign-api-docs/)
 
 ## Migration guides (if applicable)
-IDS to InDesign APIs (WIP)
+IDS to InDesign APIs (Not Applicable)
 
-Public beta to GA (WIP)
+Public beta to GA (Not Applicable)
+
+[Private to Public Beta](https://wiki.corp.adobe.com/display/indesign/InDesign+API+migration+-+Private+Beta+to+Public+Beta)
 
 ## FAQs
 Please refer to the following [FAQ Wiki](https://wiki.corp.adobe.com/pages/viewpage.action?spaceKey=indesign&title=FAQs+-+InDesign+APIs)
