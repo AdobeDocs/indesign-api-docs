@@ -216,8 +216,8 @@ paths:
 
   /v3/capability:
     post:
-      summary: Submit custom capability.
-      description: Submit the capability bundle. Returns the URL for posting execution request against the capability
+      summary: (Beta Only) Submit custom capability.
+      description: Submit the capability bundle. Returns the URL for posting execution request against the capability. Available only for Beta Users at the moment.
       parameters:
         - name: x-gw-ims-org-id
           in: header
@@ -273,8 +273,8 @@ paths:
 
   /v3/{organization}/{capability}:
     post:
-      summary: Submit capability execution request.
-      description: Define the input assets and parameters with which the capability should be executed against the app engine.
+      summary: (Beta Only) Submit capability execution request.
+      description: Define the input assets and parameters with which the capability should be executed against the app engine. Available only for Beta Users at the moment.
       parameters:
         - name: x-gw-ims-org-id
           in: header
