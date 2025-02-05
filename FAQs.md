@@ -112,5 +112,7 @@ Automation', 'Database Publishing', and 'Template Editing' on their
 ### 10. How existing Beta partners can use InDesign APIs ?
 
 Existing Beta Partners, need to add the following header to continue using InDesign APIs.
+
 Header details:
+
 ```x-enable-beta: true ```
