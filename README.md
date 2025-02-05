@@ -1,4 +1,4 @@
-# InDesign APIs (Beta) - Firefly Services
+# InDesign APIs - Firefly Services
 
 ## Introduction
 The InDesign APIs allow you to edit, query data, and run workflows on an InDesign file. This document will help you onboard to the APIs, familiarize you with the available features, and get you started with some basic usage examples.
