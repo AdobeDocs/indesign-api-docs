@@ -691,7 +691,7 @@ curl --location --request POST 'https://indesign.adobe.io/v3/merge-data' \
 }
 ```
 
-## __Exposing your own APIs__
+## __Exposing your own APIs__ (Beta Only)
 Many times, the end users' requirements are very specific and cannot be fulfilled in a generic manner. Some custom work may be needed to address these cases.
 
 InDesign APIs expose a way for third-party developers to come on board and deploy their custom scripts as endpoints. The script writer can define the custom attributes and values that make sense for a particular endpoint. These can be done by deploying the capability bundle. To understand more about capabilities, their deployment and using them, please refer to this [documentation](Capability.md).
