@@ -1,4 +1,4 @@
-# InDesign APIs (Beta) - Firefly Services
+# InDesign APIs - Firefly Services
 
 ## Introduction
 The InDesign APIs allow you to edit, query data, and run workflows on an InDesign file. This document will help you onboard to the APIs, familiarize you with the available features, and get you started with some basic usage examples.
@@ -577,8 +577,7 @@ Here’s the response corresponding to it :
 ### Events Stream with Adobe I/O Events and Webhooks
 InDesign APIs events provide all the job processing details, similar to those shown in the status calls of InDesign APIs. However, InDesign APIs events are more comprehensive and real-time, unlike the status calls which only include "not-started," "running," "completed," and "failed" statuses.
 
-InDesign APIs are currently in Beta thus cannot be enabled without a PreRelease agreement. After a PreRelease agreement is in place, user need to connect with Adobe for enabling events stream.
-
+InDesign APIs event streaming is enabled for entitled users only.
 
 ## Consume the APIs provided by InDesign APIs
 You can find the detailed [API documentation here](https://adobedocs.github.io/indesign-api-docs/). Here are some sample requests for the APIs :
@@ -691,7 +690,7 @@ curl --location --request POST 'https://indesign.adobe.io/v3/merge-data' \
 }
 ```
 
-## __Exposing your own APIs__
+## __Exposing your own APIs__ (Beta Only)
 Many times, the end users' requirements are very specific and cannot be fulfilled in a generic manner. Some custom work may be needed to address these cases.
 
 InDesign APIs expose a way for third-party developers to come on board and deploy their custom scripts as endpoints. The script writer can define the custom attributes and values that make sense for a particular endpoint. These can be done by deploying the capability bundle. To understand more about capabilities, their deployment and using them, please refer to this [documentation](Capability.md).
