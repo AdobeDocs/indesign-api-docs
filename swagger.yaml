@@ -68,8 +68,8 @@ paths:
     post:
       tags:
         - dataMerge
-      summary: Performs data merge.
-      description: Creates and returns merged InDesign documents or PDFs that are created after merging the data and the given template.
+      summary: Creates and returns merged InDesign documents, JPEGs, PNGs or PDFs.
+      description: Creates and returns merged InDesign documents, JPEGs, PNGs or PDFs that are created after merging the data and the given template.
         Output rendition has mimetype 'image/jpeg' for jpeg, 'image/png' for png, 'application/pdf' for pdf or 'application/x-indesign' for indd. For the structure of StatusCompletedResponse/output/data refer to DataMergeOutputData. Also for the list of possible error codes in FailedEvent refer to DataMergeFailedData.
       operationId: dataMerge
       parameters:
