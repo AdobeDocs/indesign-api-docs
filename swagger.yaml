@@ -254,7 +254,6 @@ paths:
           application/zip:
             schema:
               type: object
-              $ref: "#/components/schemas/BaseJobRequestWithOutput"
         description: Capability bundle in ZIP format. This describes the capability to App Engine
         required: true
       responses:
