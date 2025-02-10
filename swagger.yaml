@@ -1,7 +1,7 @@
 openapi: 3.0.0
 info:
   description: Documentation for InDesign APIs - Firefly Services. This document provides a detailed specification of the various exposed APIs, that can be leveraged by developers. 
-  version: 0.1.0
+  version: ""
   title: InDesign APIs - Firefly Services
   contact:
     email: idservices@adobe.com
