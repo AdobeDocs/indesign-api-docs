@@ -884,10 +884,8 @@ components:
                 pageRange:
                   type: string
                   default: All
-                  description: Page ranges. The ranges are based on index of the page within
-                    the document. Value can be 'All' along with numeral ranges. Also,
-                    if exportingSpread is true, this range would represent spread
-                    indices in the document.
+                  description: Page ranges. The ranges are based on index of the page within the document. Value can be 'All' along with numeral ranges, For example, '1-2, 5'. Also,if exportingSpread is true, this range would represent spread indices in the document.
+                    
                 quality:
                   type: string
                   description: Defines the quality of the output.
@@ -1564,6 +1562,7 @@ components:
               enum:
                 - Azure
                 - Dropbox
+                - Aws
             
         destination:
           type: string
@@ -1591,6 +1590,7 @@ components:
               enum:
                 - Azure
                 - Dropbox
+                - Aws
         source:
           type: string
           description: This provides a path relative of the output where resource would be generated.
