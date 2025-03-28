@@ -1,0 +1,745 @@
+/*************************************************************************
+* ADOBE CONFIDENTIAL
+* ___________________
+*
+* Copyright 2021 Adobe
+* All Rights Reserved.
+*
+* NOTICE: All information contained herein is, and remains
+* the property of Adobe and its suppliers, if any. The intellectual
+* and technical concepts contained herein are proprietary to Adobe
+* and its suppliers and are protected by all applicable intellectual
+* property laws, including trade secret and copyright laws.
+* Dissemination of this information or reproduction of this material
+* is strictly forbidden unless prior written permission is obtained
+* from Adobe.
+**************************************************************************/
+
+// Define a replacement string for error messages where dynamic values will be inserted
+const ErrorReplacementString = '^1';
+
+// Define an object containing various error types and their corresponding messages
+const Errors = {
+    InternalScriptError: {
+        errorCode: 'internal_error',
+        errorStrings: [
+            'Internal script error. This should not have happened.'
+        ]
+    },
+    ProcessingErrorOccurred: {
+        errorCode: 'internal_error',
+        errorStrings: [
+            'Internal error: Error during processing.'
+        ]
+    },
+    PDFPresetNotSet: {
+        errorCode: 'capability_error',
+        errorStrings: [
+            'Capability error: No PDF Preset could be set.'
+        ]
+    },
+    OutputDirError: {
+        errorCode: 'internal_error',
+        errorStrings: [
+            'Internal error: Unable to create specified output directory.'
+        ]
+    },
+    RelinkError: {
+        errorCode: 'capability_error',
+        errorStrings: [
+            'Capability error: Unable to relink.',
+            'Relink failed for ^1.'
+        ]
+    },
+    PlaceError: {
+        errorCode: 'capability_error',
+        errorStrings: [
+            'Capability error: Unable to place.',
+            'Place failed for ^1.'
+        ]
+    },
+    ArrayExpected: {
+        errorCode: 'parameter_error',
+        errorStrings: [
+            'Parameter error: Expected array ',
+            'for property ^1.'
+        ]
+    },
+    ParsingBoolError: {
+        errorCode: 'parameter_error',
+        errorStrings: [
+            'Parameter error: Expected boolean ',
+            '^1 is the provided value ',
+            'for property ^1.'
+        ]
+    },
+    ParsingIntError: {
+        errorCode: 'parameter_error',
+        errorStrings: [
+            'Parameter error: Expected integer ',
+            '^1 is the provided value ',
+            'for property ^1.'
+        ]
+    },
+    ParsingFloatError: {
+        errorCode: 'parameter_error',
+        errorStrings: [
+            'Parameter error: Expected number ',
+            '^1 is the provided value ',
+            'for property ^1.'
+        ]
+    },
+    ParsingStringError: {
+        errorCode: 'parameter_error',
+        errorStrings: [
+            'Parameter error: Expected string ',
+            '^1 is the provided value ',
+            'for property ^1.'
+        ]
+    },
+    OutOfBound: {
+        errorCode: 'parameter_error',
+        errorStrings: [
+            'Parameter error: Incorrect range provided. ',
+            'Culprit Value is ^1.'
+        ]
+    },
+    MissingKey: {
+        errorCode: 'parameter_error',
+        errorStrings: [
+            'Parameter error: Key not found in object. ',
+            'Missing key is ^1.'
+        ]
+    },
+    EnumError: {
+        errorCode: 'parameter_error',
+        errorStrings: [
+            'Parameter error: No matching enum value found. ',
+            '^1 is the provided value',
+            'for property ^1.'
+        ]
+    },
+    MissingParams: {
+        errorCode: 'parameter_error',
+        errorStrings: [
+            "Parameter error: Either the 'params' is not found in the request or it is not in the correct format."
+        ]
+    },
+    ObjectExpected: {
+        errorCode: 'parameter_error',
+        errorStrings: [
+            'Parameter error: Expected object ',
+            'for property ^1.'
+        ]
+    },
+    AtLeastOneInternalParamShouldBePresent: {
+        errorCode: 'parameter_error',
+        errorStrings: [
+            'Parameter error: At least one of the parameters should be present. ',
+            'Missing parameters are ^1'
+        ]
+    },
+    CannotOpenFileError: {
+        errorCode: 'capability_error',
+        errorStrings: [
+            'Capability error: Cannot open file.'
+        ]
+    }
+};
+
+// DOM related variables
+
+// Load InDesign's scripting environment
+const myInDesign = require("indesign");
+const app = myInDesign.app; // Access the InDesign application instance
+
+// Import the local file system module from UXP for file handling
+const fs = require("uxp").storage.localFileSystem;
+
+// Import UXP scripting module for getting script arguments and setting script output.
+const script = require("uxp").script;
+
+
+// Utility class containing helper functions for logging, error handling, file operations, and InDesign document management.
+class Utils {
+    constructor() {
+        // Array to store log messages
+        this.logs = [];
+
+        // Paths for working and output directories
+        this.workingFolder = "";
+        this.outputFolder = "";
+
+        // List of assets to be uploaded
+        this.assetsToBeUploaded = [];
+
+        // Flag to determine whether a separate log file should be created
+        this.createSeparateLogFile = true;
+
+        // Default log file name
+        this.logFilePath = "LogFile.txt";
+    }
+
+
+    // Initialize logging by clearing the logs array
+    initiateLogging() {
+        this.logs = [];
+    }
+
+    // Log a message to the console and store it in the logs array
+    log(message) {
+        console.log(message);
+        this.logs.push(message);
+
+    }
+
+    // Converts the package in appropriate format, which can be returned from the capability.
+    getFinalReturnPackage(obj) {
+        this.log("Final package created");
+        return JSON.stringify(obj);
+    }
+
+    // Creates and returns the package to be returned in case the job is successful.
+    async getSuccessReturnObj(data) {
+        let obj = {
+            status: "SUCCESS",
+            assetsToBeUploaded: this.assetsToBeUploaded
+        };
+
+        try {
+            obj.dataURL = await this.writeToFile(data, "outputData");
+        } catch (err) {
+            this.log(`Error writing outputData: ${err.message}`);
+        }
+
+        return obj;
+    }
+
+    // Creates and returns the package to be returned in case the job has failed.
+    getFailureReturnObj(errorCode, errorString, data = null) {
+        return {
+            status: "FAILURE",
+            errorCode, // Attach the error code.
+            errorString, // Attach the error message.
+            data // Include additional data if available.
+        };
+    }
+
+    // Add an asset which is to be uploaded and sent back to the caller.
+    addAssetToBeUploaded(assetPath, data = null) {
+        this.assetsToBeUploaded.push({ path: assetPath, data: data });
+    }
+
+    // This handles errors in case an exception is raised. This results the capability returning error to the caller.
+    handleError(exception) {
+        let errorCode, errorString;
+        console.log('Exception occurred: ' + JSON.stringify(exception));
+
+        if (exception.message === 'open') {
+            exception.message = Errors.CannotOpenFileError.errorStrings[0];
+            exception.errorCode = Errors.CannotOpenFileError.errorCode;
+        }
+
+        errorString = 'Script error: ';
+        if (exception.isCustom === true) {
+            if (exception.message) {
+                errorString += exception.message;
+            }
+            errorCode = exception.errorCode;
+        } else {
+            errorCode = Errors.ProcessingErrorOccurred.errorCode;
+            if (exception.message) {
+                errorString += Errors.ProcessingErrorOccurred.errorStrings[0] + ' ' + exception.message;
+            }
+            if (exception.errorCode !== undefined) {
+                errorString += '\nInternal error code: ' + exception.errorCode + '.';
+            }
+            if (exception.line !== undefined) {
+                errorString += ' Line: ' + exception.line + '.';
+            }
+            if (exception.fileName !== undefined) {
+                errorString += ' FileName: ' + exception.fileName + '.';
+            }
+            console.log('Processing error occurred. ' + errorString);
+        }
+
+        return this.getFailureReturnObj(errorCode, errorString);
+    }
+
+    // This will update out-of-date links in a document.
+    async updateDocumentLinks(document) {
+        try {
+            let links = document.links;
+            let numLinks = links.length;
+            let outOfDateLinks = [];
+
+            this.log('Number of links: ' + numLinks);
+
+            for (let i = 0; i < numLinks; i++) {
+                let link = links.item(i);
+                try {
+                    let uri = link.linkResourceURI;
+                    this.log('URI: ' + uri);
+                    if (link.status === myInDesign.LinkStatus.LINK_OUT_OF_DATE) {
+                        outOfDateLinks.push(link);
+                    }
+                } catch (err) {
+                    this.log('Link status unknown: ' + err);
+                }
+            }
+
+            // Update all out-of-date links.
+            for (let i = 0; i < outOfDateLinks.length; i++) {
+                let link = outOfDateLinks[i];
+                if (link.isValid) {
+                    await link.update();
+                }
+            }
+
+            let composeStartTime = Date.now();
+
+            // Recompose the document after updating links.
+            await document.recompose();
+            let composedTime = Date.now() - composeStartTime;
+            this.log('Recompose Time: ' + composedTime);
+        } catch (error) {
+            this.error("Error updating document links:", error);
+        }
+    }
+
+    // Writes data to the given named JSON file
+    async writeToFile(data, filename) {
+        try {
+            let folder = await fs.getEntryWithUrl("file://" + this.workingFolder);
+            let file = await folder.createFile(filename + '.json', { overwrite: true });
+            await file.write(" ");
+            if (await file.write(JSON.stringify(data))) {
+                this.log('Data was successfully written')
+            }
+            else {
+                this.log('Data write failed')
+            }
+            return file.nativePath;
+        }
+        catch (err) {
+            this.log('Error writing to file: ' + err.message)
+        }
+
+    }
+
+    // Sets the working folder to be used across the capability.
+    async setWorkingFolder(workingFolder) {
+        // workingFolder = workingFolder.replace(/\//g, '\\')
+        // if (workingFolder.charAt(workingFolder.length - 1) !== '\\') {
+        //     workingFolder = workingFolder + '\\'
+        // }
+        this.workingFolder = workingFolder
+        await this.openLogFileHandle();
+    }
+
+    // Opens a log file handle if separate logging is enabled.
+    async openLogFileHandle() {
+        try {
+            var folder = await fs.getEntryWithUrl("file://" + this.workingFolder);
+            var logFile = await folder.createFile(this.logFilePath, { overwrite: true });
+            this.logFileHandle = logFile;
+        } catch (err) {
+            console.error("Failed to create log file:", err);
+            this.log(`Failed to create log file: ${err.message}`);
+        }
+    }
+
+    // Append a log message to the log file
+    async logToFile(message) {
+        if (!this.logFileHandle) {
+            await this.openLogFileHandle();
+        }
+
+        try {
+            await this.logFileHandle.write(message + "\n");
+        } catch (err) {
+            console.error("Failed to write to log file:", err);
+
+        }
+    }
+
+    // Closes all open documents in the application.
+    async closeAllOpenDocuments() {
+        try {
+            console.log("Closing all open documents...");
+            this.log("Closing all open documents...");
+            const documents = app.documents;
+            let SaveOptions = myInDesign.SaveOptions;
+
+            // Close each document without saving
+            for (let i = documents.length - 1; i >= 0; i--) {
+                let doc = documents.item(i)
+                await doc.close(SaveOptions.NO);
+            }
+
+            console.log("All documents closed.");
+        } catch (error) {
+            console.error("Error closing documents:", error);
+            this.log(`Error closing documents: ${error.message}`);
+        }
+    }
+
+    // This is used to raise an exception with all the required details.
+    // NOTE: This takes variable list of argument and then try to fill in the details in errorObj.errorStrings
+    raiseException(errorObj) {
+        UTILS.log('RaiseException()')
+        var numMessageParameters = arguments.length
+        UTILS.log('numMessageParameters: ' + numMessageParameters)
+        var numErrorStrings = errorObj.errorStrings.length
+        UTILS.log('numErrorStrings: ' + numErrorStrings)
+        var numIterations = (numMessageParameters > numErrorStrings) ? numErrorStrings : numMessageParameters
+        var errorMessage = errorObj.errorStrings[0]
+        UTILS.log('Default errorMessage: ' + errorMessage)
+
+        // Construct the detailed error message using available parameters.
+        for (var itr = 1; itr < numIterations; itr++) {
+            var parameter = arguments[itr]
+            if (parameter !== undefined && parameter !== '') {
+                var parameterMessage = errorObj.errorStrings[itr]
+                errorMessage = errorMessage + ' ' + parameterMessage.replace('^1', parameter)
+                UTILS.log('Appended errorMessage: ' + errorMessage)
+            }
+        }
+        var exceptionObj = {
+            number: errorObj.errorCode,
+            isCustom: true,
+            message: errorMessage
+        }
+
+        throw exceptionObj
+    }
+
+    // Gets a string from an 'object' defined with 'key'.
+    // A default value can be passed via 'defaultVal' which will be used if the key is missing. The case of key can be ignored via 'ignoreCase'.
+    // In case, key is missing and a default value is not provided, an exception will be thrown. Exception will also be thrown if the value found is not string.
+    getStringFromObject(object, key, defaultVal, ignoreCase) {
+        var val
+        this.log('GetStringFromObject ' + key)
+
+        if (this.isKeyPresent(object, key)) {
+            val = this.getValueFromObject(object, key, ignoreCase)
+            if (typeof val !== 'string') {
+                this.raiseException(Errors.ParsingStringError, val, key)
+            } else {
+                return val
+            }
+        } else if (defaultVal === undefined) {
+            this.raiseException(Errors.MissingKey, key)
+        } else {
+            // default value provided.
+            return defaultVal
+        }
+    }
+
+    // Checks whether a key is present in the object or not.
+    isKeyPresent(object, key) {
+        if (Object.prototype.hasOwnProperty.call(object, key)) {
+            return true
+        }
+        return false
+    }
+
+    // Gets the value from an 'object' defined with 'key'.
+    // The case of key can be ignored via 'ignoreCase'. In case, key is missing an exception will be thrown.
+    getValueFromObject(object, key, ignoreCase) {
+        UTILS.log('GetValueFromObject ' + key)
+
+        if (ignoreCase === true) {
+            var objectKey
+            for (objectKey in object) {
+                if (Object.prototype.hasOwnProperty.call(object, objectKey)) {
+                    if (objectKey.toLowerCase() === key.toLowerCase()) {
+                        return object[objectKey]
+                    }
+                }
+            }
+        } else if (Object.prototype.hasOwnProperty.call(object, key)) {
+            return object[key]
+        }
+
+        this.raiseException(Errors.MissingKey, key)
+    }
+
+    // Get the full path from a relative and a base path. In absence of base path, working directory is used.
+    getFullPath(relativePath, basePath) {
+        var origRelativePath = relativePath
+        if (relativePath.indexOf('..') !== -1 || relativePath.indexOf('/') === 0) {
+            this.raiseException(Errors.InCorrectRelativePath, origRelativePath)
+        }
+        relativePath = relativePath.replace(/\//g, '\\')
+        if (relativePath.indexOf('\\.\\') !== -1) {
+            this.raiseException(Errors.InCorrectRelativePath, origRelativePath)
+        }
+
+        if (basePath === undefined) {
+            basePath = this.workingFolder
+        } else {
+            basePath = basePath.replace(/\//g, '\\')
+            if (basePath.charAt(basePath.length - 1) !== '\\') {
+                basePath = basePath + '\\'
+            }
+        }
+
+        if (relativePath.charAt(0) === '.') {
+            relativePath = relativePath.slice(1)
+        }
+        if (relativePath.charAt(0) === '\\') {
+            relativePath = relativePath.slice(1)
+        }
+
+        var fullPath = basePath + "/"+relativePath
+        return fullPath
+    }
+
+    // Get relative path to the working directory for a path. This returns in unix notation.
+    getRelativeReturnPath(path) {
+        var index = path.indexOf(this.workingFolder)
+        if (index === 0) {
+            var tempPath = path.substr(UTILS.workingFolder.length)
+            tempPath = tempPath.replace(/\\/g, '/')
+            return tempPath
+        }
+    }
+
+    // Terminate logging and write logs to file
+    async terminateLogging() {
+        this.log('Terminating logging.')
+        await this.logToFile(this.logs.join('\n'));
+    }
+}
+
+// Create an instance of the Utils class
+const UTILS = new Utils();
+
+
+// Constant strings
+var KeyStrings = {
+    OutputPath: 'outputPath',
+    ProcessedData: 'processedData',
+    TargetDocument: 'targetDocument',
+    TimeDocumentClose: 'DocumentClose',
+    TimeDocumentOpen: 'DocumentOpen',
+    TimeExportIDML: 'ExportIDML',
+    TimeOverall: 'Overall',
+    TimeRelinkAssets: 'RelinkAssets',
+    Timings: 'timings',
+    WorkingFolder: 'workingFolder'
+}
+
+// Object to store timing metrics for various processing steps.
+var timingObject = {};
+
+// Object to store warnings encountered during execution.
+var warnings = {};
+
+// Variable to hold the InDesign document.
+var document;
+
+
+/**
+ * Processes the provided parameters and executes the main operations.
+ * This includes opening the document, updating links, exporting to IDML, and logging performance metrics.
+ */
+async function ProcessParams(parameters) {
+
+    // This is where the actual processing will take place.
+    UTILS.log('Processing parameters internal')
+    var returnVal = {}
+
+    // Retrieve the target document path from parameters.
+    var documentPath = UTILS.getStringFromObject(parameters, KeyStrings.TargetDocument)
+    documentPath = UTILS.getFullPath(documentPath)
+
+    UTILS.log('Opening document')
+    var tempTime = new Date().getTime()
+
+    // Get file entry from the file system.
+    let file = await fs.getEntryWithUrl(`file://${documentPath}`);
+
+    // Check if the path points to a valid file.
+    if (!file.isFile) {
+        UTILS.log("Not a valid file.");
+        return;
+    }
+
+    // Open the document in InDesign Server.
+    document = await app.open(file)
+
+    // Log the time taken to open the document.
+    timingObject[KeyStrings.TimeDocumentOpen] = (new Date()).getTime() - tempTime
+    UTILS.log('Opened document')
+    tempTime = new Date().getTime()
+
+    // Update document links.
+    await UTILS.updateDocumentLinks(document)
+    timingObject[KeyStrings.TimeRelinkAssets] = (new Date()).getTime() - tempTime
+    UTILS.log('Updated links in the document')
+
+
+    // Retrieve the output file path from parameters.
+    var outputPath = UTILS.getStringFromObject(parameters, KeyStrings.OutputPath)
+    outputPath = UTILS.getFullPath(outputPath)
+    tempTime = new Date().getTime()
+
+    // Export the document as an IDML file.
+    document.exportFile(myInDesign.ExportFormat.INDESIGN_MARKUP, outputPath)
+    timingObject[KeyStrings.TimeExportIDML] = (new Date()).getTime() - tempTime
+
+    // Convert the absolute output path to a relative path for return.
+    var relativePath = UTILS.getRelativeReturnPath(outputPath)
+
+    // Register the exported file as an asset to be uploaded.
+    UTILS.addAssetToBeUploaded(relativePath)
+
+    returnVal.idmlPath = relativePath
+    // Processing ends.
+
+    return returnVal
+};
+
+/**
+ * Main function that controls the script execution.
+ * It initializes logging, processes parameters, handles exceptions, and returns the result.
+ */
+async function main() {
+
+    var startTime = new Date().getTime() // Capture the script start time
+    var returnObj = {} // Object to store return values
+    var parameters = {} // Stores input parameters
+    var tempTime
+    var errorOccurred = false // Flag to track errors
+    var data = {} // Stores processed data
+
+    try {
+
+        // Initialize logging.
+        await UTILS.initiateLogging()
+        UTILS.log('Initiating logging.')
+        UTILS.log('This way of logging can be used for debugging and generic logging.')
+        UTILS.log('This has been done after setting of working directory because it is relative to the working directory')
+        UTILS.log('Each log will be a separate line in the log file.')
+        UTILS.log('The file generated can be sent back')
+
+        // Close all open InDesign documents to prevent conflicts.
+        await UTILS.closeAllOpenDocuments()
+
+        // Retrieve input parameters from the script arguments.
+        let input = script.args // Right now out input will look like ["parameters={...}"]. So, will first need input[0]
+
+        input=input[0] // Now out input looks like "parameters={...}". We will have to slice it down so that we only have the JSON Object {...}.
+                        // if this step is skipped, parsing it using JSON.parse() will give us error.
+                        // Remove "parameters=" prefix to extract JSON.
+
+        input=input.slice(11)
+
+        // Now we have the parameters as string. Parse the input JSON string into an object.
+        var allParameters = JSON.parse(input)
+        UTILS.log('Parsed job input : ' + input)
+
+        // Extract parameters from the parsed JSON.
+        parameters = allParameters.params
+        if (parameters === undefined) {
+            parameters = allParameters.input.params
+        }
+
+        // Validate the extracted parameters.
+        if (parameters === undefined || typeof parameters !== 'object' || Array.isArray(parameters)) {
+            UTILS.log('No params found')
+            UTILS.raiseException(Errors.MissingParams)
+        }
+
+        // Set the working folder based on parameters.
+        await UTILS.setWorkingFolder(UTILS.getStringFromObject(allParameters, KeyStrings.WorkingFolder))
+
+        var result
+        UTILS.log('Processing Params')
+        tempTime = new Date().getTime()
+
+        // Process the parameters and perform document-related tasks.
+        result = await ProcessParams(parameters)
+        data[KeyStrings.ProcessedData] = result
+
+        // Include the log file in the list of assets to be uploaded.
+        UTILS.addAssetToBeUploaded(UTILS.logFilePath)
+
+        data.warnings = warnings
+        // processing ends.
+
+        tempTime = new Date().getTime()
+        
+        timingObject[KeyStrings.TimeDocumentClose] = (new Date()).getTime() - tempTime
+        UTILS.log('End of try')
+    }
+    catch (e) {
+
+        // Handle exceptions and prepare failure response.
+        var tempObj = {
+            name: e.name,
+            message: e.message,
+            errorCode: e.number,
+            isCustom: e.isCustom,
+            line: e.line,
+            fileName: e.fileName
+        }
+        
+        UTILS.log('Exception occurred', tempObj)
+        errorOccurred = true
+
+        // Failure, prepare the object to be returned.
+        returnObj = UTILS.handleError(tempObj)
+
+    }
+    finally {
+
+        if (document && document.isValid) {
+            // If Document is still open. Close it.
+            UTILS.log('Closing document')
+            tempTime = new Date().getTime()
+            document.close()
+            timingObject[KeyStrings.TimeDocumentClose] = (new Date()).getTime() - tempTime
+        }
+
+        // Log execution time.
+        var elapsedTime = (new Date()).getTime() - startTime
+        UTILS.log('Time taken: ' + elapsedTime)
+        timingObject[KeyStrings.TimeOverall] = elapsedTime
+        UTILS.log('Timing: ' + JSON.stringify(timingObject))
+        data[KeyStrings.Timings] = timingObject
+
+        // If no errors occurred, return a success response.
+        if (!errorOccurred) {
+            UTILS.log('Finally: No error')
+            returnObj = await UTILS.getSuccessReturnObj(data)
+        }
+
+        // Log the final result.
+        UTILS.log('Final Result' + JSON.stringify(returnObj))
+
+        // Terminate logging and return the final response.
+        await UTILS.terminateLogging()
+        return UTILS.getFinalReturnPackage(returnObj)
+    }
+}
+
+/**
+ * Executes the main function and sets the script result.
+ * If an error occurs, it logs the error and sets the result accordingly.
+ */
+try {
+    var out=await main();
+
+    //In UXP Script, we have to set the return Result using setResult() function.
+    script.setResult(out);
+}
+catch (error) {
+    console.log(error);
+    script.setResult(error);
+}
+
+
+

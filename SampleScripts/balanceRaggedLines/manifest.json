@@ -1,0 +1,17 @@
+{
+    "manifestVersion": "1.0.0", 
+    "name": "balanceRaggedLines", 
+    "host": {
+        "app": "indesign", 
+        "maxVersion": "20.2.0", 
+        "minVersion": "16.0.1"
+    }, 
+    "version": "1.0.3", 
+    "apiEntryPoints": [
+        {
+            "path": "balanceRaggedLines.jsx", 
+            "type": "capability", 
+            "language": "extendscript"
+        }
+    ]
+}
