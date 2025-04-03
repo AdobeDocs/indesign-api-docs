@@ -57,7 +57,6 @@ Provide the following JSON parameters to run the script:
     "assets": [
         {
             "source": {
-                "type": "HTTP_GET",
                 "url": "<YOUR_URL>"
             },
             "destination": "sample.indd"
