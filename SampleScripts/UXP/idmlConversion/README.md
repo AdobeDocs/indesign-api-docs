@@ -1,6 +1,6 @@
 # IDML Export Capability
 
-This directory contains a UXP script for exporting InDesign documents to IDML format using Adobe InDesign's scripting capabilities. The script is designed to work with InDesign versions 16.0.1 and above.
+This directory contains a UXP script for exporting InDesign documents to IDML format using Adobe InDesign's scripting capabilities. The script is designed to work with InDesign versions 18.4.0 and above.
 
 ## Directory Contents
 
@@ -14,7 +14,7 @@ idmlConversion/
 
 ### 1. `manifest.json`
 The manifest file defines the capability configuration:
-- Supports InDesign versions 16.0.1 and above
+- Supports InDesign versions 18.4.0 and above
 - Implements a UXP capability entry point
 - Version: 1.0.0
 
@@ -29,7 +29,7 @@ The main script file that implements the IDML export functionality. Features inc
 
 ## Prerequisites
 
-- Adobe InDesign (version 16.0.1 or higher)
+- Adobe InDesign (version 18.4.0 or higher)
 - UXP scripting environment
 - Access to InDesign Services
 - Appropriate file system permissions
