@@ -1,6 +1,6 @@
 # IDML Conversion Capability (ExtendScript)
 
-This directory contains an ExtendScript implementation for converting InDesign documents to IDML format. This is the ExtendScript version of the IDML conversion capability, designed to work with InDesign versions 17.0.0 and above.
+This directory contains an ExtendScript implementation for converting InDesign documents to IDML format. This is the ExtendScript version of the IDML conversion capability, designed to work with InDesign versions 16.0.1 and above.
 
 ## Directory Contents
 
@@ -17,9 +17,9 @@ Example/
 
 ### 1. `manifest.json`
 The manifest file defines the capability configuration:
-- Supports InDesign versions 17.0.0 and above
+- Supports InDesign versions 16.0.1 and above 
 - Implements an ExtendScript capability entry point
-- Version: 0.0.1
+- Version: 1.0.0
 
 ### 2. `sample.jsx`
 The main script file that implements the IDML conversion functionality. Features include:
@@ -37,7 +37,7 @@ The main script file that implements the IDML conversion functionality. Features
 
 ## Prerequisites
 
-- Adobe InDesign (version 17.0.0 or higher)
+- Adobe InDesign (version 16.0.1 or higher)
 - ExtendScript environment
 - Access to InDesign Services
 - Appropriate file system permissions

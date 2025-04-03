@@ -3,10 +3,10 @@
     "name": "balanceRaggedLines", 
     "host": {
         "app": "indesign", 
-        "maxVersion": "20.2.0", 
+        "maxVersion": "99.9.9", 
         "minVersion": "16.0.1"
     }, 
-    "version": "1.0.3", 
+    "version": "1.0.0", 
     "apiEntryPoints": [
         {
             "path": "balanceRaggedLines.jsx", 

@@ -2,10 +2,10 @@
     "manifestVersion": "1.0.0",
     "id": "Unique id for the capability",
     "name": "Name of the capability",
-    "version": "0.0.1",
+    "version": "1.0.0",
     "host": {
         "app": "indesign",
-        "minVersion": "17.0.0",
+        "minVersion": "16.0.1",
         "maxVersion": "99.9.9"
     },
     "apiEntryPoints": [

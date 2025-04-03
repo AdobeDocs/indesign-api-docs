@@ -1,6 +1,6 @@
 # Balance Ragged Lines Capability
 
-This directory contains a script for managing ragged line balancing in Adobe InDesign documents using ExtendScript. The script is designed to work with InDesign versions 16.0.1 through 20.2.0.
+This directory contains a script for managing ragged line balancing in Adobe InDesign documents using ExtendScript. The script is designed to work with InDesign versions 16.0.1 and above.
 
 ## Directory Contents
 
@@ -17,9 +17,9 @@ balanceRaggedLines/
 
 ### 1. `manifest.json`
 The manifest file defines the capability configuration:
-- Supports InDesign versions 16.0.1 to 20.2.0
+- Supports InDesign versions 16.0.1 and above.
 - Implements an ExtendScript capability entry point
-- Version: 1.0.3
+- Version: 1.0.0
 
 ### 2. `balanceRaggedLines.jsx`
 The main script file that implements the ragged line balancing functionality. Features include:

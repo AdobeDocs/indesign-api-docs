@@ -1,11 +1,28 @@
-// Error constants are defined here.
-/* eslint-disable no-unused-vars */
+/*************************************************************************
+* ADOBE CONFIDENTIAL
+* ___________________
+*
+* Copyright 2025 Adobe
+* All Rights Reserved.
+*
+* NOTICE: All information contained herein is, and remains
+* the property of Adobe and its suppliers, if any. The intellectual
+* and technical concepts contained herein are proprietary to Adobe
+* and its suppliers and are protected by all applicable intellectual
+* property laws, including trade secret and copyright laws.
+* Dissemination of this information or reproduction of this material
+* is strictly forbidden unless prior written permission is obtained
+* from Adobe.
+**************************************************************************/
+// errors.jsx
 
+// Error constants are defined here.
 /*  This document list all the error which are possible from the scripts. The error object is built such that it has an error code and some error strings.
     The error strings are constructed in a way such that the first string is default and a string literal. It is to be returned anyhow. The subsequent strings can be
     strings having '^1' as placeholder replacement string. This replacement string can be replaced with relevant information. Based on the information
     available the final error message can be created.
 */
+/* eslint-disable no-unused-vars */
 
 var ErrorReplacementString = '^1'
 
