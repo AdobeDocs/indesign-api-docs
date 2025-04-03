@@ -4,7 +4,7 @@
     "host": {
         "app": "indesign", 
         "maxVersion": "99.9.9", 
-        "minVersion": "16.0.1"
+        "minVersion": "18.4.0"
     }, 
     "version": "1.0.0", 
     "apiEntryPoints": [
