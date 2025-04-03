@@ -3,7 +3,7 @@ The below code snippets are for demonstration purpose. Please feel free to downl
 Just remember you will need to have the assets stored in one of the accepted external storage. 
 
 ## Sample capability bundle
-A sample capability bundle can be found at [Example](Example/).
+Sample capability bundles can be found at [SampleScripts](SampleScripts/).
 A manifest.json must be bundled inside the capability zip. A typical manifest would look like:
 ```json
 {
