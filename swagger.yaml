@@ -228,8 +228,8 @@ paths:
 
   /v3/capability:
     post:
-      summary: (Beta Only) Submit custom capability.
-      description: Submit the capability bundle. Returns the URL for posting execution request against the capability. This API is in Beta state.
+      summary: Submit custom capability.
+      description: Submit the capability bundle. Returns the URL for posting execution request against the capability.
       parameters:
         - name: x-gw-ims-org-id
           in: header
@@ -285,8 +285,8 @@ paths:
 
   /v3/{organization}/{capability}:
     post:
-      summary: (Beta Only) Submit capability execution request.
-      description: Define the input assets and parameters with which the capability should be executed against the app engine. This API is in Beta state.
+      summary: Submit capability execution request.
+      description: Define the input assets and parameters with which the capability should be executed against the app engine.
       parameters:
         - name: x-gw-ims-org-id
           in: header
@@ -1138,6 +1138,7 @@ components:
                     linkImages:
                       description: If true, links images to the target document. If false, embeds images in the target document. This is in reference to the images being brought in the document while merging.
                       type: boolean
+                      default: false
                 pagesPerDocument:
                   description: The maximum number of pages per document.
                   type: integer
