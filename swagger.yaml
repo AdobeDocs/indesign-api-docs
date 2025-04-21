@@ -10,6 +10,8 @@ tags:
     description: Rendition APIs.
   - name: dataMerge
     description: Data Merge API.
+  - name: customScripts
+    description: Custom Scripts API.
 security:
   - ApiKeyAuth: []
   - BearerAuth: [] 
@@ -162,7 +164,7 @@ paths:
   /v3/status/{id}:
     get:
       summary: Gets latest status for a job.
-      description: Returns the latest status event of a capability execution.
+      description: Returns the latest status event of a API job execution.
       parameters:
         - name: x-gw-ims-org-id
           in: header
@@ -190,7 +192,7 @@ paths:
             type: string
       responses:
         200:
-          description: Status of a capability execution.
+          description: Status of an API job execution.
           content:
             application/json:
               schema:
@@ -226,10 +228,12 @@ paths:
         500:
           $ref: "#/components/responses/InternalServerError"
 
-  /v3/capability:
+  /v3/scripts:
     post:
-      summary: Submit custom capability.
-      description: Submit the capability bundle. Returns the URL for posting execution request against the capability.
+      tags:
+        - customScripts
+      summary: Submit custom scripts.
+      description: Submit the custom script bundle. Returns the URL for posting execution request against the custom script.
       parameters:
         - name: x-gw-ims-org-id
           in: header
@@ -254,24 +258,24 @@ paths:
           application/zip:
             schema:
               type: object
-        description: Capability bundle in ZIP format. This describes the capability to App Engine
+        description: Custom script bundle in ZIP format. This describes the custom script to App Engine
         required: true
       responses:
         '202':
-          description: Status of a capability execution.
+          description: Status of an API job execution.
           content:
             application/json:
               schema:
                 properties:
                   capability:
                     type: string
-                    description: Name of capability as specified in capability manifest
+                    description: Name of custom script as specified in the custom script manifest
                   version:
                     type: string
-                    description: Version of capability as specified in capability manifest
+                    description: Version of custom script as specified in custom script manifest
                   url:
                     type: string
-                    description: URL to submit execution request against the capability
+                    description: URL to submit execution request against the custom script
         400:
           $ref: "#/components/responses/BadParams"
         401:
@@ -283,10 +287,12 @@ paths:
         500:
           $ref: "#/components/responses/InternalServerError"
 
-  /v3/{organization}/{capability}:
+  /v3/{organization}/{scripts}:
     post:
-      summary: Submit capability execution request.
-      description: Define the input assets and parameters with which the capability should be executed against the app engine.
+      tags:
+        - customScripts
+      summary: Submit custom script execution request.
+      description: Submit an execution request for a custom script. Define the input assets and parameters the custom script will use when it is executed against the app engine.
       parameters:
         - name: x-gw-ims-org-id
           in: header
@@ -308,13 +314,13 @@ paths:
             type: string
         - name: organization
           in: path
-          description: organization identifier as reported by response to capability submit request
+          description: organization identifier as reported by response to custom script submit request
           required: true
           schema:
             type: string
-        - name: capability
+        - name: scripts
           in: path
-          description: Name of the capability specified in capability manifest
+          description: Name of the custom script specified in custom script manifest
           required: true
           schema:
             type: string
@@ -323,7 +329,7 @@ paths:
           application/json:
             schema:
               $ref: "#/components/schemas/BaseJobRequestWithOutput"
-        description: Job request object that specifies parameters for the execution of capability.
+        description: Job request object that specifies parameters for the execution of custom script.
         required: true
       responses:
         202:
@@ -353,7 +359,7 @@ components:
       bearerFormat: JWT
   responses:
     Accepted:
-      description: The job/capability has been accepted for processing.
+      description: The job has been accepted for processing.
       content:
         application/json:
           schema:
@@ -1397,7 +1403,7 @@ components:
               description: Output response from  current state of the job.
             dataURL:
               type: string
-              description: The data returned from execution of capability. If the data is more than 250 kB and less the 20 MB, it will be provided as a presigned URL. If it is more than 20 MB, the job will fail.
+              description: The data returned from execution of the job. If the data is more than 250 kB and less the 20 MB, it will be provided as a presigned URL. If it is more than 20 MB, the job will fail.
             outputs:
               type: object
               description: This contains list of URL for all the generated assets 
@@ -1633,7 +1639,7 @@ components:
           description: Event ID for the latest event.
           type: string
         id:
-          description: Capability Execution ID.
+          description: Job Execution ID.
           type: string
         timestamp:
           type: string
@@ -1895,10 +1901,10 @@ components:
               enum:
                 - COMPLETED
             data:
-              description: The data returned from execution of capability. If the data is less than 250 kB, then the data would be provided here.
+              description: The data returned from execution of the Job. If the data is less than 250 kB, then the data would be provided here.
               type: object
             dataURL:
-              description: The data returned from execution of capability. If the data is more than 250 kB and less the 20 MB, it will be provided as a presigned URL. If it is more than 20 MB, the job will fail with error code 413.
+              description: The data returned from execution of the Job. If the data is more than 250 kB and less the 20 MB, it will be provided as a presigned URL. If it is more than 20 MB, the job will fail with error code 413.
               type: string
 
     FailedEvent:
