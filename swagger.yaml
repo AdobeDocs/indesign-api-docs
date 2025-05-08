@@ -287,7 +287,7 @@ paths:
         500:
           $ref: "#/components/responses/InternalServerError"
 
-  /v3/{script_url}:
+  /v3/{script_id}/{script_name}:
     post:
       tags:
         - customScripts
@@ -312,9 +312,15 @@ paths:
           required: true
           schema:
             type: string
-        - name: script_url
+        - name: script_id
           in: path
-          description: Script url as reported by response to custom script submit request
+          description: script_id as reported in response to custom script submit request
+          required: true
+          schema:
+            type: string
+        - name: script_name
+          in: path
+          description: Name of the custom script specified in custom script manifest
           required: true
           schema:
             type: string
