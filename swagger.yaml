@@ -287,7 +287,7 @@ paths:
         500:
           $ref: "#/components/responses/InternalServerError"
 
-  /v3/{organization}/{scripts}:
+  /v3/{script_id}/{script_name}:
     post:
       tags:
         - customScripts
@@ -312,13 +312,13 @@ paths:
           required: true
           schema:
             type: string
-        - name: organization
+        - name: script_id
           in: path
-          description: organization identifier as reported by response to custom script submit request
+          description: script_id as reported in response to custom script submit request
           required: true
           schema:
             type: string
-        - name: scripts
+        - name: script_name
           in: path
           description: Name of the custom script specified in custom script manifest
           required: true
@@ -1013,10 +1013,11 @@ components:
                 outputFileBaseString:
                   type: string
                   description: The name of the output file.
+                  default: It is derived from the original document filename.
                 outputFolderPath:
                   type: string
                   description: The path of the output folder.
-
+                  default: A unique temporary folder name would be created.
 
     MergeDataRequest:
       allOf:
@@ -1081,9 +1082,11 @@ components:
                 recordRange:
                   description: The ranges of records to process for this job. Value can be 'All' along with numeral ranges. For example, '1-2, 5'.
                   type: string
+                  default: All
                 allowMultipleRecordsPerPage:
                   description: The number of records to place on each page of the document.
                   type: boolean
+                  default: false
                 multipleRecordLayoutOptions:
                   description: The options to be used in case allowMultipleRecordsPerPage is set to true.
                   type: object
@@ -1097,6 +1100,7 @@ components:
                       enum:
                         - rows_first
                         - columns_first
+                      default: rows_first
                     bottomMargin:
                       description: The offset value of the bottom margin in the target document. The values can be specified like '1 pt', '1 pica'. '1' etc. If a number is mentioned in the string, it will be used as a value in pica.
                       type: string
@@ -1122,6 +1126,7 @@ components:
                     centerImage:
                       description: If true, centers the image in the frame while preserving the frame size as content size and proportions. If the content is larger than the frame, content around the edges is obscured by the bounding box of the frame. This doesn't work with 'Content_Aware_Fit' fittingOption.
                       type: boolean
+                      default: false
                     fittingOption:
                       description: |
                         Method of fitting content in a frame.
@@ -1141,6 +1146,7 @@ components:
                         - honor_existing_style
                         - preserve_sizes
                         - proportional
+                      default: proportional
                     linkImages:
                       description: If true, links images to the target document. If false, embeds images in the target document. This is in reference to the images being brought in the document while merging.
                       type: boolean
@@ -1148,6 +1154,7 @@ components:
                 pagesPerDocument:
                   description: The maximum number of pages per document.
                   type: integer
+                  default: By default this would not be applicable.
                 removeBlankLines:
                   description: If true, removes blank lines caused by empty fields.
                   type: boolean
@@ -1159,9 +1166,11 @@ components:
                 outputFileBaseString:
                   type: string
                   description: The name of the output file.
+                  default: It is derived from the original document filename.
                 outputFolderPath:
                   type: string
                   description: The path of the output folder.
+                  default: A unique temporary folder name would be created.
 
     MergeDataOutputData:
       allOf:
