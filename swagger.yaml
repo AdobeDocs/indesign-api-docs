@@ -12,6 +12,8 @@ tags:
     description: Data Merge API.
   - name: customScripts
     description: Custom Scripts API.
+  - name: remapLinks
+    description: Remap Links API.
 security:
   - ApiKeyAuth: []
   - BearerAuth: [] 
@@ -330,6 +332,59 @@ paths:
             schema:
               $ref: "#/components/schemas/BaseJobRequestWithOutput"
         description: Job request object that specifies parameters for the execution of custom script.
+        required: true
+      responses:
+        202:
+          $ref: '#/components/responses/Accepted'
+        400:
+          $ref: "#/components/responses/BadParams"
+        401:
+          $ref: "#/components/responses/Unauthorized"
+        403:
+          $ref: "#/components/responses/Forbidden"
+        404:
+          $ref: "#/components/responses/NotFound"
+        500:
+          $ref: "#/components/responses/InternalServerError"
+
+  /v3/remap-links:
+    post:
+      tags:
+        - remapLinks
+      summary: Remaps file-based links to AEM URLs in InDesign documents
+      description: Replaces existing file-based links in InDesign documents with AEM URLs. This is particularly useful for customers working with AEM using AAL, as it allows designers to work with the output files post-generation by having direct links to AEM URLs.
+      operationId: remapLinks
+      parameters:
+        - name: x-gw-ims-org-id
+          in: header
+          description: Identifier for IMS organization as defined in Adobe's developer console. This is optional
+          required: false
+          schema:
+            type: string
+        - name: x-api-key
+          in: header
+          description: API key as defined in Adobe's developer console
+          required: true
+          schema:
+            type: string
+        - name: Authorization
+          in: header
+          description: Authorization token with bearer "token_value"
+          required: true
+          schema:
+            type: string
+        - name: x-aem-token
+          in: header
+          description: Bearer token generated for AEM technical account without the bearer keyword
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/RemapLinksRequest"
+        description: Job request object that specifies parameters for remapping links in the InDesign document.
         required: true
       responses:
         202:
@@ -1409,14 +1464,14 @@ components:
                 - succeeded
             data:
               type: object
-              description: Output response from  current state of the job.
+              description: Output response from current state of the job.
             dataURL:
               type: string
               description: The data returned from execution of the job. If the data is more than 250 kB and less the 20 MB, it will be provided as a presigned URL. If it is more than 20 MB, the job will fail.
             outputs:
               type: object
               description: This contains list of URL for all the generated assets 
-                  
+
     failedEvent:
       allOf:
         - $ref: '#/components/schemas/BaseEvent'
@@ -1433,8 +1488,10 @@ components:
               description: Error code for failure.
             message:
               type: string
-              description: Error message for failure 
-
+              description: Error message for failure
+            data:
+              type: object
+              description: Detailed error information
 
     ErrorCodesAndDefinitions:
       allOf:
@@ -1936,3 +1993,46 @@ components:
                 code:
                   type: integer
                   description: The error code.
+
+    RemapLinksRequest:
+      allOf:
+        - description: Inputs for the link remapping request.
+          type: object
+          required:
+            - params
+            - assets
+          properties:
+            assets:
+              type: array
+              items:
+                $ref: "#/components/schemas/InputAsset"
+            params:
+              type: object
+              required:
+                - targetDocument
+                - dataSource
+              properties:
+                targetDocument:
+                  description: The InDesign document in which links need to be remapped.
+                  type: string
+                dataSource:
+                  description: Array of link mappings containing source and destination URIs.
+                  type: array
+                  minItems: 1
+                  items:
+                    type: object
+                    required:
+                      - sourceURI
+                      - destinationURI
+                    properties:
+                      sourceURI:
+                        type: string
+                        description: File path/resource URI for the existing link that needs to be remapped.
+                      destinationURI:
+                        type: string
+                        description: AEM URI that will replace the existing link.
+            outputs:
+              type: array
+              items:
+                $ref: '#/components/schemas/OutputAsset'
+
