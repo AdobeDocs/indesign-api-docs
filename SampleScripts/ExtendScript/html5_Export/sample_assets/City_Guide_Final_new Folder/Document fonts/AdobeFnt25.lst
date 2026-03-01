@@ -1,0 +1,196 @@
+%!Adobe-FontList 1.25
+%Locale:0x409
+
+%BeginFont
+Handler:DirectoryHandler
+FontType:Invalid
+OutlineFileName:/Users/shreygupta/Downloads/html5 testing/html5_Export/sample_assets/City_Guide_Final_new Folder/Document fonts/AdobeFnt16.lst
+FileLength:2982
+FileModTime:468482079
+%EndFont
+
+%BeginFont
+Handler:DirectoryHandler
+FontType:Invalid
+OutlineFileName:/Users/shreygupta/Downloads/html5 testing/html5_Export/sample_assets/City_Guide_Final_new Folder/Document fonts/AdobeFnt24.lst
+FileLength:4656
+FileModTime:791791224
+%EndFont
+
+%BeginFont
+Handler:DirectoryHandler
+FontType:Invalid
+OutlineFileName:/Users/shreygupta/Downloads/html5 testing/html5_Export/sample_assets/City_Guide_Final_new Folder/Document fonts/AdobeFnt25.lst
+FileLength:4494
+FileModTime:793808515
+%EndFont
+
+%BeginFont
+Handler:DirectoryHandler
+FontType:Type1
+FontName:ChaparralPro-Bold
+FamilyName:Chaparral Pro
+StyleName:Bold
+MenuName:Chaparral Pro
+StyleBits:2
+WeightClass:700
+WidthClass:5
+AngleClass:0
+FullName:Chaparral Pro Bold
+WritingScript:Roman
+OutlineFileName:/Users/shreygupta/Downloads/html5 testing/html5_Export/sample_assets/City_Guide_Final_new Folder/Document fonts/ChaparralPro-Bold.otf
+DataFormat:sfntData
+UsesStandardEncoding:yes
+isCFF:yes
+hasSVG:no
+hasSBIX:no
+hasCOLR:no
+VariableFontType:NonVariableFont
+FileLength:126008
+FileModTime:419874851
+DesignSize:110
+NameArray:0,Mac,4,Chaparral Pro Bold
+NameArray:0,Win,1,Chaparral Pro
+%EndFont
+
+%BeginFont
+Handler:DirectoryHandler
+FontType:Type1
+FontName:ChaparralPro-Italic
+FamilyName:Chaparral Pro
+StyleName:Italic
+MenuName:Chaparral Pro
+StyleBits:1
+WeightClass:400
+WidthClass:5
+AngleClass:1
+FullName:Chaparral Pro Italic
+WritingScript:Roman
+OutlineFileName:/Users/shreygupta/Downloads/html5 testing/html5_Export/sample_assets/City_Guide_Final_new Folder/Document fonts/ChaparralPro-Italic.otf
+DataFormat:sfntData
+UsesStandardEncoding:yes
+isCFF:yes
+hasSVG:no
+hasSBIX:no
+hasCOLR:no
+VariableFontType:NonVariableFont
+FileLength:128628
+FileModTime:419874851
+DesignSize:110
+NameArray:0,Mac,18,Chaparral Pro Ital
+NameArray:0,Mac,4,Chaparral Pro Italic
+NameArray:0,Win,1,Chaparral Pro
+%EndFont
+
+%BeginFont
+Handler:DirectoryHandler
+FontType:Type1
+FontName:ChaparralPro-Regular
+FamilyName:Chaparral Pro
+StyleName:Regular
+MenuName:Chaparral Pro
+StyleBits:0
+WeightClass:400
+WidthClass:5
+AngleClass:0
+FullName:Chaparral Pro
+WritingScript:Roman
+OutlineFileName:/Users/shreygupta/Downloads/html5 testing/html5_Export/sample_assets/City_Guide_Final_new Folder/Document fonts/ChaparralPro-Regular.otf
+DataFormat:sfntData
+UsesStandardEncoding:yes
+isCFF:yes
+hasSVG:no
+hasSBIX:no
+hasCOLR:no
+VariableFontType:NonVariableFont
+FileLength:127864
+FileModTime:419874851
+DesignSize:110
+NameArray:0,Mac,4,Chaparral Pro
+NameArray:0,Win,1,Chaparral Pro
+%EndFont
+
+%BeginFont
+Handler:DirectoryHandler
+FontType:Type1
+FontName:LetterGothicStd-Bold
+FamilyName:Letter Gothic Std
+StyleName:Bold
+MenuName:Letter Gothic Std
+StyleBits:2
+WeightClass:700
+WidthClass:5
+AngleClass:0
+FullName:Letter Gothic Std Bold
+WritingScript:Roman
+OutlineFileName:/Users/shreygupta/Downloads/html5 testing/html5_Export/sample_assets/City_Guide_Final_new Folder/Document fonts/LetterGothicStd-Bold.otf
+DataFormat:sfntData
+UsesStandardEncoding:yes
+isCFF:yes
+hasSVG:no
+hasSBIX:no
+hasCOLR:no
+VariableFontType:NonVariableFont
+FileLength:34276
+FileModTime:429081889
+DesignSize:120
+NameArray:0,Mac,4,Letter Gothic Std Bold
+NameArray:0,Win,1,Letter Gothic Std
+%EndFont
+
+%BeginFont
+Handler:DirectoryHandler
+FontType:Type1
+FontName:LetterGothicStd-BoldSlanted
+FamilyName:Letter Gothic Std
+StyleName:Bold Slanted
+MenuName:Letter Gothic Std
+StyleBits:3
+WeightClass:700
+WidthClass:5
+AngleClass:1
+FullName:Letter Gothic Std Bold Slanted
+WritingScript:Roman
+OutlineFileName:/Users/shreygupta/Downloads/html5 testing/html5_Export/sample_assets/City_Guide_Final_new Folder/Document fonts/LetterGothicStd-BoldSlanted.otf
+DataFormat:sfntData
+UsesStandardEncoding:yes
+isCFF:yes
+hasSVG:no
+hasSBIX:no
+hasCOLR:no
+VariableFontType:NonVariableFont
+FileLength:35936
+FileModTime:429081889
+DesignSize:120
+NameArray:0,Mac,4,Letter Gothic Std Bold Slanted
+NameArray:0,Win,1,Letter Gothic Std
+%EndFont
+
+%BeginFont
+Handler:DirectoryHandler
+FontType:Type1
+FontName:MyriadPro-Bold
+FamilyName:Myriad Pro
+StyleName:Bold
+MenuName:Myriad Pro
+StyleBits:2
+WeightClass:700
+WidthClass:5
+AngleClass:0
+FullName:Myriad Pro Bold
+WritingScript:Roman
+OutlineFileName:/Users/shreygupta/Downloads/html5 testing/html5_Export/sample_assets/City_Guide_Final_new Folder/Document fonts/MyriadPro-Bold.otf
+DataFormat:sfntData
+UsesStandardEncoding:yes
+isCFF:yes
+hasSVG:no
+hasSBIX:no
+hasCOLR:no
+VariableFontType:NonVariableFont
+FileLength:97124
+FileModTime:429081889
+DesignSize:110
+NameArray:0,Mac,4,Myriad Pro Bold
+NameArray:0,Win,1,Myriad Pro
+%EndFont
+
