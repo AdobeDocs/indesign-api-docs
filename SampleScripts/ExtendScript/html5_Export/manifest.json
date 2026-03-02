@@ -1,0 +1,20 @@
+{
+    "manifestVersion": "1.0.0",
+    "name": "Exporthtml5",
+    "version": "1.0.2",
+    "host": {
+        "app": "indesign",
+        "appVersionStrategy": "LATEST_VERSION"
+    },
+    "apiEntryPoints": [
+        {
+            "type": "capability",
+            "path": "sample.jsx",
+            "language": "extendscript"
+        },
+        {
+            "type" : "openapi",
+            "path" : "swagger.yml"
+        }
+    ]
+}
