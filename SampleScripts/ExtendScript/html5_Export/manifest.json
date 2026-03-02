@@ -1,8 +1,7 @@
 {
     "manifestVersion": "1.0.0",
-    "id": "Unique id for the capability",
-    "name": "Name of the capability",
-    "version": "1.0.0",
+    "name": "Exporthtml5",
+    "version": "1.0.2",
     "host": {
         "app": "indesign",
         "appVersionStrategy": "LATEST_VERSION"
