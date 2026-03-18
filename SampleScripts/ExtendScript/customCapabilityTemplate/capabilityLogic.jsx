@@ -40,9 +40,7 @@ CAPABILITY.run = function (document, parameters, allParameters, returnVal) {
   // Example (uncomment and adjust for your case):
   // var outputPath = UTILS.GetStringFromObject(parameters, 'outputPath')
   // outputPath = UTILS.GetFullPath(outputPath)
-  UTILS.Log('outputPathYayyyyy: ')
-  app.open(File("/input.inddc"))
-  UTILS.Log('document openedYayyyyy')
+  // app.open(File("outputPath"))
   // UTILS.AddAssetToBeUploaded(UTILS.GetRelativeReturnPath(outputPath))
   // returnVal.outputPath = outputPath
 
