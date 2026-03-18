@@ -19,9 +19,6 @@
 // Utils functions which can be used across.
 /* globals app, Errors, File, Folder, LinkStatus, SaveOptions */
 
-// Utils functions which can be used across.
-/* globals app, Errors, File, Folder, LinkStatus, SaveOptions */
-
 // Globals.
 var logFileObject
 
@@ -44,13 +41,16 @@ if (typeof Array.isArray === 'undefined') {
   }
 }
 
+// Create a UTILS object to store utility functions and variables.
 var UTILS = {}
-UTILS.Logs = []
-UTILS.workingFolder = ''
-UTILS.outputFolder = ''
-UTILS.assetsToBeUploaded = [] // These are assets which are to be uploaded.
-UTILS.createSeparateLogFile = true
-UTILS.logFilePath = 'LogFile.txt'
+
+// Initialize various properties of the UTILS object.
+UTILS.Logs = [] // Stores log messages.
+UTILS.workingFolder = '' // Path of the working folder.
+UTILS.outputFolder = '' // Path of the output folder.
+UTILS.assetsToBeUploaded = [] // List of assets that need to be uploaded.
+UTILS.createSeparateLogFile = true // Flag to determine if a separate log file should be created.
+UTILS.logFilePath = 'LogFile.txt' // File name for logging.
 
 // Converts the package in appropriate format, which can be returned from the capability.
 UTILS.GetFinalReturnPackage = function (obj) {
@@ -62,8 +62,8 @@ UTILS.GetFinalReturnPackage = function (obj) {
 UTILS.GetSuccessReturnObj = function (data) {
   var obj = {}
   obj.status = 'SUCCESS'
-  obj.assetsToBeUploaded = UTILS.assetsToBeUploaded
-  var dataURL = UTILS.WriteToFile(data, 'outputData')
+  obj.assetsToBeUploaded = UTILS.assetsToBeUploaded // Attach the list of assets to be uploaded.
+  var dataURL = UTILS.WriteToFile(data, 'outputData') // Save data to file.
   if (dataURL) {
     obj.dataURL = dataURL
   }
@@ -71,16 +71,12 @@ UTILS.GetSuccessReturnObj = function (data) {
 }
 
 // Creates and returns the package to be returned in case the job has failed.
-// Includes assetsToBeUploaded (e.g. LogFile.txt) so the platform can still upload the log on failure.
 UTILS.GetFailureReturnObj = function (errorCode, errorString, data) {
   var obj = {}
   obj.status = 'FAILURE'
-  obj.errorCode = errorCode
-  obj.errorString = errorString
-  if (data !== undefined) {
-    obj.data = data
-  }
-  obj.assetsToBeUploaded = UTILS.assetsToBeUploaded
+  obj.errorCode = errorCode // Attach the error code.
+  obj.errorString = errorString // Attach the error message.
+  obj.data = data // Include additional data if available.
   return obj
 }
 
@@ -89,16 +85,17 @@ UTILS.AddAssetToBeUploaded = function (assetPath, data) {
   var assetToBeUploaded = {}
   assetToBeUploaded.path = assetPath
   if (data !== undefined) {
-    assetToBeUploaded.data = data
+    assetToBeUploaded.data = data // Include additional asset data if provided.
   }
   UTILS.assetsToBeUploaded.push(assetToBeUploaded)
 }
 
 // This handles errors in case an exception is raised. This results the capability returning error to the caller.
-// Application error codes are from: SDK/docs/references/errorcodes.htm
 UTILS.HandleError = function (exception) {
   var errorCode, errorString
   UTILS.Log('Exception occurred: ' + JSON.stringify(exception))
+
+  // Handle specific exception cases
   if (exception.message === 'open') {
     exception.message = Errors.CannotOpenFileError.errorStrings[0]
     exception.errorCode = Errors.CannotOpenFileError.errorCode
@@ -141,6 +138,8 @@ UTILS.RaiseException = function (errorObj) {
   var numIterations = (numMessageParameters > numErrorStrings) ? numErrorStrings : numMessageParameters
   var errorMessage = errorObj.errorStrings[0]
   UTILS.Log('', 'Default errorMessage: ' + errorMessage)
+
+  // Construct the detailed error message using available parameters.
   for (var itr = 1; itr < numIterations; itr++) {
     var parameter = arguments[itr]
     if (parameter !== undefined && parameter !== '') {
@@ -149,6 +148,8 @@ UTILS.RaiseException = function (errorObj) {
       UTILS.Log('', 'Appended errorMessage: ' + errorMessage)
     }
   }
+
+  // Throw an exception object with custom details.
   var exceptionObj = {
     number: errorObj.errorCode,
     isCustom: true,
@@ -158,7 +159,7 @@ UTILS.RaiseException = function (errorObj) {
   throw exceptionObj
 }
 
-// This updates all the links in the document.
+// This will update out-of-date links in a document.
 UTILS.UpdateDocumentLinks = function (document) {
   var links = document.links
   var numLinks = links.length
@@ -167,7 +168,7 @@ UTILS.UpdateDocumentLinks = function (document) {
 
   UTILS.Log('Number of links: ' + numLinks)
   for (linkItr = 0; linkItr < numLinks; linkItr++) {
-    try{
+    try {
       link = links[linkItr]
       uri = link.linkResourceURI
       UTILS.Log(linkItr + ': URI: ' + uri)
@@ -178,6 +179,8 @@ UTILS.UpdateDocumentLinks = function (document) {
       UTILS.Log('Link status unknown : ' + err)
     }
   }
+
+  // Update all out-of-date links.
   numLinks = outOfDateLinks.length
   for (linkItr = 0; linkItr < numLinks; linkItr++) {
     link = document.links.itemByID(outOfDateLinks[linkItr])
@@ -186,13 +189,14 @@ UTILS.UpdateDocumentLinks = function (document) {
     }
   }
 
+  // Recompose the document after updating links.
   var composeStartTime = new Date().getTime()
   document.recompose()
   var composedTime = (new Date()).getTime() - composeStartTime
   UTILS.Log('document.recompose Time: ' + composedTime)
 }
 
-// This embeds all the links in the document.
+// This Embeds all the links in the document.
 UTILS.EmbedDocumentLinks = function (document) {
   var links = document.links
   var numLinks = links.length
@@ -210,7 +214,7 @@ UTILS.EmbedDocumentLinks = function (document) {
   }
 }
 
-// Trims the string which has been passed.
+// Trims leading and trailing spaces from a string.
 UTILS.Trim = function (val) {
   return val.replace(/^\s+|\s+$/gm, '')
 }
@@ -220,7 +224,7 @@ UTILS.RemoveAllSpaces = function (val) {
   return val.replace(/\s/g, '')
 }
 
-// Converts a value to boolean. Exception is thrown if the conversion fails.
+// Converts a value to integer. Exception is thrown if the conversion fails.
 UTILS.GetBoolean = function (val) {
   if (val === 'true' || val === true) {
     return true
@@ -591,14 +595,20 @@ UTILS.InitiateLogging = function () {
   UTILS.Logs = []
 }
 
+
+// Opens a log file handle if separate logging is enabled.
 UTILS.OpenLogFileHandle = function () {
   if (UTILS.createSeparateLogFile === true) {
     logFileObject = new File(UTILS.GetFullPath(UTILS.logFilePath))
     var exists = false
+
+    // Check if the log file already exists
     if (logFileObject.open('read')) {
       exists = true
     }
     UTILS.Log('Creating log file at ' + UTILS.GetFullPath(UTILS.logFilePath))
+
+    // Open the log file in append mode if it exists, otherwise create a new file
     if (exists) {
       logFileObject.close()
       logFileObject.open('append')
@@ -608,16 +618,18 @@ UTILS.OpenLogFileHandle = function () {
   }
 }
 
-// Ends logging.
+// Ends logging by closing the log file handle if separate logging is enabled
 UTILS.TerminateLogging = function () {
   if (UTILS.createSeparateLogFile === true) {
     logFileObject.close()
   }
 }
 
-// This logs any information.
+// This logs any provided information
 UTILS.Log = function (log) {
   var logText
+
+  // Convert non-string logs to JSON format
   if (log === undefined) {
     logText = ''
   } else if (typeof primaryLog !== 'string') {
@@ -627,7 +639,8 @@ UTILS.Log = function (log) {
   }
 
   if (UTILS.createSeparateLogFile === true) {
-    // Write to file.
+
+    // Write to file if log file object exists
     if (logFileObject) {
       if (UTILS.Logs.length > 0) {
         for (var itr = 0; itr < UTILS.Logs.length; itr++) {
@@ -644,14 +657,19 @@ UTILS.Log = function (log) {
   }
 }
 
+// Writes data to a uniquely named JSON file
 UTILS.WriteToFile = function (data, fileName) {
   var fileURL, newFile
   var exists = false
   var suffix = ''
   var counter = 1
+
+  // Generate a unique filename if none is provided
   if (fileName === undefined) {
     fileName = UTILS.GetUniqueName()
   }
+
+  // Ensure the file does not already exist
   do {
     fileURL = UTILS.GetFullPath(fileName + suffix + '.json')
     newFile = File(fileURL)
@@ -664,6 +682,7 @@ UTILS.WriteToFile = function (data, fileName) {
     }
   } while (exists)
 
+  // Write data to the file
   newFile.encoding = 'UTF8'
   newFile.open('write')
   if (newFile.write(JSON.stringify(data))) {
@@ -676,6 +695,7 @@ UTILS.WriteToFile = function (data, fileName) {
   }
 }
 
+// Closes all open documents in the application.
 UTILS.CloseAllOpenDocuments = function () {
   UTILS.Log('Closing all the documents')
   app.documents.everyItem().close(SaveOptions.NO)

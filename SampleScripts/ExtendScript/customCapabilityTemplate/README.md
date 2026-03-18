@@ -1,87 +1,56 @@
-# Custom capability template (ExtendScript)
+# Custom Capability Template
 
-Use this folder as a **starting point** for InDesign API / InDesign Server custom capabilities. Boilerplate is already wired:
+Minimal ExtendScript template for **InDesign Server** capabilities: add logic in `capabilityLogic.jsx` and keep standard parameter handling, logging, timings, and errors.
 
-| Concern | Where it lives |
-|--------|----------------|
-| Parse `parameters`, `workingFolder`, `jobID` | `sample.jsx` (do not need to edit) |
-| Logging + `LogFile.txt` upload | `utils.jsx` — use `UTILS.Log(...)` |
-| Paths under job working directory | `UTILS.GetFullPath('relative/path')` |
-| Register outputs for upload | `UTILS.AddAssetToBeUploaded('relative/path')` |
-| Log file (`LogFile.txt`) | Always added for upload in **success and failure** so you can inspect what happened. |
-| Structured validation errors | `UTILS.RaiseException(Errors.MissingKey, 'paramName')` |
-| Success / failure JSON for the platform | `sample.jsx` → `GetSuccessReturnObj` / `HandleError` |
+## InDesign Server scripting
 
-## What you edit
+Server runs headless—**do not rely on `app.activeDocument` or creating documents without a file path**. Open the job document with `app.open(File(...))` using a path relative to `workingFolder` (this template does that via `params.targetDocument`).
 
-**Primary file: `capabilityLogic.jsx`**
+For the object model (`Application`, `Document`, `app.open`, etc.), see the ExtendScript API reference, e.g. [InDesign Server 14 Application / object model](https://www.indesignjs.de/extendscriptAPI/indesign-server14/#Application.html).
 
-Implement `runCapability(parameters, context)`:
+## Quick start
 
-- **`parameters`** — Your API `params` object (define any keys you need).
-- **`context`** — `{ jobId, workingFolder, setActiveDocument(doc) }`.
-  - If you call `context.setActiveDocument(myDoc)` after opening a document, the template will **close that document** in `finally` and can attach **missing link / font warnings** to the response.
+1. **Required input:** `params.targetDocument` — relative path to the `.indd` under `workingFolder`. The template opens it, relinks, collects warnings, then runs your logic.
 
-Return a **plain object**; it is included in the job response JSON (via `dataURL`).
+2. **Implement your logic** in `capabilityLogic.jsx` inside `CAPABILITY.run`:
+   - `document` — opened document
+   - `parameters` — `params` from the job
+   - `allParameters` — full job input (`workingFolder`, `params`, …)
+   - `returnVal` — populate for `processedData`
 
-On failure, throw or call `UTILS.RaiseException(...)`.
+3. **Run** the capability with JSON containing `workingFolder` and `params`.
 
-## Optional changes
+## Files
 
-| File | When |
-|------|------|
-| `manifest.json` | Change `id` (UUID), `name` (capability name), `version` for each deploy. |
-| `errors.jsx` | Add your own `Errors.YourError` entries for clear messages. |
-| `sample.jsx` | Only if you need different global app preferences or extra lifecycle hooks. |
+| File | Purpose |
+|------|--------|
+| `sample.jsx` | Entry: open document from `targetDocument`, then `CAPABILITY.run`. |
+| `capabilityLogic.jsx` | **Edit here** — your capability inside `CAPABILITY.run()`. |
+| `errors.jsx`, `json2.jsx`, `utils.jsx` | Shared helpers (same pattern as other samples). |
+| `manifest.json` | Capability manifest. |
 
-## Zip layout (required)
+## Example: save to output path
 
-Files must be at the **root** of the zip (no parent folder):
+In `capabilityLogic.jsx`:
 
-```
-MyCapability.zip
-├── manifest.json
-├── sample.jsx
-├── capabilityLogic.jsx
-├── utils.jsx
-├── errors.jsx
-└── json2.jsx
+```javascript
+var outputPath = UTILS.GetStringFromObject(parameters, 'outputPath')
+outputPath = UTILS.GetFullPath(outputPath)
+document.save(File(outputPath))
+UTILS.AddAssetToBeUploaded(UTILS.GetRelativeReturnPath(outputPath))
+returnVal.outputPath = outputPath
 ```
 
-Submit the zip per [Working with Capabilities API](https://developer.adobe.com/firefly-services/docs/indesign-apis/how-tos/working-with-capabilities-api/).
-
-## Example API request body
-
-After deployment, call your capability URL with a body like:
+## Input shape
 
 ```json
 {
-  "assets": [
-    {
-      "source": {
-        "url": "https://your-storage/presigned-get",
-        "storageType": "Azure"
-      },
-      "destination": "input.indd"
-    }
-  ],
+  "workingFolder": "/path/to/working/folder",
   "params": {
-    "targetDocument": "input.indd",
-    "yourCustomParam": "value"
+    "targetDocument": "doc.indd",
+    "outputPath": "out/result.indd"
   }
 }
 ```
 
-Paths in `params` are **relative to the job working folder** (where assets are placed). Use only relative paths; `..` and absolute paths are rejected by `UTILS.GetFullPath`.
-
-## Quick checklist
-
-1. Implement `runCapability` in `capabilityLogic.jsx`.
-2. For every file the caller should download, call `UTILS.AddAssetToBeUploaded('path/under/working/folder')`.
-3. Update `manifest.json` (`id`, `name`, `version`).
-4. Zip the six files at root → upload → call your capability endpoint.
-
-## Support
-
-- [InDesign APIs overview](https://developer.adobe.com/firefly-services/docs/indesign-apis/)
-- Main repo [README](../../../README.md) (custom script input/output contract)
+If your capability only produces new files (no input `.indd`), you still need a document open on Server—use a small template `.indd` as `targetDocument` or extend the template to open a specific starter file your job provides.

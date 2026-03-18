@@ -1,19 +1,19 @@
 /*************************************************************************
-* ADOBE CONFIDENTIAL
-* ___________________
-*
-* Copyright 2025 Adobe
-* All Rights Reserved.
-*
-* NOTICE: All information contained herein is, and remains
-* the property of Adobe and its suppliers, if any. The intellectual
-* and technical concepts contained herein are proprietary to Adobe
-* and its suppliers and are protected by all applicable intellectual
-* property laws, including trade secret and copyright laws.
-* Dissemination of this information or reproduction of this material
-* is strictly forbidden unless prior written permission is obtained
-* from Adobe.
-**************************************************************************/
+ * ADOBE CONFIDENTIAL
+ * ___________________
+ *
+ *  Copyright 2025 Adobe
+ *  All Rights Reserved.
+ *
+ * NOTICE:  All information contained herein is, and remains
+ * the property of Adobe and its suppliers, if any. The intellectual
+ * and technical concepts contained herein are proprietary to Adobe
+ * and its suppliers and are protected by all applicable intellectual
+ * property laws, including trade secret and copyright laws.
+ * Dissemination of this information or reproduction of this material
+ * is strictly forbidden unless prior written permission is obtained
+ * from Adobe.
+ **************************************************************************/
 // errors.jsx
 
 // Error constants are defined here.
@@ -29,139 +29,139 @@ var ErrorReplacementString = '^1'
 var Errors = {
   // Errors during processing: 1001-1999
   InternalScriptError: {
-    errorCode: 1001,
+    errorCode: 'internal_error',
     errorStrings: [
       'Internal script error. This should not had happened.'
     ]
   },
   ProcessingErrorOccurred: {
-    errorCode: 1002,
+    errorCode: 'internal_error',
     errorStrings: [
-      'Error during processing.'
+      'Internal error: Error during processing.'
     ]
   },
   PDFPresetNotSet: {
-    errorCode: 1003,
+    errorCode: 'capability_error',
     errorStrings: [
-      'No PDF Preset could be set.'
+      'Capability error: No PDF Preset could be set.'
     ]
   },
   OutputDirError: {
-    errorCode: 1004,
+    errorCode: 'internal_error',
     errorStrings: [
-      'Unable to create specified output directory.'
+      'Internal error: Unable to create specified output directory.'
     ]
   },
   RelinkError: {
-    errorCode: 1005,
+    errorCode: 'capability_error',
     errorStrings: [
-      'Unable to relink.',
-      'Relink failed for ^1'
+      'Capability error: Unable to relink.',
+      'Relink failed for ^1.'
     ]
   },
   PlaceError: {
-    errorCode: 1006,
+    errorCode: 'capability_error',
     errorStrings: [
-      'Unable to place.',
-      'Place failed for ^1'
+      'Capability error: Unable to place.',
+      'Place failed for ^1.'
     ]
   },
 
   // Errors in input: 2001-2999
   ArrayExpected: {
-    errorCode: 2001,
+    errorCode: 'parameter_error',
     errorStrings: [
-      'Expected array',
+      'Parameter error: Expected array ',
       'for property ^1.'
     ]
   },
   ParsingBoolError: {
-    errorCode: 2002,
+    errorCode: 'parameter_error',
     errorStrings: [
-      'Expected boolean.',
-      '^1 is the provided value',
+      'Parameter error: Expected boolean ',
+      '^1 is the provided value ',
       'for property ^1.'
     ]
   },
   ParsingIntError: {
-    errorCode: 2003,
+    errorCode: 'parameter_error',
     errorStrings: [
-      'Expected integer.',
-      '^1 is the provided value',
+      'Parameter error: Expected integer ',
+      '^1 is the provided value ',
       'for property ^1.'
     ]
   },
   ParsingFloatError: {
-    errorCode: 2004,
+    errorCode: 'parameter_error',
     errorStrings: [
-      'Expected number.',
-      '^1 is the provided value',
+      'Parameter error: Expected number ',
+      '^1 is the provided value ',
       'for property ^1.'
     ]
   },
   ParsingStringError: {
-    errorCode: 2005,
+    errorCode: 'parameter_error',
     errorStrings: [
-      'Expected string.',
-      '^1 is the provided value',
+      'Parameter error: Expected string ',
+      '^1 is the provided value ',
       'for property ^1.'
     ]
   },
   OutOfBound: {
-    errorCode: 2006,
+    errorCode: 'parameter_error',
     errorStrings: [
-      'Incorrect range provided.',
+      'Parameter error: Incorrect range provided. ',
       'Culprit Value is ^1.'
     ]
   },
   MissingKey: {
-    errorCode: 2007,
+    errorCode: 'parameter_error',
     errorStrings: [
-      'Key not found in object.',
+      'Parameter error: Key not found in object. ',
       'Missing key is ^1.'
     ]
   },
-  InCorrectRelativePath: {
-    errorCode: 2009,
-    errorStrings: [
-      'Invalid relative path (no .. or absolute paths allowed).',
-      'Path: ^1.'
-    ]
-  },
   EnumError: {
-    errorCode: 2008,
+    errorCode: 'parameter_error',
     errorStrings: [
-      'No matching enum value found.',
+      'Parameter error: No matching enum value found. ',
       '^1 is the provided value',
       'for property ^1.'
     ]
   },
   MissingParams: {
-    errorCode: 2013,
+    errorCode: 'parameter_error',
     errorStrings: [
-      'Either the \'params\' is not found in the request or it is not in the correct format.'
+      'Parameter error: Either the \'params\' is not found in the request or it is not in the correct format.'
     ]
   },
   ObjectExpected: {
-    errorCode: 2016,
+    errorCode: 'parameter_error',
     errorStrings: [
-      'Expected object',
+      'Parameter error: Expected object ',
       'for property ^1.'
     ]
   },
   AtLeastOneInternalParamShouldBePresent: {
-    errorCode: 2017,
+    errorCode: 'parameter_error',
     errorStrings: [
-      'At least one of the parameters should be present.',
+      'Parameter error: At least one of the parameters should be present. ',
       'Missing parameters are ^1'
     ]
   },
 
   // Errors coming from IDS and sent under ProcessingErrorOccurred. These are specific errors which need string change while returning to the user.
   CannotOpenFileError: {
-    errorCode: 29447, // kCannotOpenFileError
+    errorCode: 'capability_error', // kCannotOpenFileError
     errorStrings: [
-      'Cannot open file.'
+      'Capability error: Cannot open file.'
+    ]
+  },
+  InCorrectRelativePath: {
+    errorCode: 'parameter_error',
+    errorStrings: [
+      'Parameter error: Incorrect relative path.',
+      '^1 is the provided path.'
     ]
   }
 }
