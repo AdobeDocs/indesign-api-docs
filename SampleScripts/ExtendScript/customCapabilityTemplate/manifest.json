@@ -1,0 +1,15 @@
+{
+    "manifestVersion": "1.0.0",
+    "name": "MyCustomCapability",
+    "version": "1.0.0",
+    "host": {
+        "app": "indesign"
+    },
+    "apiEntryPoints": [
+        {
+            "type": "capability",
+            "path": "sample.jsx",
+            "language": "extendscript"
+        }
+    ]
+}
