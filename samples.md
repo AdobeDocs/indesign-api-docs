@@ -4,6 +4,8 @@ Just remember you will need to have the assets stored in one of the accepted ext
 
 ## Sample capability bundle
 Sample capability bundles can be found at [SampleScripts](SampleScripts/).
+
+**Custom script starter:** [customCapabilityTemplate](SampleScripts/ExtendScript/customCapabilityTemplate/) — boilerplate for logging, working folder, errors, and return JSON; implement logic in `capabilityLogic.jsx` only.
 A manifest.json must be bundled inside the capability zip. A typical manifest would look like:
 ```json
 {

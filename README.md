@@ -1045,7 +1045,7 @@ The second way is to log data in the application's log. You can use the followin
     ```
 
 ### __Complete Sample script__
-A sample script can be found under [Example](Example/), where the main script is sample.jsx, and the rest are supporting scripts.
+Sample capability bundles live under [SampleScripts](SampleScripts/). For a **minimal template** (logging, working folder, error handling, uploads), start from [customCapabilityTemplate](SampleScripts/ExtendScript/customCapabilityTemplate/) and edit `capabilityLogic.jsx`.
 - This script has the functionality to create `idml` from an InDesign document.
 - This script can be treated as a baseline script that handles input and output.
 
